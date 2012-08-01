@@ -22,31 +22,6 @@ module.exports = function (grunt) {
 			name: "title",
 			message: "Project title?",
 			"default": projectTitle || "Sample Project Title"
-		}, {
-			name: "rosy",
-			message: "Would you like to include Rosy?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "jshint",
-			message: "Would you like to include JSHint?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "caboose",
-			message: "Would you like to include Caboose?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "red-start",
-			message: "Would you like to include RED Start?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "statix",
-			message: "Would you like to include Statix?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
 		}];
 
 		var child = cp.spawn("npm", ["install"], {
@@ -56,89 +31,108 @@ module.exports = function (grunt) {
 		});
 
 		child.addListener("exit", function (code) {
-			grunt.helper("prompt", {}, options, function(err, props) {
 
-				var builtIns = [
-					"concat",
-					"min",
-					"qunit",
-					"server",
-					"test"
-				];
+			grunt.helper("check_for_available_plugins", function (plugins) {
+				var i, j, plugin;
 
-				var path;
+				for (i = 0, j = plugins.length; i < j; i++) {
+					plugin = plugins[i];
 
-				for (var i = 0, j = builtIns.length; i < j; i++) {
-					path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
-
-					if (fs.existsSync("./" + path)) {
-						fs.unlinkSync(path);
-					}
+					options.push({
+						name: plugin.id,
+						description: plugin.description,
+						message: "Would you like to include %s?".replace("%s", plugin.name),
+						validator: /^y$|^n$/i,
+						"default": "Y/n"
+					});
 				}
 
-				var name = props.name;
-				var title = props.title;
+				grunt.helper("prompt", {}, options, function(err, props) {
 
-				delete props.name;
-				delete props.title;
+					var builtIns = [
+						"concat",
+						"min",
+						"qunit",
+						"server",
+						"test"
+					];
 
-				var plugArr = [];
-				i = 0;
+					var path;
 
-				for (var key in props) {
-					var assert = grunt.helper("get_assertion", props[key]);
+					for (var i = 0, j = builtIns.length; i < j; i++) {
+						path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
 
-					if (assert) {
-						plugArr.push(key);
-					}
-				}
-
-				var tmpDir = ".rbp-temp";
-				var wrench = require("wrench");
-
-				if (fs.existsSync(tmpDir)) {
-					wrench.rmdirSyncRecursive(tmpDir, true);
-				}
-
-				grunt.file.mkdir(tmpDir);
-				grunt.file.setBase(tmpDir);
-
-				grunt.helper("store_vars", name, title, function () {
-
-					grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
-
-					(function install (count) {
-						if (!plugArr[count]) {
-							return;
+						if (fs.existsSync("./" + path)) {
+							fs.unlinkSync(path);
 						}
+					}
 
-						grunt.helper("install_plugin", plugArr[count], function (stop) {
-							if (stop === true) {
-								done(false);
+					var name = props.name;
+					var title = props.title;
+
+					delete props.name;
+					delete props.title;
+
+					var plugArr = [];
+					i = 0;
+
+					for (var key in props) {
+						var assert = grunt.helper("get_assertion", props[key]);
+
+						if (assert) {
+							plugArr.push(key);
+						}
+					}
+
+					var tmpDir = ".rbp-temp";
+					var wrench = require("wrench");
+
+					if (fs.existsSync(tmpDir)) {
+						wrench.rmdirSyncRecursive(tmpDir, true);
+					}
+
+					grunt.file.mkdir(tmpDir);
+					grunt.file.setBase(tmpDir);
+
+					grunt.helper("store_vars", name, title, function () {
+
+						grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+
+						(function install (count) {
+							if (!plugArr[count]) {
 								return;
 							}
 
-							count++;
+							grunt.helper("install_plugin", plugArr[count], function (stop) {
+								if (stop === true) {
+									done(false);
+									return;
+								}
 
-							if (plugArr[count]) {
-								install(count);
-							} else {
-								grunt.file.setBase("../");
-								wrench.rmdirSyncRecursive(tmpDir, true);
+								count++;
 
-								grunt.log.writeln("");
-								grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+								if (plugArr[count]) {
+									install(count);
+								} else {
+									grunt.file.setBase("../");
+									wrench.rmdirSyncRecursive(tmpDir, true);
 
-								pkg.config.initialized = true;
-								pkg.save();
+									grunt.log.writeln("");
+									grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
-								done();
-							}
-						});
-					}(i));
+									pkg.config.initialized = true;
+									pkg.save();
 
+									done();
+								}
+							});
+						}(i));
+
+					});
 				});
+
 			});
+
 		});
 	});
 
