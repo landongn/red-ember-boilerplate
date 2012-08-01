@@ -15,7 +15,8 @@ module.exports = function (grunt) {
 		var repo = pkg.repository.url;
 		var parts = url.parse(repo);
 		var host = "api.github.com";
-		var path = "/repos" + parts.pathname.replace(".git", "") + "/branches";
+		var pathname = parts.pathname.replace(".git", "");
+		var path = "/repos%s/branches".replace("%s", pathname);
 
 		var plugins = [];
 		var pluginMetadata = [];
@@ -56,8 +57,8 @@ module.exports = function (grunt) {
 
 		var getMetadata = function () {
 			var plugin = plugins.pop();
-			options.path = "/repos/ff0000/red-boilerplate/contents/dependencies.json?ref=" + plugin;
 
+			options.path = "/repos%s/contents/dependencies.json?ref=".replace("%s", pathname) + plugin;
 			console.log("    Grabbing metadata from %s".replace("%s", plugin).grey);
 
 			getJSON(options, function (obj) {
