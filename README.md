@@ -32,7 +32,7 @@ Creating a project
 ### Using the rbp NPM module
 
     npm install rbp -g
-    rbp new project
+    rbp new sampleProjectName
 
 ### Standalone
 
@@ -71,3 +71,14 @@ Available plugins
 - [__RED Start__](https://github.com/ff0000/red-boilerplate/tree/plugins/red-start) - Easy creation of Django projects and applications based the layout used at RED Interactive Agency.
 - [__Rosy__](https://github.com/ff0000/red-boilerplate/tree/plugins/rosy) - An inheritable / extendable JavaScript framework.
 - [__Statix__](https://github.com/ff0000/red-boilerplate/tree/plugins/statix) - Statix is a static website generator.
+
+
+Creating a plugin
+-----------------
+
+Check out this repository, then:
+
+    git checkout --orphan plugins/sample-plugin-name
+    git rm -rf .
+
+That's it. Create your plugin, commit as normal, then push up to GitHub.
