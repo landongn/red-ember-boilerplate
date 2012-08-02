@@ -54,7 +54,6 @@ module.exports = function (grunt) {
 			req.end();
 		};
 
-		console.log("");
 		console.log(("[!]".magenta + " Checking for available plugins.".grey).bold);
 		console.log("    Pinging GitHub at %s".replace("%s", pkg.repository.url).grey);
 
