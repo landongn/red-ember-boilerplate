@@ -32,20 +32,21 @@ module.exports = function (grunt) {
 					}
 				}
 
+				if (installed.length) {
+					grunt.log.writeln("");
+					grunt.log.writeln("[*]" + " Installed modules:".yellow);
+
+					for (i = 0, j = installed.length; i < j; i++) {
+						grunt.log.writeln("    " + installed[i].magenta);
+					}
+				}
+
 				if (available.length) {
 					grunt.log.writeln("");
 					grunt.log.writeln("[*]" + " Available modules:".yellow);
 
 					for (i = 0, j = available.length; i < j; i++) {
 						grunt.log.writeln("    " + available[i].cyan);
-					}
-				}
-
-				if (installed.length) {
-					grunt.log.writeln("[*]" + " Installed modules:".yellow);
-
-					for (i = 0, j = installed.length; i < j; i++) {
-						grunt.log.writeln("    " + installed[i].magenta);
 					}
 				}
 
