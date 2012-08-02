@@ -5,6 +5,6 @@ var pkg = require("./utils/pkg");
 module.exports = function (grunt) {
 
 	// Default task.
-	grunt.registerTask("default", "start");
+	grunt.registerTask("default", "tasks");
 
 };
