@@ -140,15 +140,13 @@ module.exports = function (grunt) {
 
 		var addOrigin = function () {
 			var prompt = require("prompt");
-			prompt.message = "";
-			prompt.delimiter = "";
 
 			prompt.start();
 
 			prompt.get([{
 				name: "init",
-				message: "Github repository url (This can be left blank)? ",
-				validator: /^y$|^n$/i,
+				message: "Github repository url (This can be left blank)?",
+				required: false,
 				"default": null
 			}], function (err, props) {
 				if (props.init) {
@@ -165,14 +163,12 @@ module.exports = function (grunt) {
 		var initializeRBP = function (ungit) {
 			if (ungit) {
 				var prompt = require("prompt");
-				prompt.message = "Please answer the following:\n".bold;
-				prompt.delimiter = "";
 
 				prompt.start();
 
 				prompt.get([{
 					name: "init",
-					message: "[?] ".white + "Would you like to create a git repository? ".grey,
+					message: "Would you like to create a git repository?".grey,
 					validator: /^y$|^n$/i,
 					"default": "Y/n"
 				}], function (err, props) {
@@ -198,14 +194,12 @@ module.exports = function (grunt) {
 
 			if (unstaged) {
 				var prompt = require("prompt");
-				prompt.message = "[!] WARNING:".yellow;
-				prompt.delimiter = " ";
 
 				prompt.start();
 
 				prompt.get([{
 					name: "unstaged",
-					message: "There are unstaged files in your git repository. These may be overwritten. Are you sure you want to continue?".magenta,
+					message: "WARNING: ".yellow + "There are unstaged files in your git repository. These may be overwritten. Are you sure you want to continue?".magenta,
 					validator: /^y$|^n$/i,
 					"default": "Y/n"
 				}], function (err, props) {
