@@ -98,6 +98,9 @@ module.exports = function (grunt) {
 
 						grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
 
+						pkg.config.initialized = true;
+						pkg.save();
+
 						(function install (count) {
 							if (!plugArr[count]) {
 								return;
@@ -119,9 +122,6 @@ module.exports = function (grunt) {
 
 									grunt.log.writeln("");
 									grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
-
-									pkg.config.initialized = true;
-									pkg.save();
 
 									done();
 								}
