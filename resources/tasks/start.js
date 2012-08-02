@@ -159,12 +159,16 @@ module.exports = function (grunt) {
 		};
 
 		var initializeRBP = function (ungit) {
-			var prompt = require("prompt");
-
 			if (ungit) {
+				var prompt = require("prompt");
+				prompt.message = "Please answer the following:\n".bold;
+				prompt.delimiter = "";
+
+				prompt.start();
+
 				prompt.get([{
 					name: "init",
-					message: "Would you like to create a git repository?",
+					message: "[?] ".white + "Would you like to create a git repository?".grey,
 					validator: /^y$|^n$/i,
 					"default": "Y/n"
 				}], function (err, props) {
@@ -209,6 +213,8 @@ module.exports = function (grunt) {
 						done(false);
 					}
 				});
+			} else {
+				initializeRBP(ungit);
 			}
 		};
 
