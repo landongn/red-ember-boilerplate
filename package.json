@@ -11,9 +11,6 @@
   },
   "dependencies": {
     "grunt": "0.3.x",
-    "grunt-compass": "0.2.x",
-    "grunt-requirejs": "0.2.x",
-    "requirejs": "2.0.x",
     "uglify-js": "1.3.x",
     "wrench": "1.3.x"
   },
