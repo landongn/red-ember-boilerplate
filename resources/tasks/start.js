@@ -219,7 +219,7 @@ module.exports = function (grunt) {
 
 		child.addListener("exit", function () {
 			prompt = require("prompt");
-			prompt.message = prompt.message || "[?]".white;
+			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";
 
 			grunt.utils.spawn({
