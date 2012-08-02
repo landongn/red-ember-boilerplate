@@ -140,10 +140,14 @@ module.exports = function (grunt) {
 
 		var addOrigin = function () {
 			var prompt = require("prompt");
+			prompt.message = "";
+			prompt.delimiter = "";
+
+			prompt.start();
 
 			prompt.get([{
 				name: "init",
-				message: "Github repository url (This can be left blank)?",
+				message: "Github repository url (This can be left blank)? ",
 				validator: /^y$|^n$/i,
 				"default": null
 			}], function (err, props) {
@@ -168,7 +172,7 @@ module.exports = function (grunt) {
 
 				prompt.get([{
 					name: "init",
-					message: "[?] ".white + "Would you like to create a git repository?".grey,
+					message: "[?] ".white + "Would you like to create a git repository? ".grey,
 					validator: /^y$|^n$/i,
 					"default": "Y/n"
 				}], function (err, props) {
