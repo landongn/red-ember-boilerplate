@@ -8,6 +8,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("start", "Get your party started", function (useDefaults) {
 		var done = this.async();
 		var pkg = require("./utils/pkg");
+		var prompt;
 
 		var projectName = pkg.config.vars.PROJECT_NAME;
 		var projectTitle = pkg.config.vars.PROJECT_TITLE;
@@ -139,8 +140,6 @@ module.exports = function (grunt) {
 		};
 
 		var addOrigin = function () {
-			var prompt = require("prompt");
-
 			prompt.start();
 
 			prompt.get([{
@@ -162,8 +161,6 @@ module.exports = function (grunt) {
 
 		var initializeRBP = function (ungit) {
 			if (ungit) {
-				var prompt = require("prompt");
-
 				prompt.start();
 
 				prompt.get([{
@@ -193,8 +190,6 @@ module.exports = function (grunt) {
 			var ungit = result.indexOf("fatal: Not a git repository") !== -1;
 
 			if (unstaged) {
-				var prompt = require("prompt");
-
 				prompt.start();
 
 				prompt.get([{
@@ -223,6 +218,10 @@ module.exports = function (grunt) {
 		});
 
 		child.addListener("exit", function () {
+			prompt = require("prompt");
+			prompt.message = prompt.message || "[?]".white;
+			prompt.delimiter = prompt.delimter || " ";
+
 			grunt.utils.spawn({
 				cmd: "git",
 				args: ["status"]
