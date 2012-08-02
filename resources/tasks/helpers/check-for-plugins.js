@@ -3,7 +3,7 @@ var pkg = require("../utils/pkg");
 
 module.exports = function (grunt) {
 
-	grunt.registerHelper("check_for_available_plugins", function (includeMetadata, cb) {
+	grunt.registerHelper("check_for_available_plugins", function (cb) {
 		if (!pkg.repository) {
 			cb([]);
 		}
@@ -19,7 +19,6 @@ module.exports = function (grunt) {
 		var path = "/repos%s/branches".replace("%s", pathname);
 
 		var plugins = [];
-		var pluginMetadata = [];
 
 		var options = {
 			host: host,
@@ -55,27 +54,6 @@ module.exports = function (grunt) {
 			req.end();
 		};
 
-		var getMetadata = function () {
-			var plugin = plugins.pop();
-
-			options.path = "/repos%s/contents/dependencies.json?ref=".replace("%s", pathname) + plugin;
-			console.log("    Grabbing metadata from %s".replace("%s", plugin).grey);
-
-			getJSON(options, function (obj) {
-				var buffer = new Buffer(obj.content, "base64").toString("utf8");
-				var metadata = JSON.parse(buffer);
-
-				metadata.id = plugin.replace("plugins/", "");
-				pluginMetadata.push(metadata);
-
-				if (plugins.length) {
-					getMetadata();
-				} else if (cb) {
-					cb(pluginMetadata);
-				}
-			});
-		};
-
 		console.log("");
 		console.log(("[!]".magenta + " Checking for available plugins.".grey).bold);
 		console.log("    Pinging GitHub at %s".replace("%s", pkg.repository.url).grey);
@@ -86,18 +64,12 @@ module.exports = function (grunt) {
 			for (i = 0, j = branches.length; i < j; i++) {
 				branch = branches[i];
 				if ((/^plugins\//).test(branch.name)) {
-					plugins.push(branch.name);
+					plugins.push(branch.name.replace("plugins/", ""));
 				}
 			}
 
-			if (plugins.length) {
-				if (includeMetadata) {
-					getMetadata();
-				} else {
-					cb(plugins);
-				}
-			} else {
-				cb(pluginMetadata);
+			if (cb) {
+				cb(plugins);
 			}
 		});
 	});

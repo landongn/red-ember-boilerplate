@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 		var plugArr = arguments;
 
 		if (!plugArr.length) {
-			grunt.helper("check_for_available_plugins", false, function (plugins) {
+			grunt.helper("check_for_available_plugins", function (plugins) {
 				grunt.log.writeln("");
 				grunt.log.writeln("Install plugins with grunt install:my-plugin-name");
 
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 				var installed = [];
 
 				for (i = 0, j = plugins.length; i < j; i++) {
-					plugin = plugins[i].replace("plugins/", "");
+					plugin = plugins[i];
 
 					if (!pkg.config.installed_plugins[plugin]) {
 						available.push(plugin);

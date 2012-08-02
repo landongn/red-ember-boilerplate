@@ -32,16 +32,15 @@ module.exports = function (grunt) {
 
 		child.addListener("exit", function (code) {
 
-			grunt.helper("check_for_available_plugins", true, function (plugins) {
+			grunt.helper("check_for_available_plugins", function (plugins) {
 				var i, j, plugin;
 
 				for (i = 0, j = plugins.length; i < j; i++) {
 					plugin = plugins[i];
 
 					options.push({
-						name: plugin.id,
-						description: plugin.description,
-						message: "Would you like to include %s?".replace("%s", plugin.name),
+						name: plugin,
+						message: "Would you like to include %s?".replace("%s", plugin),
 						validator: /^y$|^n$/i,
 						"default": "Y/n"
 					});
