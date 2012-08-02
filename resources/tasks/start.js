@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 
 		child.addListener("exit", function (code) {
 
-			grunt.helper("check_for_available_plugins", function (plugins) {
+			grunt.helper("check_for_available_plugins", true, function (plugins) {
 				var i, j, plugin;
 
 				for (i = 0, j = plugins.length; i < j; i++) {

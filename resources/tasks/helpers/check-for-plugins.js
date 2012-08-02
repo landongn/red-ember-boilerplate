@@ -3,7 +3,7 @@ var pkg = require("../utils/pkg");
 
 module.exports = function (grunt) {
 
-	grunt.registerHelper("check_for_available_plugins", function (cb) {
+	grunt.registerHelper("check_for_available_plugins", function (includeMetadata, cb) {
 		if (!pkg.repository) {
 			cb({});
 		}
@@ -91,8 +91,12 @@ module.exports = function (grunt) {
 			}
 
 			if (plugins.length) {
-				getMetadata();
-			} else if (cb) {
+				if (includeMetadata) {
+					getMetadata();
+				} else {
+					cb(plugins);
+				}
+			} else {
 				cb(pluginMetadata);
 			}
 		});
