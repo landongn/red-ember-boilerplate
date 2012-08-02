@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 
 	grunt.registerHelper("check_for_available_plugins", function (includeMetadata, cb) {
 		if (!pkg.repository) {
-			cb({});
+			cb([]);
 		}
 
 		var url = require("url");
