@@ -222,6 +222,8 @@ module.exports = function (grunt) {
 			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";
 
+			grunt.log.writeln("");
+
 			grunt.utils.spawn({
 				cmd: "git",
 				args: ["status"]
