@@ -49,32 +49,29 @@ module.exports = function (grunt) {
 			"default": "Y/n"
 		}];
 
-		var child = cp.spawn("npm", ["install"], {
-			env: null,
-			setsid: true,
-			stdio: "inherit"
-		});
+		var removeBuiltIns = function () {
+			var builtIns = [
+				"concat",
+				"min",
+				"qunit",
+				"server",
+				"test"
+			];
 
-		child.addListener("exit", function (code) {
-			grunt.helper("prompt", {}, options, function(err, props) {
+			var path;
 
-				var builtIns = [
-					"concat",
-					"min",
-					"qunit",
-					"server",
-					"test"
-				];
+			for (var i = 0, j = builtIns.length; i < j; i++) {
+				path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
 
-				var path;
-
-				for (var i = 0, j = builtIns.length; i < j; i++) {
-					path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
-
-					if (fs.existsSync("./" + path)) {
-						fs.unlinkSync(path);
-					}
+				if (fs.existsSync("./" + path)) {
+					fs.unlinkSync(path);
 				}
+			}
+		};
+
+		var promptForSettings = function (code) {
+			grunt.helper("prompt", {}, options, function(err, props) {
+				removeBuiltIns();
 
 				var name = props.name;
 				var title = props.title;
@@ -83,7 +80,7 @@ module.exports = function (grunt) {
 				delete props.title;
 
 				var plugArr = [];
-				i = 0;
+				var i = 0;
 
 				for (var key in props) {
 					var assert = grunt.helper("get_assertion", props[key]);
@@ -139,7 +136,48 @@ module.exports = function (grunt) {
 
 				});
 			});
+		};
+
+		var initializeRBP = function () {
+			var child = cp.spawn("npm", ["install"], {
+				env: null,
+				setsid: true,
+				stdio: "inherit"
+			});
+
+			child.addListener("exit", promptForSettings);
+		};
+
+		grunt.utils.spawn({
+			cmd: "git",
+			args: ["status"]
+		}, function (err, result, code) {
+			var unstaged = result.indexOf("Changes not staged for commit") !== -1;
+
+			if (unstaged) {
+				var prompt = require("prompt");
+				prompt.message = "[!] WARNING:".yellow;
+				prompt.delimiter = " ";
+
+				prompt.start();
+
+				prompt.get([{
+					name: "unstaged",
+					message: "There are unstaged files in your git repository. These may be overwritten. Are you sure you want to continue?".magenta,
+					validator: /^y$|^n$/i,
+					"default": "Y/n"
+				}], function (err, props) {
+					var assert = grunt.helper("get_assertion", props.unstaged);
+
+					if (assert) {
+						initializeRBP();
+					} else {
+						done(false);
+					}
+				});
+			}
 		});
+
 	});
 
 };
