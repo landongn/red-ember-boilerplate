@@ -7,7 +7,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ff0000/red-bolierplate.git"
+    "url": "https://github.com/ff0000/red-boilerplate.git"
   },
   "dependencies": {
     "grunt": "0.3.x",

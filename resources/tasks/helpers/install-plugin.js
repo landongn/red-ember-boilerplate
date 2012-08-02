@@ -190,7 +190,7 @@ module.exports = function (grunt) {
 			setGitRemoteRef({
 				name : pkg.name,
 				branch : pkg.branch,
-				repo : "git://github.com/ff0000/" + pkg.name + ".git"
+				repo : pkg.repository.url
 			}, function () {
 				continueInstallPlugin(plug, cb);
 			});

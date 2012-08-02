@@ -23,31 +23,6 @@ module.exports = function (grunt) {
 			name: "title",
 			message: "Project title?",
 			"default": projectTitle || "Sample Project Title"
-		}, {
-			name: "rosy",
-			message: "Would you like to include Rosy?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "jshint",
-			message: "Would you like to include JSHint?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "caboose",
-			message: "Would you like to include Caboose?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "red-start",
-			message: "Would you like to include RED Start?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
-		}, {
-			name: "statix",
-			message: "Would you like to include Statix?",
-			validator: /^y$|^n$/i,
-			"default": "Y/n"
 		}];
 
 		var removeBuiltIns = function () {
@@ -70,7 +45,20 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var promptForSettings = function (code) {
+		var promptForSettings = function (plugins) {
+			var i, j, plugin;
+
+			for (i = 0, j = plugins.length; i < j; i++) {
+				plugin = plugins[i];
+
+				options.push({
+					name: plugin,
+					message: "Would you like to include %s?".replace("%s", plugin),
+					validator: /^y$|^n$/i,
+					"default": "Y/n"
+				});
+			}
+
 			grunt.helper("prompt", {}, options, function(err, props) {
 				removeBuiltIns();
 
@@ -139,6 +127,10 @@ module.exports = function (grunt) {
 			});
 		};
 
+		var gatherPlugins = function () {
+			grunt.helper("check_for_available_plugins", promptForSettings);
+		};
+
 		var addOrigin = function () {
 			prompt.start();
 
@@ -152,9 +144,9 @@ module.exports = function (grunt) {
 					grunt.utils.spawn({
 						cmd: "git",
 						args: ["remote", "add", "origin", props.init]
-					}, promptForSettings);
+					}, gatherPlugins);
 				} else {
-					promptForSettings();
+					gatherPlugins();
 				}
 			});
 		};
@@ -177,11 +169,11 @@ module.exports = function (grunt) {
 							args: ["init"]
 						}, addOrigin);
 					} else {
-						promptForSettings();
+						gatherPlugins();
 					}
 				});
 			} else {
-				promptForSettings();
+				gatherPlugins();
 			}
 		};
 
