@@ -2,7 +2,17 @@ module.exports = function(grunt) {
 
 	grunt.registerTask("tasks", "List all tasks", function () {
 
+		var done = this.async();
 		var path = require('path');
+		var hasInitialized;
+
+		grunt.helper("check_initialized", function (initialized) {
+			hasInitialized = initialized;
+
+			if (!initialized) {
+				grunt.task.run("start");
+			}
+		});
 
 		// Initialize task system so that the tasks can be listed.
 		grunt.task.init([], {help: true});
@@ -17,12 +27,24 @@ module.exports = function(grunt) {
 		});
 
 		var tasks = Object.keys(grunt.task._tasks).map(function(name) {
+			var arr = [];
 			col1len = Math.max(col1len, name.length);
 			var info = grunt.task._tasks[name].info;
 			if (grunt.task._tasks[name].multi) {
 				info += ' *';
+
+				var config = grunt.config.get([name]);
+				if (config) {
+					arr.push(config);
+
+					for (var key in config) {
+						col1len = Math.max(col1len, (name + ":" + key).length);
+					}
+				} else {
+					arr.push("none");
+				}
 			}
-			return [name, info];
+			return [name, info].concat(arr);
 		});
 
 		// Widths for options/tasks table output.
@@ -30,24 +52,33 @@ module.exports = function(grunt) {
 
 		grunt.log.writeln("");
 		tasks.forEach(function(a) {
-
 			var b = a[0].split(":"),
-					c = a[1];
+				c = a[1],
+				opts = a[2];
 
 
 			if (b.length > 1) {
-				b[1] = b[1].yellow;
+				b[0] = b[0].grey;
+				b[1] = b[1].white;
 			}
 
 			b = b.join(":");
 
-			if (b !== "tasks") {
-				grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.green, col1len), '', c.cyan]);
+			if (hasInitialized && b !== "tasks" && (!opts || opts !== "none")) {
+				grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.white, col1len - 1), '', c.cyan]);
+
+				if (opts) {
+					for (var key in opts) {
+						if (key !== "" && opts.hasOwnProperty(key)) {
+							grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.grey + (":" + key).white, col1len), '', '']);
+						}
+					}
+				}
 			}
 		});
 		grunt.log.writeln("");
 
-		process.exit();
+		done();
 	});
 
 };
