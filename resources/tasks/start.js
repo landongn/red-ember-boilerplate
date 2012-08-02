@@ -138,21 +138,55 @@ module.exports = function (grunt) {
 			});
 		};
 
-		var initializeRBP = function () {
-			var child = cp.spawn("npm", ["install"], {
-				env: null,
-				setsid: true,
-				stdio: "inherit"
-			});
+		var addOrigin = function () {
+			var prompt = require("prompt");
 
-			child.addListener("exit", promptForSettings);
+			prompt.get([{
+				name: "init",
+				message: "Github repository url (This can be left blank)?",
+				validator: /^y$|^n$/i,
+				"default": null
+			}], function (err, props) {
+				if (props.init) {
+					grunt.utils.spawn({
+						cmd: "git",
+						args: ["remote", "add", "origin", props.init]
+					}, promptForSettings);
+				} else {
+					promptForSettings();
+				}
+			});
 		};
 
-		grunt.utils.spawn({
-			cmd: "git",
-			args: ["status"]
-		}, function (err, result, code) {
+		var initializeRBP = function (ungit) {
+			var prompt = require("prompt");
+
+			if (ungit) {
+				prompt.get([{
+					name: "init",
+					message: "Would you like to create a git repository?",
+					validator: /^y$|^n$/i,
+					"default": "Y/n"
+				}], function (err, props) {
+					var assert = grunt.helper("get_assertion", props.init);
+
+					if (assert) {
+						grunt.utils.spawn({
+							cmd: "git",
+							args: ["init"]
+						}, addOrigin);
+					} else {
+						promptForSettings();
+					}
+				});
+			} else {
+				promptForSettings();
+			}
+		};
+
+		var checkGitInfo = function (err, result, code) {
 			var unstaged = result.indexOf("Changes not staged for commit") !== -1;
+			var ungit = result.indexOf("fatal: Not a git repository") !== -1;
 
 			if (unstaged) {
 				var prompt = require("prompt");
@@ -170,12 +204,25 @@ module.exports = function (grunt) {
 					var assert = grunt.helper("get_assertion", props.unstaged);
 
 					if (assert) {
-						initializeRBP();
+						initializeRBP(ungit);
 					} else {
 						done(false);
 					}
 				});
 			}
+		};
+
+		var child = cp.spawn("npm", ["install"], {
+			env: null,
+			setsid: true,
+			stdio: "inherit"
+		});
+
+		child.addListener("exit", function () {
+			grunt.utils.spawn({
+				cmd: "git",
+				args: ["status"]
+			}, checkGitInfo);
 		});
 
 	});
