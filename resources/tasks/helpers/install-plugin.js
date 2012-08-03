@@ -12,10 +12,6 @@ module.exports = function (grunt) {
 				fs.unlinkSync("install.js");
 			}
 
-			if (fs.existsSync("./dependencies.json")) {
-				fs.unlinkSync("dependencies.json");
-			}
-
 			grunt.file.setBase(".rbp-temp");
 
 			if (cb) {
@@ -118,7 +114,7 @@ module.exports = function (grunt) {
 				cmd: "git",
 				args: ["checkout", plugPath]
 			}, function (err, result, code) {
-				var plugPkg = grunt.file.readJSON("./dependencies.json");
+				var plugPkg = grunt.file.readJSON("./package.json");
 				var pkgRepo = pkg.repository;
 				var plugRepo = plugPkg.repository;
 
