@@ -68,7 +68,7 @@ module.exports = function (grunt) {
 			}
 
 			if (cb) {
-				cb(plugins);
+				cb(plugins.sort());
 			}
 		});
 	});
