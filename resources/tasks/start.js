@@ -5,9 +5,13 @@ module.exports = function (grunt) {
 	var fs = require("fs");
 	var cp = require("child_process");
 
-	grunt.registerTask("start", "Get your party started", function (useDefaults) {
+	grunt.registerTask("start", "Get your party started", function () {
 		var done = this.async();
 		var pkg = require("./utils/pkg");
+
+		var args = grunt.utils.toArray(arguments);
+		var whitelist = [];
+
 		var prompt;
 
 		var projectName = pkg.config.vars.PROJECT_NAME;
@@ -46,17 +50,27 @@ module.exports = function (grunt) {
 		};
 
 		var promptForSettings = function (plugins) {
-			var i, j, plugin;
+			var i, j, k, plugin;
+			var l = args.length;
 
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				options.push({
-					name: plugin,
-					message: "Would you like to include %s?".replace("%s", plugin),
-					validator: /^y$|^n$/i,
-					"default": "Y/n"
-				});
+				if (l) {
+					for (k = 0; k < l; k++) {
+						if (args[k] === plugin) {
+							whitelist.push(args[k]);
+							ask = false;
+						}
+					}
+				} else {
+					options.push({
+						name: plugin,
+						message: "Would you like to include %s?".replace("%s", plugin),
+						validator: /^y$|^n$/i,
+						"default": "Y/n"
+					});
+				}
 			}
 
 			grunt.helper("prompt", {}, options, function(err, props) {
@@ -68,7 +82,7 @@ module.exports = function (grunt) {
 				delete props.name;
 				delete props.title;
 
-				var plugArr = [];
+				var plugArr = whitelist;
 				var i = 0;
 
 				for (var key in props) {
@@ -78,6 +92,9 @@ module.exports = function (grunt) {
 						plugArr.push(key);
 					}
 				}
+
+				// Sort by name
+				plugArr = plugArr.sort();
 
 				var tmpDir = ".rbp-temp";
 				var wrench = require("wrench");
