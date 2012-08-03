@@ -2,6 +2,7 @@
 module.exports = function (grunt) {
 
 	var fs = require("fs");
+	var cp = require("child_process");
 	var path = require("path");
 	var pkg = require("../utils/pkg");
 
@@ -94,10 +95,14 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			if (callInstall) {
-				grunt.utils.spawn({
-					cmd: "npm",
-					args: ["install"]
-				}, function (err, result, code) {
+				var child = cp.spawn("npm", ["install"], {
+					cwd: "../",
+					env: null,
+					setsid: true,
+					stdio: "inherit"
+				});
+
+				child.addListener("exit", function () {
 					copyFiles(plug, plugPkg, cb);
 				});
 
