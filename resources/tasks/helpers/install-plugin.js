@@ -2,19 +2,18 @@
 module.exports = function (grunt) {
 
 	var fs = require("fs");
+	var cp = require("child_process");
 	var path = require("path");
 	var pkg = require("../utils/pkg");
 
 	grunt.registerHelper("install_plugin", function (plug, cb) {
 
 		var completeInstall = function (plug, plugPkg, cb) {
-			if (fs.existsSync("../install.js")) {
-				fs.unlinkSync("../install.js");
+			if (fs.existsSync("./install.js")) {
+				fs.unlinkSync("install.js");
 			}
 
-			if (fs.existsSync("./dependencies.json")) {
-				fs.unlinkSync("../dependencies.json");
-			}
+			grunt.file.setBase(".rbp-temp");
 
 			if (cb) {
 				cb();
@@ -26,14 +25,14 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			grunt.helper("replace_in_files", function () {
-				grunt.file.setBase(".rbp-temp");
+				var install = (plugPkg.scripts || {}).install;
 
-				var installPath = "../install.js";
+				if (install) {
+					var args = install.split(" ");
 
-				if (fs.existsSync(installPath)) {
 					grunt.utils.spawn({
-						cmd: "node",
-						args: [installPath]
+						cmd: args.shift(),
+						args: args
 					}, function (err, result, code) {
 						grunt.log.writeln(result);
 						completeInstall(plug, plugPkg, cb);
@@ -46,7 +45,7 @@ module.exports = function (grunt) {
 
 		var copyFiles = function (plug, plugPkg, cb) {
 			var wrench = require("wrench");
-			var scope = plugPkg.scope || "";
+			var scope = (plugPkg.config || {}).scope || "";
 			var repoPaths = grunt.file.expandFiles("./" + plug + "/**/*");
 			var i, j, file;
 
@@ -96,10 +95,14 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			if (callInstall) {
-				grunt.utils.spawn({
-					cmd: "npm",
-					args: ["install"]
-				}, function (err, result, code) {
+				var child = cp.spawn("npm", ["install"], {
+					cwd: "../",
+					env: null,
+					setsid: true,
+					stdio: "inherit"
+				});
+
+				child.addListener("exit", function () {
 					copyFiles(plug, plugPkg, cb);
 				});
 
@@ -116,19 +119,20 @@ module.exports = function (grunt) {
 				cmd: "git",
 				args: ["checkout", plugPath]
 			}, function (err, result, code) {
-				var plugPkg = grunt.file.readJSON("./dependencies.json");
-				var pkgRepo = plugPkg.repository;
-				var plugBranch = plugPkg.branch || pkg.branch || "master";
+				var plugPkg = grunt.file.readJSON("./package.json");
+				var pkgRepo = pkg.repository;
+				var plugRepo = plugPkg.repository;
 
 				grunt.log.writeln("");
-				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + (pkgRepo || plugPath)).grey).bold);
+				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + (plugRepo ? plugRepo.url : plugPath)).grey).bold);
 
-				if (pkgRepo) {
+				if (plugRepo) {
+					var plugBranch = plugRepo.branch || pkgRepo.branch || "master";
 					grunt.file.mkdir(plug);
 
 					grunt.utils.spawn({
 						cmd: "git",
-						args: ["clone", "--branch", plugBranch, pkgRepo, plug]
+						args: ["clone", "--branch", plugBranch, plugRepo.url, plug]
 					}, function (err, result, code) {
 						installDependencies(plug, plugPkg, cb);
 					});
@@ -141,7 +145,7 @@ module.exports = function (grunt) {
 		var setGitRemoteRef = function (options, cb) {
 			// Check for remote, add if not found
 			var name   = options.name,
-				branch = options.branch || pkg.branch,
+				branch = options.branch || "master",
 				repo = options.repo;
 
 			grunt.utils.spawn({
@@ -189,8 +193,8 @@ module.exports = function (grunt) {
 		}, function (err, result, code) {
 			setGitRemoteRef({
 				name : pkg.name,
-				branch : pkg.branch,
-				repo : "git://github.com/ff0000/" + pkg.name + ".git"
+				branch : pkg.repository.branch,
+				repo : pkg.repository.url
 			}, function () {
 				continueInstallPlugin(plug, cb);
 			});

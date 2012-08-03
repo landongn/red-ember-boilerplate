@@ -1,53 +1,84 @@
 module.exports = function(grunt) {
 
-  grunt.registerTask("tasks", "List all tasks", function () {
+	grunt.registerTask("tasks", "List all tasks", function () {
 
-    var path = require('path');
+		var done = this.async();
+		var path = require('path');
+		var hasInitialized;
 
-    // Initialize task system so that the tasks can be listed.
-    grunt.task.init([], {help: true});
+		grunt.helper("check_initialized", function (initialized) {
+			hasInitialized = initialized;
 
-    // Build 2-column array for table view.
-    var col1len = 0;
-    var opts = Object.keys(grunt.cli.optlist).map(function(long) {
-      var o = grunt.cli.optlist[long];
-      var col1 = '--' + (o.negate ? 'no-' : '') + long + (o.short ? ', -' + o.short : '');
-      col1len = Math.max(col1len, col1.length);
-      return [col1, o.info];
-    });
+			if (!initialized) {
+				grunt.task.run("start");
+			}
+		});
 
-    var tasks = Object.keys(grunt.task._tasks).map(function(name) {
-      col1len = Math.max(col1len, name.length);
-      var info = grunt.task._tasks[name].info;
-      if (grunt.task._tasks[name].multi) {
-        info += ' *';
-      }
-      return [name, info];
-    });
+		// Initialize task system so that the tasks can be listed.
+		grunt.task.init([], {help: true});
 
-    // Widths for options/tasks table output.
-    var widths = [1, col1len, 2, 76 - col1len];
+		// Build 2-column array for table view.
+		var col1len = 0;
+		var opts = Object.keys(grunt.cli.optlist).map(function(long) {
+			var o = grunt.cli.optlist[long];
+			var col1 = '--' + (o.negate ? 'no-' : '') + long + (o.short ? ', -' + o.short : '');
+			col1len = Math.max(col1len, col1.length);
+			return [col1, o.info];
+		});
 
-    grunt.log.writeln("");
-    tasks.forEach(function(a) { 
+		var tasks = Object.keys(grunt.task._tasks).map(function(name) {
+			var arr = [];
+			col1len = Math.max(col1len, name.length);
+			var info = grunt.task._tasks[name].info;
+			if (grunt.task._tasks[name].multi || name === "watch") {
+				info += ' *';
 
-      var b = a[0].split(":"),
-          c = a[1];
+				var config = grunt.config.get([name]);
+				if (config) {
+					arr.push(config);
+
+					for (var key in config) {
+						col1len = Math.max(col1len, (name + ":" + key).length);
+					}
+				} else {
+					arr.push("none");
+				}
+			}
+			return [name, info].concat(arr);
+		});
+
+		// Widths for options/tasks table output.
+		var widths = [1, col1len, 2, 76 - col1len];
+
+		grunt.log.writeln("");
+		tasks.forEach(function(a) {
+			var b = a[0].split(":"),
+				c = a[1],
+				opts = a[2];
 
 
-      if (b.length > 1) {
-        b[1] = b[1].yellow;
-      }
+			if (b.length > 1) {
+				b[0] = b[0].grey;
+				b[1] = b[1].white;
+			}
 
-      b = b.join(":");
+			b = b.join(":");
 
-      if (b !== "tasks") {
-        grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.green, col1len), '', c.cyan]); 
-      }
-    });
-    grunt.log.writeln("");
+			if (hasInitialized && b !== "tasks" && (!opts || opts !== "none")) {
+				grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.white, col1len - 1), '', c.cyan]);
 
-    process.exit();
-  });
+				if (opts) {
+					for (var key in opts) {
+						if (key !== "" && opts.hasOwnProperty(key)) {
+							grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.grey + (":" + key).white, col1len), '', '']);
+						}
+					}
+				}
+			}
+		});
+		grunt.log.writeln("");
+
+		done();
+	});
 
 };

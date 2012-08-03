@@ -1,26 +1,28 @@
 {
-  "name": "red-boilerplate",
-  "branch": "master",
-  "preferGlobal": "true",
-  "version": "2.0.0",
-  "author": "RED Interactive <geeks@ff0000.com>",
-  "description": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ff0000/red-bolierplate.git"
-  },
-  "dependencies": {
-    "grunt": "0.3.x",
-    "grunt-compass": "0.2.x",
-    "grunt-requirejs": "0.2.x",
-    "requirejs": "2.0.x",
-    "uglify-js": "1.3.x",
-    "wrench": "1.3.x"
-  },
-  "config": {
-    "vars": {},
-    "available_plugins": {},
-    "installed_plugins": {}
-  },
-  "license": "MIT"
+	"name": "red-boilerplate",
+	"preferGlobal": "true",
+	"version": "2.1.0",
+	"author": "RED Interactive <geeks@ff0000.com>",
+	"description": "RED Interactive's boilerplate to initialize common projects.",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/ff0000/red-boilerplate.git"
+	},
+	"dependencies": {
+		"grunt": "0.3.x",
+		"prompt": "0.1.x",
+		"uglify-js": "1.3.x",
+		"wrench": "1.3.x"
+	},
+	"config": {
+		"vars": {},
+		"available_plugins": {},
+		"installed_plugins": {}
+	},
+	"license": "MIT",
+	"devDependencies": {},
+	"optionalDependencies": {},
+	"engines": {
+		"node": "*"
+	}
 }
