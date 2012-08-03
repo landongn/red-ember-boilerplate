@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 			var arr = [];
 			col1len = Math.max(col1len, name.length);
 			var info = grunt.task._tasks[name].info;
-			if (grunt.task._tasks[name].multi) {
+			if (grunt.task._tasks[name].multi || name === "watch") {
 				info += ' *';
 
 				var config = grunt.config.get([name]);
