@@ -1,12 +1,12 @@
 {
 	"name": "red-boilerplate",
 	"preferGlobal": "true",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "RED Interactive's boilerplate to initialize common projects.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ff0000/red-boilerplate.git"
+		"url": "git://github.com/ff0000/red-boilerplate.git"
 	},
 	"dependencies": {
 		"grunt": "0.3.x",
@@ -19,5 +19,10 @@
 		"available_plugins": {},
 		"installed_plugins": {}
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"devDependencies": {},
+	"optionalDependencies": {},
+	"engines": {
+		"node": "*"
+	}
 }
