@@ -60,21 +60,23 @@ module.exports = function (grunt) {
 				file = repoPaths[i];
 
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					grunt.log.writeln(("    Writing " + file.replace(plug, scope)).grey);
+					grunt.log.writeln(("    Writing " + file.replace(plug + "/", scope)).grey);
 					grunt.file.copy(file, file.replace(plug, path.join("../", scope)));
 				}
 			}
 
 			wrench.rmdirSyncRecursive(plug, true);
 
-			var plugPaths = grunt.file.expandFiles("**/*");
+			if (plug !== "master") {
+				var plugPaths = grunt.file.expandFiles("**/*");
 
-			for (i = 0, j = plugPaths.length; i < j; i++) {
-				file = plugPaths[i];
+				for (i = 0, j = plugPaths.length; i < j; i++) {
+					file = plugPaths[i];
 
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					grunt.log.writeln(("    Writing " + file).grey);
-					grunt.file.copy(file, path.join("../", file));
+					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+						grunt.log.writeln(("    Writing " + file).grey);
+						grunt.file.copy(file, path.join("../", file));
+					}
 				}
 			}
 
@@ -85,14 +87,16 @@ module.exports = function (grunt) {
 			var callInstall;
 
 			for (var dep in plugPkg.dependencies) {
-				if (!pkg.dependencies[dep]) {
+				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
 					pkg.dependencies[dep] = plugPkg.dependencies[dep];
 					callInstall = true;
 				}
 			}
 
-			pkg.config.installed_plugins[plug] = plugPkg;
-			pkg.save();
+			if (plug !== "master") {
+				pkg.config.installed_plugins[plug] = plugPkg.description;
+				pkg.save();
+			}
 
 			if (callInstall) {
 				var child = cp.spawn("npm", ["install"], {
@@ -123,8 +127,11 @@ module.exports = function (grunt) {
 				var pkgRepo = pkg.repository;
 				var plugRepo = plugPkg.repository;
 
+				var action = " " + (plug === "master" ? "Updating" : "Installing") + " ";
+				var source = (plugRepo ? plugRepo.url : plugPath);
+
 				grunt.log.writeln("");
-				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + (plugRepo ? plugRepo.url : plugPath)).grey).bold);
+				grunt.log.writeln(("[!]".magenta + (action + plugPkg.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
 					var plugBranch = plugRepo.branch || pkgRepo.branch || "master";
