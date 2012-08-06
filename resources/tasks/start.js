@@ -50,7 +50,6 @@ module.exports = function (grunt) {
 		};
 
 		var finalizeInstall = function () {
-			grunt.log.writeln("");
 			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
 			pkg.config.initialized = true;
