@@ -56,6 +56,10 @@ module.exports = function (grunt) {
 				"README.md"
 			];
 
+			if (plug === "master") {
+				exclude.push("**/project/**/*");
+			}
+
 			for (i = 0, j = repoPaths.length; i < j; i++) {
 				file = repoPaths[i];
 
