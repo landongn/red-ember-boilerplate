@@ -121,7 +121,7 @@ module.exports = function (grunt) {
 
 			grunt.utils.spawn({
 				cmd: "git",
-				args: ["checkout", plugPath]
+				args: ["checkout", "-f", plugPath]
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
 				var pkgRepo = pkg.repository;
