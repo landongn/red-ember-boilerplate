@@ -194,7 +194,7 @@ module.exports = function (grunt) {
 		};
 
 		var checkGitInfo = function (err, result, code) {
-			var unstaged = result.indexOf("Changes not staged for commit") !== -1;
+			var unstaged = result.indexOf("Untracked files:") !== -1;
 			var ungit = result.indexOf("fatal: Not a git repository") !== -1;
 
 			if (unstaged) {
