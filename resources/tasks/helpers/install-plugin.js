@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 				file = repoPaths[i];
 
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					newFile = file.replace(plug, path.join("../", scope));
+					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
 					grunt.log.writeln(("    Writing " + newFile.replace("../", "")).grey);
 					grunt.file.copy(file, newFile);
