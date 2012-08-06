@@ -49,6 +49,23 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var finalizeInstall = function () {
+			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+
+			pkg.config.initialized = true;
+			pkg.save();
+
+			done();
+		};
+
+		var showAvailableTasks = function () {
+			grunt.log.writeln("");
+			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
+
+			grunt.task.run("tasks");
+			finalizeInstall();
+		};
+
 		var promptForSettings = function (plugins) {
 			var i, j, k, plugin;
 			var l = args.length;
@@ -128,13 +145,7 @@ module.exports = function (grunt) {
 								grunt.file.setBase("../");
 								wrench.rmdirSyncRecursive(tmpDir, true);
 
-								grunt.log.writeln("");
-								grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
-
-								pkg.config.initialized = true;
-								pkg.save();
-
-								done();
+								showAvailableTasks();
 							}
 						});
 					}(i));
