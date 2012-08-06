@@ -99,11 +99,10 @@ module.exports = function (grunt) {
 				var tmpDir = ".rbp-temp";
 				var wrench = require("wrench");
 
-				if (fs.existsSync(tmpDir)) {
-					wrench.rmdirSyncRecursive(tmpDir, true);
+				if (!fs.existsSync(tmpDir)) {
+					grunt.file.mkdir(tmpDir);
 				}
 
-				grunt.file.mkdir(tmpDir);
 				grunt.file.setBase(tmpDir);
 
 				grunt.helper("store_vars", name, title, function () {
