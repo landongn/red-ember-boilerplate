@@ -30,11 +30,16 @@ module.exports = function (grunt) {
 				if (install) {
 					var args = install.split(" ");
 
-					grunt.utils.spawn({
-						cmd: args.shift(),
-						args: args
-					}, function (err, result, code) {
-						grunt.log.writeln(result);
+					var child = cp.spawn(args.shift(), args, {
+						cwd: cwd,
+						env: null,
+						setsid: true
+					});
+
+					child.stdin.pipe(process.stdin);
+					child.stdout.pipe(process.stdout);
+
+					child.addListener("exit", function (code) {
 						completeInstall(plug, plugPkg, cb);
 					});
 				} else {
