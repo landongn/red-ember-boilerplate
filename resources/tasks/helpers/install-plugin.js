@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 			var wrench = require("wrench");
 			var scope = (plugPkg.config || {}).scope || "";
 			var repoPaths = grunt.file.expandFiles("./" + plug + "/**/*");
-			var i, j, file;
+			var i, j, file, newFile;
 
 			var exclude = [
 				"package.json",
@@ -60,8 +60,10 @@ module.exports = function (grunt) {
 				file = repoPaths[i];
 
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					grunt.log.writeln(("    Writing " + file.replace(plug + "/", scope)).grey);
-					grunt.file.copy(file, file.replace(plug, path.join("../", scope)));
+					newFile = file.replace(plug, path.join("../", scope));
+
+					grunt.log.writeln(("    Writing " + newFile.replace("../", "")).grey);
+					grunt.file.copy(file, newFile);
 				}
 			}
 
