@@ -76,9 +76,22 @@ Available plugins
 Creating a plugin
 -----------------
 
+You must create a plugin branch in order to add a plugin to RBP. The plugin branch contains a required `package.json` file, along with any RBP-specific files that are not part of your plugin's git repository.
+
+Note that you do not have to target a git repository. Plugins can be self-contained within the plugin branch itself. It's an option you should use if it makes more semantic sense than creating a new git repository.
+
 Check out this repository, then:
 
     git checkout --orphan plugins/sample-plugin-name
     git rm -rf .
 
-That's it. Create your plugin, commit as normal, then push up to GitHub.
+### package.json
+
+Each plugin must include its own `package.json` file. RBP will read through the parameters and perform the appropriate steps to import the plugin. For reference, take a look at Caboose's [`package.json`](https://github.com/ff0000/red-boilerplate/blob/plugins/caboose/package.json).
+
+### common parameters
+
+- `repository` (optional): An object containing the repo type, the target branch and the repo url.
+- `dependencies` (optional): An object containing any `npm` dependencies.
+- `scripts.install` (optional): A parameter containing any scripts to run on plugin install
+- `config.scope` (optional): A parameter to scope your plugin to a specified directory.

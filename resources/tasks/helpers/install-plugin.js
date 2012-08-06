@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 			var wrench = require("wrench");
 			var scope = (plugPkg.config || {}).scope || "";
 			var repoPaths = grunt.file.expandFiles("./" + plug + "/**/*");
-			var i, j, file;
+			var i, j, file, newFile;
 
 			var exclude = [
 				"package.json",
@@ -56,25 +56,33 @@ module.exports = function (grunt) {
 				"README.md"
 			];
 
+			if (plug === "master") {
+				exclude.push("**/project/**/*");
+			}
+
 			for (i = 0, j = repoPaths.length; i < j; i++) {
 				file = repoPaths[i];
 
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					grunt.log.writeln(("    Writing " + file.replace(plug, scope)).grey);
-					grunt.file.copy(file, file.replace(plug, path.join("../", scope)));
+					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+
+					grunt.log.writeln(("    Writing " + newFile.replace("../", "")).grey);
+					grunt.file.copy(file, newFile);
 				}
 			}
 
 			wrench.rmdirSyncRecursive(plug, true);
 
-			var plugPaths = grunt.file.expandFiles("**/*");
+			if (plug !== "master") {
+				var plugPaths = grunt.file.expandFiles("**/*");
 
-			for (i = 0, j = plugPaths.length; i < j; i++) {
-				file = plugPaths[i];
+				for (i = 0, j = plugPaths.length; i < j; i++) {
+					file = plugPaths[i];
 
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					grunt.log.writeln(("    Writing " + file).grey);
-					grunt.file.copy(file, path.join("../", file));
+					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+						grunt.log.writeln(("    Writing " + file).grey);
+						grunt.file.copy(file, path.join("../", file));
+					}
 				}
 			}
 
@@ -85,14 +93,16 @@ module.exports = function (grunt) {
 			var callInstall;
 
 			for (var dep in plugPkg.dependencies) {
-				if (!pkg.dependencies[dep]) {
+				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
 					pkg.dependencies[dep] = plugPkg.dependencies[dep];
 					callInstall = true;
 				}
 			}
 
-			pkg.config.installed_plugins[plug] = plugPkg;
-			pkg.save();
+			if (plug !== "master") {
+				pkg.config.installed_plugins[plug] = plugPkg.description;
+				pkg.save();
+			}
 
 			if (callInstall) {
 				var child = cp.spawn("npm", ["install"], {
@@ -117,14 +127,17 @@ module.exports = function (grunt) {
 
 			grunt.utils.spawn({
 				cmd: "git",
-				args: ["checkout", plugPath]
+				args: ["checkout", "-f", plugPath]
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
 				var pkgRepo = pkg.repository;
 				var plugRepo = plugPkg.repository;
 
+				var action = " " + (plug === "master" ? "Updating" : "Installing") + " ";
+				var source = (plugRepo ? plugRepo.url : plugPath);
+
 				grunt.log.writeln("");
-				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + (plugRepo ? plugRepo.url : plugPath)).grey).bold);
+				grunt.log.writeln(("[!]".magenta + (action + plugPkg.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
 					var plugBranch = plugRepo.branch || pkgRepo.branch || "master";
@@ -179,7 +192,7 @@ module.exports = function (grunt) {
 		};
 
 		if (pkg.config.installed_plugins[plug]) {
-			grunt.log.writeln(("You've already installed " + pkg.config.installed_plugins[plug].name + "!").yellow);
+			grunt.log.writeln(("You've already installed " + plug + "! Remove the reference from package.json (config.installed_modules) to reinstall.").yellow);
 
 			if (cb) {
 				cb();
