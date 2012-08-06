@@ -31,7 +31,6 @@ module.exports = function (grunt) {
 					var args = install.split(" ");
 
 					var child = cp.spawn(args.shift(), args, {
-						cwd: cwd,
 						env: null,
 						setsid: true
 					});
