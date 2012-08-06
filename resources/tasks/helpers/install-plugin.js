@@ -186,7 +186,7 @@ module.exports = function (grunt) {
 		};
 
 		if (pkg.config.installed_plugins[plug]) {
-			grunt.log.writeln(("You've already installed " + pkg.config.installed_plugins[plug].name + "!").yellow);
+			grunt.log.writeln(("You've already installed " + plug + "! Remove the reference from package.json (config.installed_modules) to reinstall.").yellow);
 
 			if (cb) {
 				cb();
