@@ -35,7 +35,9 @@ module.exports = function (grunt) {
 						setsid: true
 					});
 
-					child.stdin.pipe(process.stdin);
+					process.stdin.resume();
+
+					process.stdin.pipe(child);
 					child.stdout.pipe(process.stdout);
 
 					child.addListener("exit", function (code) {
