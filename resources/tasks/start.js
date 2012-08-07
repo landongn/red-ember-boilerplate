@@ -238,7 +238,7 @@ module.exports = function (grunt) {
 
 		child.addListener("exit", function () {
 			if (pkg.config.initialized) {
-				grunt.log.writeln("This party's already been started. You can install individual plugins with `grunt install`");
+				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
 				done();
 			} else {
 				prompt = require("prompt");
