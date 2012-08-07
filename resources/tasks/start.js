@@ -237,16 +237,21 @@ module.exports = function (grunt) {
 		});
 
 		child.addListener("exit", function () {
-			prompt = require("prompt");
-			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
-			prompt.delimiter = prompt.delimter || " ";
+			if (pkg.config.initialized) {
+				grunt.log.writeln("This party's already been started. You can install individual plugins with `grunt install`");
+				done();
+			} else {
+				prompt = require("prompt");
+				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+				prompt.delimiter = prompt.delimter || " ";
 
-			grunt.log.writeln("");
+				grunt.log.writeln("");
 
-			grunt.utils.spawn({
-				cmd: "git",
-				args: ["status"]
-			}, checkGitInfo);
+				grunt.utils.spawn({
+					cmd: "git",
+					args: ["status"]
+				}, checkGitInfo);
+			}
 		});
 
 	});
