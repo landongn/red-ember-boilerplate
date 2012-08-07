@@ -106,6 +106,14 @@ module.exports = function (grunt) {
 			}
 
 			if (plug !== "master") {
+
+				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
+
+				if (plugInitScript) {
+					pkg.scripts = pkg.scripts || {};
+					pkg.scripts.install = pkg.scripts.install ? [pkg.scripts.install, plugInitScript].join("; ") : plugInitScript;
+				}
+
 				pkg.config.installed_plugins[plug] = plugPkg.description;
 				pkg.save();
 			}
