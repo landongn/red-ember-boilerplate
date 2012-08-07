@@ -96,12 +96,12 @@ module.exports = function (grunt) {
 		};
 
 		var installDependencies = function (plug, plugPkg, cb) {
-			var callInstall;
+			var callUpdate;
 
 			for (var dep in plugPkg.dependencies) {
 				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
 					pkg.dependencies[dep] = plugPkg.dependencies[dep];
-					callInstall = true;
+					callUpdate = true;
 				}
 			}
 
@@ -118,8 +118,8 @@ module.exports = function (grunt) {
 				pkg.save();
 			}
 
-			if (callInstall) {
-				var child = cp.spawn("npm", ["install"], {
+			if (callUpdate) {
+				var child = cp.spawn("npm", ["update"], {
 					cwd: "../",
 					env: null,
 					setsid: true,
