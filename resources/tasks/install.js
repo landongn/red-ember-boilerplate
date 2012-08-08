@@ -73,7 +73,10 @@ module.exports = function (grunt) {
 
 				grunt.helper("install_plugin", plugArr[count], function (stop) {
 					if (stop === true) {
+						grunt.file.setBase("../");
+						wrench.rmdirSyncRecursive(tmpDir, true);
 						done(false);
+
 						return;
 					}
 

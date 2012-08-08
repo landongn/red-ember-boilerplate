@@ -205,27 +205,48 @@ module.exports = function (grunt) {
 			});
 		};
 
-		if (pkg.config.installed_plugins[plug]) {
-			grunt.log.writeln(("You've already installed " + plug + "! Remove the reference from package.json (config.installed_modules) to reinstall.").yellow);
-
-			if (cb) {
-				cb();
-			}
-			return;
-		}
-
-		grunt.utils.spawn({
-			cmd: "git",
-			args: ["init"]
-		}, function (err, result, code) {
-			setGitRemoteRef({
-				name : pkg.name,
-				branch : pkg.repository.branch,
-				repo : pkg.repository.url
-			}, function () {
-				continueInstallPlugin(plug, cb);
+		var initialize = function () {
+			grunt.utils.spawn({
+				cmd: "git",
+				args: ["init"]
+			}, function (err, result, code) {
+				setGitRemoteRef({
+					name : pkg.name,
+					branch : pkg.repository.branch,
+					repo : pkg.repository.url
+				}, function () {
+					continueInstallPlugin(plug, cb);
+				});
 			});
-		});
+		};
+
+		if (pkg.config.installed_plugins[plug]) {
+			var prompt = require("prompt");
+			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+			prompt.delimiter = prompt.delimter || " ";
+
+			prompt.start();
+
+			prompt.get([{
+				name: "force",
+				message: "WARNING: ".yellow + "You've already installed " + plug + "! All associated files will be overwritten. Are you sure you want to continue?".magenta,
+				validator: /^y$|^n$/i,
+				"default": "Y/n"
+			}], function (err, props) {
+				var assert = grunt.helper("get_assertion", props.force);
+
+				if (assert) {
+					initialize();
+				} else {
+					if (cb) {
+						cb(true);
+					}
+				}
+			});
+			return;
+		} else {
+			initialize();
+		}
 	});
 
 };
