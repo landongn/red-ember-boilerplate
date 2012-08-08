@@ -52,6 +52,20 @@ module.exports = function (grunt) {
 		var finalizeInstall = function () {
 			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
+			var rbp = {
+				name: pkg.name,
+				version: pkg.version,
+				repository: pkg.repository
+			};
+
+			// Set pkg.repository branch
+			rbp.repository.branch = branch || "master";
+			pkg.config.rbp = rbp;
+
+			pkg.name = pkg.config.vars.PROJECT_NAME;
+			pkg.version = "0.0.0";
+			pkg.repository.url = "";
+
 			pkg.config.initialized = true;
 			pkg.save();
 
