@@ -90,6 +90,11 @@ module.exports = function (grunt) {
 				}
 			}
 
+			var removeTmpDir = function () {
+				grunt.file.setBase("../");
+				wrench.rmdirSyncRecursive(tmpDir, true);
+			};
+
 			grunt.helper("prompt", {}, options, function(err, props) {
 				removeBuiltIns();
 
@@ -128,11 +133,14 @@ module.exports = function (grunt) {
 
 					(function install (count) {
 						if (!plugArr[count]) {
+							removeTmpDir();
+							finalizeInstall();
 							return;
 						}
 
 						grunt.helper("install_plugin", plugArr[count], function (stop) {
 							if (stop === true) {
+								removeTmpDir();
 								done(false);
 								return;
 							}
@@ -142,9 +150,7 @@ module.exports = function (grunt) {
 							if (plugArr[count]) {
 								install(count);
 							} else {
-								grunt.file.setBase("../");
-								wrench.rmdirSyncRecursive(tmpDir, true);
-
+								removeTmpDir();
 								showAvailableTasks();
 							}
 						});
