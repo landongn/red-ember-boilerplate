@@ -1,9 +1,9 @@
 /*global module:false*/
-var pkg = require("../utils/pkg");
 
 module.exports = function (grunt) {
 
 	grunt.registerHelper("check_initialized", function (done) {
+		var pkg = require("../utils/pkg");
 		var initialized = pkg.config.initialized;
 
 		if (initialized) {

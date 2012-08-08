@@ -1,12 +1,11 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	var fs = require("fs");
-	var cp = require("child_process");
-	var path = require("path");
-	var pkg = require("../utils/pkg");
-
 	grunt.registerHelper("install_plugin", function (plug, cb) {
+		var fs = require("fs");
+		var cp = require("child_process");
+		var path = require("path");
+		var pkg = require("../utils/pkg");
 
 		var completeInstall = function (plug, plugPkg, cb) {
 			if (fs.existsSync("./install.js")) {

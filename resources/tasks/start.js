@@ -2,10 +2,10 @@
 
 module.exports = function (grunt) {
 
-	var fs = require("fs");
-	var cp = require("child_process");
-
 	grunt.registerTask("start", "Get your party started", function () {
+		var fs = require("fs");
+		var cp = require("child_process");
+
 		var done = this.async();
 		var pkg = require("./utils/pkg");
 

@@ -1,9 +1,10 @@
 /*global module:false*/
-var pkg = require("../utils/pkg");
 
 module.exports = function (grunt) {
 
 	grunt.registerHelper("check_for_available_plugins", function (cb) {
+		var pkg = require("../utils/pkg");
+
 		if (!pkg.repository) {
 			cb([]);
 		}

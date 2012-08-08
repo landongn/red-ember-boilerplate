@@ -1,9 +1,9 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	var pkg = require("../utils/pkg");
-
 	grunt.registerHelper("store_vars", function (name, title, cb) {
+		var pkg = require("../utils/pkg");
+
 		pkg.config.vars["PROJECT_NAME"] = name;
 		pkg.config.vars["PROJECT_TITLE"] = title;
 
