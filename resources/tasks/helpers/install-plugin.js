@@ -228,7 +228,7 @@ module.exports = function (grunt) {
 
 			prompt.get([{
 				name: "force",
-				message: "WARNING: ".yellow + "You've already installed " + plug + "! All associated files will be overwritten. Are you sure you want to continue?".magenta,
+				message: "WARNING: ".yellow + "You've already installed ".magenta + plug + "! All associated files will be overwritten. Are you sure you want to continue?".magenta,
 				validator: /^y$|^n$/i,
 				"default": "Y/n"
 			}], function (err, props) {
