@@ -90,8 +90,10 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var removeTmpDir = function () {
+			var removeTmpDir = function (tmpDir) {
+				var wrench = require("wrench");
 				grunt.file.setBase("../");
+
 				wrench.rmdirSyncRecursive(tmpDir, true);
 			};
 
@@ -119,7 +121,6 @@ module.exports = function (grunt) {
 				plugArr = plugArr.sort();
 
 				var tmpDir = ".rbp-temp";
-				var wrench = require("wrench");
 
 				if (!fs.existsSync(tmpDir)) {
 					grunt.file.mkdir(tmpDir);
@@ -133,14 +134,14 @@ module.exports = function (grunt) {
 
 					(function install (count) {
 						if (!plugArr[count]) {
-							removeTmpDir();
+							removeTmpDir(tmpDir);
 							finalizeInstall();
 							return;
 						}
 
 						grunt.helper("install_plugin", plugArr[count], function (stop) {
 							if (stop === true) {
-								removeTmpDir();
+								removeTmpDir(tmpDir);
 								done(false);
 								return;
 							}
@@ -150,7 +151,7 @@ module.exports = function (grunt) {
 							if (plugArr[count]) {
 								install(count);
 							} else {
-								removeTmpDir();
+								removeTmpDir(tmpDir);
 								showAvailableTasks();
 							}
 						});
