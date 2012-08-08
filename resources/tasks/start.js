@@ -2,7 +2,7 @@
 
 module.exports = function (grunt) {
 
-	grunt.registerTask("start", "Get your party started", function () {
+	grunt.registerTask("start", "Get your party started", function (branch) {
 		var fs = require("fs");
 		var cp = require("child_process");
 
