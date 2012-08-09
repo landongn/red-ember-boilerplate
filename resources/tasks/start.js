@@ -180,7 +180,7 @@ module.exports = function (grunt) {
 			prompt.get([{
 				name: "remote",
 				message: "Github repository url (This can be left blank)?",
-				validator: /^git\:\/\/*/,
+				validator: /(^git\:\/\/*)|(^$)/,
 				required: false,
 				"default": null
 			}], function (err, props) {
