@@ -9,7 +9,6 @@ module.exports = function (grunt) {
 		var done = this.async();
 		var pkg = require("./utils/pkg");
 
-		var args = grunt.utils.toArray(arguments);
 		var whitelist = [];
 
 		var prompt;
@@ -86,27 +85,17 @@ module.exports = function (grunt) {
 		};
 
 		var promptForSettings = function (plugins) {
-			var i, j, k, plugin;
-			var l = args.length;
+			var i, j, plugin;
 
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				if (l) {
-					for (k = 0; k < l; k++) {
-						if (args[k] === plugin) {
-							whitelist.push(args[k]);
-							ask = false;
-						}
-					}
-				} else {
-					options.push({
-						name: plugin,
-						message: "Would you like to include %s?".replace("%s", plugin),
-						validator: /^y$|^n$/i,
-						"default": "Y/n"
-					});
-				}
+				options.push({
+					name: plugin,
+					message: "Would you like to include %s?".replace("%s", plugin),
+					validator: /^y$|^n$/i,
+					"default": "Y/n"
+				});
 			}
 
 			var removeTmpDir = function (tmpDir) {
