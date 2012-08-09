@@ -51,6 +51,34 @@ module.exports = function (grunt) {
 			});
 		};
 
+		var updatePackageJSON = function (plug) {
+			var json = "./" + plug + "/package.json";
+
+			if (!fs.existsSync(json)) {
+				return;
+			}
+
+			var rbp = pkg.config.rbp;
+			var rbpPkg = grunt.file.readJSON(json);
+			var props = ["name", "version", "repository"];
+			var prop, curr;
+
+			for (i = 0, j = props.length; i < j; i++) {
+				prop = props[i];
+				curr = rbpPkg[prop];
+
+				if (typeof curr === "string") {
+					rbp[prop] = curr;
+				} else {
+					for (var key in curr) {
+						rbp[prop][key] = curr[key];
+					}
+				}
+			}
+
+			pkg.save();
+		};
+
 		var copyFiles = function (plug, plugPkg, cb) {
 			var wrench = require("wrench");
 			var scope = (plugPkg.config || {}).scope || "";
@@ -65,6 +93,7 @@ module.exports = function (grunt) {
 			];
 
 			if (isRBP) {
+				updatePackageJSON(plug);
 				exclude.push("**/project/**/*");
 			}
 
