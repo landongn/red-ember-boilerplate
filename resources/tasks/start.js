@@ -60,15 +60,14 @@ module.exports = function (grunt) {
 
 			pkg.save();
 
-			// Set pkg.repository branch
-			rbp.repository.branch = branch || "master";
-
 			pkg.name = pkg.config.vars.PROJECT_NAME;
 			pkg.version = "0.0.0";
 
 			var url = pkg.repository.url;
 			pkg.repository.url = "";
+
 			rbp.repository.url = url;
+			rbp.repository.branch = branch || "master";
 
 			pkg.config.rbp = rbp;
 
