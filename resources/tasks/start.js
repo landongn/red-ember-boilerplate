@@ -250,7 +250,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var child = cp.spawn("npm", ["install"], {
+		var child = cp.spawn("npm", ["install", "--production"], {
 			env: null,
 			setsid: true,
 			stdio: "inherit"
