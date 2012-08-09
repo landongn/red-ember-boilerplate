@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
 
 	grunt.registerTask("update", "Update RBP", function (branch) {
-		var pkg = require("pkg");
+		var pkg = require("./utils/pkg");
 
 		// Sanity check
 		pkg.rbp = pkg.rbp || {};
