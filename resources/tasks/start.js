@@ -188,6 +188,9 @@ module.exports = function (grunt) {
 				if (props.remote) {
 					remote = props.remote;
 
+					// Spacer
+					grunt.log.writeln("");
+
 					grunt.utils.spawn({
 						cmd: "git",
 						args: ["remote", "add", "origin", props.remote]
