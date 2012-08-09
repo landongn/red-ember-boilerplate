@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+{# paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ #}
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
@@ -7,13 +7,13 @@
 	<head>
 		<meta charset="utf-8" />
 
-		<!-- Use the .htaccess and remove these lines to avoid edge case issues. More info: h5bp.com/b/378 -->
+		{# Use the .htaccess and remove these lines to avoid edge case issues. More info: h5bp.com/b/378 #}
   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-		<!-- Prefetch your CDN URL: http://j.mp/bplatednsfetch -->
+		{# Prefetch your CDN URL: http://j.mp/bplatednsfetch #}
 		<link rel="dns-prefetch" href="{{ STATIC_URL }}" />
 
-		<!-- Set STATIC_URL parameter -->
+		{# Set STATIC_URL parameter #}
 		<link rel="static-url" href="{{ STATIC_URL }}" />
 
 		<title>{% block title %}__PROJECT_TITLE__{% endblock title %}</title>
@@ -21,24 +21,24 @@
 		<meta name="description" content="" />
 		<meta name="author" content="" />
 
-		<!-- Mobile viewport optimized: j.mp/bplateviewport -->
+		{# Mobile viewport optimized: j.mp/bplateviewport #}
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
+		{# Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons #}
 
-		<!-- CSS: implied media="all" -->
+		{# CSS: implied media="all" #}
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
 
 		{% if settings.TEMPLATE_DEBUG %}
-		<!-- holmes.css - CSS Markup Detective: j.mp/holmescss -->
+		{# holmes.css - CSS Markup Detective: j.mp/holmescss #}
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/debug/holmes.css" />
 		{% endif %}
 
-		<!-- change the property_id - this is a default testing analytics account -->
+		{# change the property_id - this is a default testing analytics account #}
 		<meta property="ga:property_id" content="UA-26918715-3"/>
 		<meta property="ga:domain" content="none"/>
 
-		<!-- change the facebook_app_id - this is a for testing localhost:8000 only -->
+		{# change the facebook_app_id - this is a for testing localhost:8000 only #}
 		<meta property="fb:app_id" content="{{ FACEBOOK_APP_ID|default:'256785791077665'}}" />
 		<meta property="og:title" content="{% block og_title %}{% endblock og_title %}" />
 		<meta property="og:image" content="{% block og_image %}{{ ROOT_URL }}/static/img/fb-share.png{% endblock %}" />
@@ -48,9 +48,9 @@
 		<meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
 		<meta property="og:locale" content="en_us" />
 
-		<!-- All JavaScript at the bottom, except for Modernizr and Respond.
-		     Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
-		     For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+		{# All JavaScript at the bottom, except for Modernizr and Respond. #}
+		{# Modernizr enables HTML5 elements & feature detects; For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ #}
+		{# Respond is a polyfill for min/max-width CSS3 Media Queries #}
 		<script src="{{ STATIC_URL }}js/libs/modernizr-2.5.3.min.js"></script>
 		<script src="{{ STATIC_URL }}js/libs/respond.js"></script>
 	</head>
