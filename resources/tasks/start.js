@@ -185,9 +185,6 @@ module.exports = function (grunt) {
 				required: false,
 				"default": null
 			}], function (err, props) {
-				// Spacer
-				grunt.log.writeln("");
-
 				if (props.remote) {
 					remote = props.remote;
 
