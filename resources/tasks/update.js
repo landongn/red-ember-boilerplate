@@ -5,11 +5,11 @@ module.exports = function (grunt) {
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
-		pkg.rbp = pkg.rbp || {};
-		pkg.rbp.repository = pkg.rbp.repository || {};
+		pkg.config.rbp = pkg.config.rbp || {};
+		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
 
-		branch = branch || pkg.rbp.repository.branch || "master";
-		grunt.task.run("install:%".replace("%s", branch));
+		branch = branch || pkg.config.rbp.repository.branch || "master";
+		grunt.task.run("install:%s".replace("%s", branch));
 	});
 
 };
