@@ -88,7 +88,6 @@ module.exports = function (grunt) {
 			var exclude = [
 				"package.json",
 				".gitignore",
-				"grunt.js",
 				"README.md"
 			];
 
