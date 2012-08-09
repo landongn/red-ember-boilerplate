@@ -8,6 +8,7 @@ module.exports = function (grunt) {
 		var pkg = require("../utils/pkg");
 
 		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
+		var branchOverride = (isRBP) ? plug.split("@")[1] : null;
 
 		var completeInstall = function (plug, plugPkg, cb) {
 			if (fs.existsSync("./install.js")) {
@@ -156,7 +157,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln(("[!]".magenta + (action + p.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
-					var plugBranch = plugRepo.branch || "master";
+					var plugBranch = branchOverride || plugRepo.branch || "master";
 					grunt.file.mkdir(plug);
 
 					grunt.utils.spawn({
@@ -209,7 +210,6 @@ module.exports = function (grunt) {
 
 		var initialize = function () {
 			var p = (isRBP && pkg.config.rbp) ? pkg.config.rbp : pkg;
-			var branchOverride = (isRBP) ? plug.split("@")[1] : null;
 
 			grunt.utils.spawn({
 				cmd: "git",
