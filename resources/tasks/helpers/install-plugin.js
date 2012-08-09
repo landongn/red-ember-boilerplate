@@ -7,6 +7,8 @@ module.exports = function (grunt) {
 		var path = require("path");
 		var pkg = require("../utils/pkg");
 
+		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
+
 		var completeInstall = function (plug, plugPkg, cb) {
 			if (fs.existsSync("./install.js")) {
 				fs.unlinkSync("install.js");
@@ -61,7 +63,7 @@ module.exports = function (grunt) {
 				"README.md"
 			];
 
-			if (plug === "master") {
+			if (isRBP) {
 				exclude.push("**/project/**/*");
 			}
 
@@ -78,7 +80,7 @@ module.exports = function (grunt) {
 
 			wrench.rmdirSyncRecursive(plug, true);
 
-			if (plug !== "master") {
+			if (!isRBP) {
 				var plugPaths = grunt.file.expandFiles("**/*");
 
 				for (i = 0, j = plugPaths.length; i < j; i++) {
@@ -104,8 +106,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plug !== "master") {
-
+			if (!isRBP) {
 				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
 				if (plugInitScript) {
@@ -143,17 +144,19 @@ module.exports = function (grunt) {
 				args: ["checkout", "-f", plugPath]
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
-				var pkgRepo = pkg.repository;
-				var plugRepo = plugPkg.repository;
 
-				var action = " " + (plug === "master" ? "Updating" : "Installing") + " ";
+				var p = (isRBP && plugPkg.config.rbp) ? plugPkg.config.rbp : plugPkg;
+
+				var plugRepo = p.repository;
+
+				var action = " " + (isRBP ? "Updating" : "Installing") + " ";
 				var source = (plugRepo ? plugRepo.url : plugPath);
 
 				grunt.log.writeln("");
-				grunt.log.writeln(("[!]".magenta + (action + plugPkg.name + " from " + source).grey).bold);
+				grunt.log.writeln(("[!]".magenta + (action + p.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
-					var plugBranch = plugRepo.branch || pkgRepo.branch || "master";
+					var plugBranch = plugRepo.branch || "master";
 					grunt.file.mkdir(plug);
 
 					grunt.utils.spawn({
@@ -205,14 +208,17 @@ module.exports = function (grunt) {
 		};
 
 		var initialize = function () {
+			var p = (isRBP && pkg.config.rbp) ? pkg.config.rbp : pkg;
+			var branchOverride = (isRBP) ? plug.split("@")[1] : null;
+
 			grunt.utils.spawn({
 				cmd: "git",
 				args: ["init"]
 			}, function (err, result, code) {
 				setGitRemoteRef({
-					name : pkg.name,
-					branch : pkg.repository.branch,
-					repo : pkg.repository.url
+					name : p.name,
+					branch : branchOverride || p.repository.branch,
+					repo : p.repository.url
 				}, function () {
 					continueInstallPlugin(plug, cb);
 				});

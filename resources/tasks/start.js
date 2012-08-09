@@ -58,6 +58,8 @@ module.exports = function (grunt) {
 				repository: pkg.repository
 			};
 
+			pkg.save();
+
 			// Set pkg.repository branch
 			rbp.repository.branch = branch || "master";
 			pkg.config.rbp = rbp;
