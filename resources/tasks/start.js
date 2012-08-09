@@ -31,6 +31,7 @@ module.exports = function (grunt) {
 
 		var removeBuiltIns = function () {
 			var builtIns = [
+				"init",
 				"concat",
 				"min",
 				"qunit",
