@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
 
 		branch = branch || pkg.config.rbp.repository.branch || "master";
-		grunt.task.run("install:%s".replace("%s", branch));
+		grunt.task.run("install:%s".replace("red-boilerplate@%s", branch));
 	});
 
 };
