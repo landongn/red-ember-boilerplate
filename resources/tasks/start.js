@@ -12,6 +12,7 @@ module.exports = function (grunt) {
 		var whitelist = [];
 
 		var prompt;
+		var remote;
 
 		var projectName = pkg.config.vars.PROJECT_NAME;
 		var projectTitle = pkg.config.vars.PROJECT_TITLE;
@@ -63,7 +64,7 @@ module.exports = function (grunt) {
 			pkg.version = "0.0.0";
 
 			var url = pkg.repository.url;
-			pkg.repository.url = "";
+			pkg.repository.url = remote || "";
 
 			rbp.repository.url = url;
 			rbp.repository.branch = branch || "master";
@@ -177,15 +178,18 @@ module.exports = function (grunt) {
 			prompt.start();
 
 			prompt.get([{
-				name: "init",
+				name: "remote",
 				message: "Github repository url (This can be left blank)?",
+				validator: /^git\:\/\/*/,
 				required: false,
 				"default": null
 			}], function (err, props) {
-				if (props.init) {
+				if (props.remote) {
+					remote = props.remote;
+
 					grunt.utils.spawn({
 						cmd: "git",
-						args: ["remote", "add", "origin", props.init]
+						args: ["remote", "add", "origin", props.remote]
 					}, gatherPlugins);
 				} else {
 					gatherPlugins();
