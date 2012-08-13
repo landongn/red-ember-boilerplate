@@ -60,6 +60,7 @@ module.exports = function (grunt) {
 			"node_modules/**/*",
 			".{git,sass-cache}/**/*",
 			"**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
+			"**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
 			"**/*.min.{js,css}"
 		];
 
