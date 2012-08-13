@@ -57,6 +57,7 @@ module.exports = function (grunt) {
 
 		var exclude = [
 			"{node_modules,.git,.sass-cache}",
+			"env/**/*",
 			"node_modules/**/*",
 			".{git,sass-cache}/**/*",
 			"**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
