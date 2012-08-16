@@ -237,7 +237,7 @@ module.exports = function (grunt) {
 		};
 
 		var initialize = function () {
-			var p = (isRBP && pkg.config.rbp) ? pkg.config.rbp : pkg;
+			var p = pkg.config.rbp;
 
 			grunt.utils.spawn({
 				cmd: "git",
