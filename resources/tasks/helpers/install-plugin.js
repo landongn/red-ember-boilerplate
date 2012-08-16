@@ -174,7 +174,7 @@ module.exports = function (grunt) {
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
 
-				var p = (isRBP && plugPkg.config.rbp) ? plugPkg.config.rbp : plugPkg;
+				var p = (plugPkg.config && plugPkg.config.rbp) ? plugPkg.config.rbp : plugPkg;
 
 				var plugRepo = p.repository;
 
@@ -237,7 +237,7 @@ module.exports = function (grunt) {
 		};
 
 		var initialize = function () {
-			var p = (isRBP && pkg.config.rbp) ? pkg.config.rbp : pkg;
+			var p = (pkg.config && pkg.config.rbp) ? pkg.config.rbp : pkg;
 
 			grunt.utils.spawn({
 				cmd: "git",
