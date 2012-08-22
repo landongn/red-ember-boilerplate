@@ -132,10 +132,18 @@ module.exports = function (grunt) {
 
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
+			var dep;
 
-			for (var dep in plugPkg.dependencies) {
+			for (dep in plugPkg.dependencies) {
 				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
 					pkg.dependencies[dep] = plugPkg.dependencies[dep];
+					callUpdate = true;
+				}
+			}
+
+			for (dep in plugPkg.devDependencies) {
+				if (!pkg.devDependencies[dep] || pkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
+					pkg.devDependencies[dep] = plugPkg.devDependencies[dep];
 					callUpdate = true;
 				}
 			}
