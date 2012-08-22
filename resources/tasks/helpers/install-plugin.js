@@ -8,7 +8,12 @@ module.exports = function (grunt) {
 		var pkg = require("../utils/pkg");
 
 		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
-		var branchOverride = (isRBP) ? plug.split("@")[1] : null;
+		var branchOverride = plug.split("@");
+
+		if (branchOverride.length) {
+			plug = branchOverride[0];
+			branchOverride = branchOverride[1];
+		}
 
 		var completeInstall = function (plug, plugPkg, cb) {
 			if (fs.existsSync("./install.js")) {
