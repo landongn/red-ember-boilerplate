@@ -12,4 +12,6 @@ module.exports = function (grunt) {
 		grunt.task.run(this.data);
 	});
 
+	grunt.config.set("build.start", "start");
+
 };
