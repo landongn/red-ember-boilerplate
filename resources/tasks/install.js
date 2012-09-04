@@ -1,7 +1,7 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	grunt.registerTask("install", "Install a plugin", function () {
+	grunt.registerTask("install", "Install a plugin", function (plugin, isUpdate) {
 		var pkg = require("./utils/pkg");
 		var done = this.async();
 
@@ -11,9 +11,7 @@ module.exports = function (grunt) {
 			}
 		});
 
-		var plugArr = arguments;
-
-		if (!plugArr.length) {
+		if (!plugin) {
 			grunt.helper("check_for_available_plugins", function (plugins) {
 				grunt.log.writeln("");
 				grunt.log.writeln("Install plugins with grunt install:my-plugin-name");
@@ -53,8 +51,6 @@ module.exports = function (grunt) {
 				done();
 			});
 		} else {
-			var i = 0;
-
 			var tmpDir = ".rbp-temp";
 			var fs = require("fs");
 			var wrench = require("wrench");
@@ -66,32 +62,16 @@ module.exports = function (grunt) {
 			grunt.file.mkdir(tmpDir);
 			grunt.file.setBase(tmpDir);
 
-			(function install (count) {
-				if (!plugArr[count]) {
-					return;
+			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
+				grunt.file.setBase("../");
+				wrench.rmdirSyncRecursive(tmpDir, true);
+
+				if (stop === true) {
+					done(false);
+				} else {
+					done();
 				}
-
-				grunt.helper("install_plugin", plugArr[count], function (stop) {
-					if (stop === true) {
-						grunt.file.setBase("../");
-						wrench.rmdirSyncRecursive(tmpDir, true);
-						done(false);
-
-						return;
-					}
-
-					count++;
-
-					if (plugArr[count]) {
-						install(count);
-					} else {
-						grunt.file.setBase("../");
-						wrench.rmdirSyncRecursive(tmpDir, true);
-
-						done();
-					}
-				});
-			}(i));
+			});
 		}
 	});
 

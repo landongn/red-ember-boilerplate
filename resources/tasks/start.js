@@ -149,7 +149,7 @@ module.exports = function (grunt) {
 							return;
 						}
 
-						grunt.helper("install_plugin", plugArr[count], function (stop) {
+						grunt.helper("install_plugin", plugArr[count], null, function (stop) {
 							if (stop === true) {
 								removeTmpDir(tmpDir);
 								done(false);

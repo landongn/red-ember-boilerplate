@@ -1,7 +1,7 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	grunt.registerHelper("install_plugin", function (plug, cb) {
+	grunt.registerHelper("install_plugin", function (plug, isUpdate, cb) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
@@ -95,6 +95,10 @@ module.exports = function (grunt) {
 				".gitignore",
 				"README.md"
 			];
+
+			if (isUpdate) {
+				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
+			}
 
 			if (isRBP) {
 				updatePackageJSON(plug);
@@ -266,7 +270,7 @@ module.exports = function (grunt) {
 			});
 		};
 
-		if (pkg.config.installed_plugins[plug]) {
+		if (!isUpdate && pkg.config.installed_plugins[plug]) {
 			var prompt = require("prompt");
 			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";
