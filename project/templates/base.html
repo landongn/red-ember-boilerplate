@@ -57,7 +57,13 @@
 	<body class="{% block page_class %}page{% endblock page_class %}{% if settings.TEMPLATE_DEBUG %} holmes-debug{% endif %}" data-page-class="{% block page_data %}Page{% endblock page_data %}">
 		<div id="container">
 			<header>
-				<nav role="navigation"></nav>
+				<nav role="navigation">
+					<ul>
+						<li><a href="/index.html">Home</a></li>
+						<li><a href="/about.html">About</a></li>
+						<li><a href="/contact.html">Contact</a></li>
+					</ul>
+				</nav>
 			</header>
 			<div id="main" role="main">
 				{% block content %}
