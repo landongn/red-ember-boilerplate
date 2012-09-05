@@ -85,15 +85,15 @@
 				require.config({
 					baseUrl : "{{STATIC_URL}}js",
 					paths: {
-						"__PROJECT_NAME__/site" : "site.min"
+						"__PROJECT_NAME__/Site" : "site.min"
 					}
 				});
 			</script>
 		{% endif %}
 
 		<script>
-			require(["__PROJECT_NAME__/site"], function (site) {
-				console.log(site);
+			require(["__PROJECT_NAME__/Site"], function (Site) {
+				Site.initialize();
 			});
 		</script>
 
