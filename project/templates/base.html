@@ -29,11 +29,6 @@
 		{# CSS: implied media="all" #}
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
 
-		{% if settings.TEMPLATE_DEBUG %}
-		{# holmes.css - CSS Markup Detective: j.mp/holmescss #}
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/debug/holmes.css" />
-		{% endif %}
-
 		{# change the property_id - this is a default testing analytics account #}
 		<meta property="ga:property_id" content="UA-26918715-3"/>
 		<meta property="ga:domain" content="none"/>
@@ -54,7 +49,7 @@
 		<script src="{{ STATIC_URL }}js/libs/modernizr-2.5.3.min.js"></script>
 		<script src="{{ STATIC_URL }}js/libs/respond.js"></script>
 	</head>
-	<body class="{% block page_class %}page{% endblock page_class %}{% if settings.TEMPLATE_DEBUG %} holmes-debug{% endif %}" data-page-class="{% block page_data %}Page{% endblock page_data %}">
+	<body class="{% block page_class %}page{% endblock page_class %}" data-page-class="{% block page_data %}Page{% endblock page_data %}">
 		<div id="container">
 			<header>
 				<nav role="navigation">
