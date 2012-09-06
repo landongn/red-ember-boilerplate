@@ -47,13 +47,6 @@ If the project you are working on is using red-boilerplate, you still have to ru
     git clone https://github.com/ff0000/project-name.git
     grunt start
 
-
-### Using the rbp NPM module
-
-    npm install rbp -g
-    rbp new sampleProjectName
-
-
 ### Usage
 
 Run `grunt --help` for a list of available tasks.
