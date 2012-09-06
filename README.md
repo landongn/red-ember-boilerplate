@@ -39,6 +39,21 @@ Creating a project
     git clone https://github.com/ff0000/red-boilerplate.git
     grunt start
 
+Cloning a project
+------------------
+
+If the project you are working on is using red-boilerplate, you still have to run `grunt start` to download all necessary dependencies (they are not checked into the repo).
+
+    git clone https://github.com/ff0000/project-name.git
+    grunt start
+
+
+### Using the rbp NPM module
+
+    npm install rbp -g
+    rbp new sampleProjectName
+
+
 ### Usage
 
 Run `grunt --help` for a list of available tasks.
