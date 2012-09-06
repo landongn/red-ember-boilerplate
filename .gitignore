@@ -85,3 +85,7 @@ node_modules
 
 # RED Boilerplate
 .rbp-temp
+
+# RBP Plugins
+.bundle
+resources/compass/gems
