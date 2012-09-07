@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 			} else if (data.length) {
 				var installedVersion = data.match(/[\d\.]+/).join("");
 
-				while (installedVersion.split(".") < 3) {
+				while (installedVersion.split(".").length < 3) {
 					installedVersion += ".0";
 				}
 
