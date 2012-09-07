@@ -1,7 +1,6 @@
 <!doctype html>
 {# paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ #}
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if lt IE 8]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
 	<head>
@@ -29,11 +28,6 @@
 		{# CSS: implied media="all" #}
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
 
-		{% if settings.TEMPLATE_DEBUG %}
-		{# holmes.css - CSS Markup Detective: j.mp/holmescss #}
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/debug/holmes.css" />
-		{% endif %}
-
 		{# change the property_id - this is a default testing analytics account #}
 		<meta property="ga:property_id" content="UA-26918715-3"/>
 		<meta property="ga:domain" content="none"/>
@@ -48,16 +42,20 @@
 		<meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
 		<meta property="og:locale" content="en_us" />
 
-		{# All JavaScript at the bottom, except for Modernizr and Respond. #}
+		{# All JavaScript at the bottom, except for Modernizr. #}
 		{# Modernizr enables HTML5 elements & feature detects; For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ #}
-		{# Respond is a polyfill for min/max-width CSS3 Media Queries #}
-		<script src="{{ STATIC_URL }}js/libs/modernizr-2.5.3.min.js"></script>
-		<script src="{{ STATIC_URL }}js/libs/respond.js"></script>
+		<script src="{{ STATIC_URL }}js/libs/modernizr.js"></script>
 	</head>
-	<body class="{% block page_class %}page{% endblock page_class %}{% if settings.TEMPLATE_DEBUG %} holmes-debug{% endif %}" data-page-class="{% block page_data %}Page{% endblock page_data %}">
+	<body class="{% block page_class %}page{% endblock page_class %}">
 		<div id="container">
 			<header>
-				<nav role="navigation"></nav>
+				<nav role="navigation">
+					<ul>
+						<li><a href="/index.html">Home</a></li>
+						<li><a href="/about.html">About</a></li>
+						<li><a href="/contact.html">Contact</a></li>
+					</ul>
+				</nav>
 			</header>
 			<div id="main" role="main">
 				{% block content %}
@@ -68,35 +66,37 @@
 			</footer>
 		</div>
 
-		<script src="{{STATIC_URL}}js/libs/require.js"></script>
-
 		{% if settings.TEMPLATE_DEBUG %}
-
-			<script src="{{STATIC_URL}}js/config.js"></script>
-			<script>
-				require.config({
-					baseUrl : "{{STATIC_URL}}js",
-					urlArgs : "cacheBust=" + (new Date()).getTime()
-				});
-			</script>
-
-		{% else %}
-
-			<script>
-				require.config({
-					baseUrl : "{{STATIC_URL}}js",
-					paths: {
-						"__PROJECT_NAME__/site" : "site.min"
-					}
-				});
-			</script>
-		{% endif %}
-
+		<script src="{{STATIC_URL}}js/libs/require.js"></script>
+		<script src="{{STATIC_URL}}js/config.js"></script>
 		<script>
-			require(["__PROJECT_NAME__/site"], function (site) {
-				console.log(site);
+			require.config({
+				baseUrl : "{{STATIC_URL}}js",
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
+		{% else %}
+		<script>
+			require.config({
+				baseUrl : "{{STATIC_URL}}js",
+				paths : {
+					"__PROJECT_NAME__/Site" : "site.min"
+				}
+			});
+		</script>
+		{% endif %}
+		<script>
+			require(["__PROJECT_NAME__/Site"], function (Site) {
+				Site.initialize();
 			});
 		</script>
 
+		{# Chrome Frame prompt for IE9 and below. #}
+		{# See: project/static/js/rosy/modules/google-chrome-frame for more info. #}
+		<!--[if lte IE 9]>
+		<script>
+			require(["ChromeFrame"]);
+		</script>
+		<![endif]-->
 	</body>
 </html>
