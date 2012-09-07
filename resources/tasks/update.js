@@ -2,12 +2,12 @@
 module.exports = function (grunt) {
 
 	grunt.registerTask("update", "Update RBP", function (plugin) {
+		plugin = plugin || "red-boilerplate";
+
 		var pkg = require("./utils/pkg");
 
 		var branch;
 		var bits = plugin.split("@");
-
-		plugin = "red-boilerplate";
 
 		if (bits.length === 1) {
 			plugin = bits[0];
