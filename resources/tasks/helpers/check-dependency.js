@@ -29,6 +29,10 @@ module.exports = function (grunt) {
 			} else if (data.length) {
 				var installedVersion = data.match(/[\d\.]+/).join("");
 
+				while (installedVersion.split(".") < 3) {
+					installedVersion += ".0";
+				}
+
 				dep.installedVersion = installedVersion;
 
 				switch (range) {
