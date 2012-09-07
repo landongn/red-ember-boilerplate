@@ -42,11 +42,9 @@
 		<meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
 		<meta property="og:locale" content="en_us" />
 
-		{# All JavaScript at the bottom, except for Modernizr and Respond. #}
+		{# All JavaScript at the bottom, except for Modernizr. #}
 		{# Modernizr enables HTML5 elements & feature detects; For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ #}
-		{# Respond is a polyfill for min/max-width CSS3 Media Queries #}
 		<script src="{{ STATIC_URL }}js/libs/modernizr-2.5.3.min.js"></script>
-		<script src="{{ STATIC_URL }}js/libs/respond.js"></script>
 	</head>
 	<body class="{% block page_class %}page{% endblock page_class %}" data-page-class="{% block page_data %}Page{% endblock page_data %}">
 		<div id="container">
