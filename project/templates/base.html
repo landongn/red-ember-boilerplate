@@ -67,28 +67,24 @@
 		</div>
 
 		{% if settings.TEMPLATE_DEBUG %}
-
-			<script src="{{STATIC_URL}}js/libs/require.js"></script>
-			<script src="{{STATIC_URL}}js/config.js"></script>
-			<script>
-				require.config({
-					baseUrl : "{{STATIC_URL}}js",
-					urlArgs : "cacheBust=" + (new Date()).getTime()
-				});
-			</script>
-
+		<script src="{{STATIC_URL}}js/libs/require.js"></script>
+		<script src="{{STATIC_URL}}js/config.js"></script>
+		<script>
+			require.config({
+				baseUrl : "{{STATIC_URL}}js",
+				urlArgs : "cacheBust=" + (new Date()).getTime()
+			});
+		</script>
 		{% else %}
-
-			<script>
-				require.config({
-					baseUrl : "{{STATIC_URL}}js",
-					paths: {
-						"__PROJECT_NAME__/Site" : "site.min"
-					}
-				});
-			</script>
+		<script>
+			require.config({
+				baseUrl : "{{STATIC_URL}}js",
+				paths : {
+					"__PROJECT_NAME__/Site" : "site.min"
+				}
+			});
+		</script>
 		{% endif %}
-
 		<script>
 			require(["__PROJECT_NAME__/Site"], function (Site) {
 				Site.initialize();
