@@ -257,7 +257,8 @@ module.exports = function (grunt) {
 									var assert = grunt.helper("get_assertion", props.force);
 
 									if (assert) {
-										pkg.config.warnings = warnings;
+										pkg.config.warnings = pkg.config.warnings || [];
+										pkg.config.warnings = pkg.config.warnings.concat(warnings);
 										pkg.save();
 
 										installDependencies(plug, plugPkg, cb);
