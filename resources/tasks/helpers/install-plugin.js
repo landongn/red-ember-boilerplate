@@ -196,6 +196,7 @@ module.exports = function (grunt) {
 
 				for (var bin in sysDeps) {
 					iterator.push({
+						plugin : plugPkg.name,
 						bin : bin,
 						version : sysDeps[bin]
 					});
@@ -225,7 +226,7 @@ module.exports = function (grunt) {
 
 								for (j = 0, k = warnings.length; j < k; j++) {
 									warn = warnings[j];
-									console.warn("[!] ".yellow + plugPkg.name.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
+									console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
 									". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
 								}
 
@@ -243,6 +244,9 @@ module.exports = function (grunt) {
 									var assert = grunt.helper("get_assertion", props.force);
 
 									if (assert) {
+										pkg.config.warnings = warnings;
+										pkg.save();
+
 										installDependencies(plug, plugPkg, cb);
 									} else {
 										if (cb) {
