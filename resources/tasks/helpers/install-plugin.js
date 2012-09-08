@@ -155,7 +155,7 @@ module.exports = function (grunt) {
 			if (!isRBP) {
 				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
-				var plugSrc = "./" + plug + "package.json";
+				var plugSrc = "./" + plug + "/package.json";
 				var plugSrcPkg;
 
 				if (plugInitScript) {
