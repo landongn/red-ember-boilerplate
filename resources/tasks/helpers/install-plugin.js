@@ -167,7 +167,9 @@ module.exports = function (grunt) {
 					plugSrcPkg = grunt.file.readJSON(plugSrc);
 
 					if (plugSrcPkg.version) {
+						plugPkg.name = plugSrcPkg.name;
 						plugPkg.version = plugSrcPkg.version;
+						plugPkg.description = plugSrcPkg.description;
 					}
 				}
 
