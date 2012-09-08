@@ -249,8 +249,8 @@ module.exports = function (grunt) {
 
 								prompt.get([{
 									name: "force",
-									message: "WARNING: ".yellow + warnings.length + " compatibility warning" + (warnings.length > 1 ? "s were" : " was") +
-									" found. This might lead to RED Boilerplate funkiness. Are you sure you want to continue?".magenta,
+									message: "WARNING: ".yellow + (warnings.length + " compatibility warning" + (warnings.length > 1 ? "s were" : " was") +
+									" found. This might lead to RED Boilerplate issues. Are you sure you want to continue?").magenta,
 									validator: /^y$|^n$/i,
 									"default": "Y/n"
 								}], function (err, props) {
