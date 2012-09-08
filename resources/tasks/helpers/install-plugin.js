@@ -155,9 +155,20 @@ module.exports = function (grunt) {
 			if (!isRBP) {
 				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
+				var plgSrc = "./" + plug + "package.json";
+				var plugSrcPkg;
+
 				if (plugInitScript) {
 					pkg.scripts = pkg.scripts || {};
 					pkg.scripts.install = pkg.scripts.install ? [pkg.scripts.install, plugInitScript].join("; ") : plugInitScript;
+				}
+
+				if (fs.existsSync(plugSrc)) {
+					plugSrcPkg = grunt.file.readJSON(plgSrc);
+
+					if (plugSrcPkg.version) {
+						plugPkg.version = plugSrcPkg.version;
+					}
 				}
 
 				pkg.config.installed_plugins[plug] = {
