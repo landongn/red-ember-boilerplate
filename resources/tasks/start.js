@@ -276,12 +276,14 @@ module.exports = function (grunt) {
 			}
 
 			var initScript = pkg.scripts.initialize[i];
-			var args = initScript.split(" ");
+			var args = initScript.split(" "),
+				cmd = args.shift(),
+				file = fs.realpathSync(args.join(""));
 
-			if (args.shift() === "node" && fs.existsSync("./" + (args = args.join("")))) {
+			if (cmd === "node" && fs.existsSync(file)) {
 				grunt.log.subhead(args);
 
-				var initializer = require(args);
+				var initializer = require(file);
 
 				initializer.run(function (error) {
 					if (error) {

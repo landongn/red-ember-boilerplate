@@ -35,10 +35,12 @@ module.exports = function (grunt) {
 				var install = (plugPkg.scripts || {}).install;
 
 				if (install) {
-					var args = install.split(" ");
+					var args = install.split(" "),
+						cmd = args.shift(),
+						file = fs.realpathSync(args.join(""));
 
-					if (args.shift() === "node" && fs.existsSync("./" + (args = args.join("")))) {
-						var initializer = require(args);
+					if (cmd === "node" && fs.existsSync(file)) {
+						var initializer = require(file);
 
 						initializer.run(function (error) {
 							if (error) {
