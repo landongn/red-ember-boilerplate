@@ -37,19 +37,19 @@ module.exports = function (grunt) {
 				if (install) {
 					var args = install.split(" ");
 
-					var child = cp.spawn(args.shift(), args, {
-						env: null,
-						setsid: true
-					});
+					if (args.shift() === "node" && fs.existsSync("./" + args)) {
+						var initializer = require("./" + args);
 
-					process.stdin.resume();
+						initializer.run(function (error) {
+							if (error) {
+								grunt.fail.warn(error);
+							}
 
-					process.stdin.pipe(child);
-					child.stdout.pipe(process.stdout);
-
-					child.addListener("exit", function (code) {
+							completeInstall(plug, plugPkg, cb);
+						});
+					} else {
 						completeInstall(plug, plugPkg, cb);
-					});
+					}
 				} else {
 					completeInstall(plug, plugPkg, cb);
 				}

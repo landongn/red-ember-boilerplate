@@ -279,15 +279,20 @@ module.exports = function (grunt) {
 			grunt.log.subhead(initScript);
 
 			var args = initScript.split(" ");
-			var child = cp.spawn(args.shift(), args, {
-				env: null,
-				setsid: true,
-				stdio: "inherit"
-			});
 
-			child.addListener("exit", function () {
+			if (args.shift() === "node" && fs.existsSync("./" + args)) {
+				var initializer = require("./" + args);
+
+				initializer.run(function (error) {
+					if (error) {
+						grunt.fail.warn(error);
+					}
+
+					runInitializeScripts(++i);
+				});
+			} else {
 				runInitializeScripts(++i);
-			});
+			}
 		};
 
 		var checkSystemDependencies = function (sysDeps) {
