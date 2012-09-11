@@ -162,7 +162,7 @@ module.exports = function (grunt) {
 					pkg.scripts = pkg.scripts || {};
 					initialize = pkg.scripts.initialize;
 
-					if (initialize.length) {
+					if (initialize && initialize.length) {
 						if (initialize.indexOf(plugInitScript) === -1) {
 							pkg.scripts.initialize.push(plugInitScript);
 						}
