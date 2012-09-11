@@ -62,6 +62,7 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			pkg.name = pkg.config.vars.PROJECT_NAME;
+			pkg.description = "";
 			pkg.version = "0.0.0";
 
 			var url = pkg.repository.url;
