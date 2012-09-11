@@ -268,15 +268,37 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var runInitializeScripts = function (i) {
+			i = (i || 0);
+
+			if (!pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
+				getThisPartyStarted();
+			}
+
+			var initScript = pkg.scripts.initialize[i];
+			grunt.log.subhead(initScript);
+
+			var args = initScript.split(" ");
+			var child = cp.spawn(args.shift(), args, {
+				env: null,
+				setsid: true,
+				stdio: "inherit"
+			});
+
+			child.addListener("exit", function () {
+				runInitializeScripts(++i);
+			});
+		};
+
 		var checkSystemDependencies = function (sysDeps) {
 			if (sysDeps) {
 				grunt.helper("check_dependencies", sysDeps, function (name) {
-					getThisPartyStarted();
+					runInitializeScripts();
 				}, function (error) {
 					done(error);
 				});
 			} else {
-				getThisPartyStarted();
+				runInitializeScripts();
 			}
 		};
 
