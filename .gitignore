@@ -89,3 +89,13 @@ node_modules
 # RBP Plugins
 .bundle
 resources/compass/gems
+
+# Avoid committing generated CSS
+project/static/css/*.css
+project/static/css/*/*.css
+project/static/css/*/*/*.css
+
+# Avoid committing minified JS
+project/static/js/*.min.js
+project/static/js/*/*.min.js
+project/static/js/*/*/*.min.js
