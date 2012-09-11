@@ -162,8 +162,10 @@ module.exports = function (grunt) {
 					pkg.scripts = pkg.scripts || {};
 					install = pkg.scripts.install;
 
-					if (install && install.indexOf(plugInitScript) === -1) {
-						pkg.scripts.install = [install, plugInitScript].join("; ");
+					if (install) {
+						if (install.indexOf(plugInitScript) === -1) {
+							pkg.scripts.install = [install, plugInitScript].join("; ");
+						}
 					} else {
 						pkg.scripts.install = plugInitScript;
 					}
