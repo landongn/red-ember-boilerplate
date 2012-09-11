@@ -110,8 +110,6 @@ module.exports = function (grunt) {
 			};
 
 			grunt.helper("prompt", {}, options, function(err, props) {
-				removeBuiltIns();
-
 				var name = props.name;
 				var title = props.title;
 
@@ -174,6 +172,7 @@ module.exports = function (grunt) {
 		};
 
 		var gatherPlugins = function () {
+			removeBuiltIns();
 			grunt.helper("check_for_available_plugins", promptForSettings);
 		};
 
