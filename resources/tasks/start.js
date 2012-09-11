@@ -51,8 +51,6 @@ module.exports = function (grunt) {
 		};
 
 		var finalizeInstall = function () {
-			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
-
 			var rbp = {
 				name: pkg.name,
 				version: pkg.version,
@@ -75,6 +73,9 @@ module.exports = function (grunt) {
 
 			pkg.config.initialized = true;
 			pkg.save();
+
+			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
+			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
 			done();
 		};
@@ -253,7 +254,11 @@ module.exports = function (grunt) {
 
 		var getThisPartyStarted = function () {
 			if (pkg.config.initialized) {
+				grunt.log.writeln();
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
+
+				grunt.task.run("tasks");
 				done();
 			} else {
 				prompt = require("prompt");
