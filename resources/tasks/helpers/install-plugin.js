@@ -37,8 +37,8 @@ module.exports = function (grunt) {
 				if (install) {
 					var args = install.split(" ");
 
-					if (args.shift() === "node" && fs.existsSync("./" + args)) {
-						var initializer = require("./" + args);
+					if (args.shift() === "node" && fs.existsSync("./" + (args = args.join("")))) {
+						var initializer = require(args);
 
 						initializer.run(function (error) {
 							if (error) {
