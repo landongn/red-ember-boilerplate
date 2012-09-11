@@ -4,8 +4,8 @@ module.exports = function (grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		meta: {
-			projectName: "{#__PROJECT_NAME__#}",
-			projectTitle: "{#__PROJECT_TITLE__#}"
+			projectName: "__PROJECT_NAME__",
+			projectTitle: "__PROJECT_TITLE__"
 		}
 	});
 

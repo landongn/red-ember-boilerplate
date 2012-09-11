@@ -250,13 +250,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var child = cp.spawn("npm", ["install", "--production"], {
-			env: null,
-			setsid: true,
-			stdio: "inherit"
-		});
-
-		child.addListener("exit", function () {
+		var getThisPartyStarted = function () {
 			if (pkg.config.initialized) {
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
 				done();
@@ -272,7 +266,62 @@ module.exports = function (grunt) {
 					args: ["status"]
 				}, checkGitInfo);
 			}
-		});
+		};
+
+		var runInitializeScripts = function (i) {
+			i = (i || 0);
+
+			if (!pkg.scripts || !pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
+				return getThisPartyStarted();
+			}
+
+			var initScript = pkg.scripts.initialize[i];
+			var args = initScript.split(" ");
+
+			if (args.shift() === "node" && fs.existsSync("./" + (args = args.join("")))) {
+				grunt.log.subhead(args);
+
+				var initializer = require(args);
+
+				initializer.run(function (error) {
+					if (error) {
+						grunt.fail.warn(error);
+					}
+
+					runInitializeScripts(++i);
+				});
+			} else {
+				runInitializeScripts(++i);
+			}
+		};
+
+		var checkSystemDependencies = function (sysDeps) {
+			if (sysDeps) {
+				grunt.helper("check_dependencies", sysDeps, function (name) {
+					runInitializeScripts();
+				}, function (error) {
+					done(error);
+				});
+			} else {
+				runInitializeScripts();
+			}
+		};
+
+		var installNPMModules = function () {
+			var child = cp.spawn("npm", ["install", "--production"], {
+				env: null,
+				setsid: true,
+				stdio: "inherit"
+			});
+
+			child.addListener("exit", function () {
+				checkSystemDependencies(pkg.systemDependencies);
+			});
+		};
+
+		(function () {
+			installNPMModules();
+		}());
 
 	});
 
