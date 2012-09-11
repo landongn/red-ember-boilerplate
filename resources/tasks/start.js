@@ -271,7 +271,7 @@ module.exports = function (grunt) {
 		var runInitializeScripts = function (i) {
 			i = (i || 0);
 
-			if (!pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
+			if (!pkg.scripts || !pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
 				getThisPartyStarted();
 			}
 
