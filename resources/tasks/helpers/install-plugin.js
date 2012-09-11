@@ -166,11 +166,9 @@ module.exports = function (grunt) {
 				if (fs.existsSync(plugSrc)) {
 					plugSrcPkg = grunt.file.readJSON(plugSrc);
 
-					if (plugSrcPkg.version) {
-						plugPkg.name = plugSrcPkg.name;
-						plugPkg.version = plugSrcPkg.version;
-						plugPkg.description = plugSrcPkg.description;
-					}
+					plugPkg.name = plugSrcPkg.name || plugPkg.name;
+					plugPkg.version = plugSrcPkg.version || plugPkg.version;
+					plugPkg.description = plugSrcPkg.description || plugPkg.description;
 				}
 
 				pkg.config.installed_plugins[plug] = {
@@ -200,80 +198,42 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var saveSystemDependencies = function (plug, plugPkg, cb) {
+			var plugSysDeps = plugPkg.systemDependencies,
+				currSysDeps = pkg.systemDependencies || {},
+				regexp = /(?:([<>=]+)?(?:\s+)?)([\d\.]+)/,
+				plugDep, currDep, plugMatch, currMatch;
+
+			for (var dep in plugSysDeps) {
+				plugDep = plugSysDeps[dep];
+				currDep = currSysDeps[dep];
+
+				if (currDep) {
+					plugMatch = plugDep.match(regexp);
+					currMatch = currDep.match(regexp);
+
+					if (plugMatch[2] > currMatch[2]) {
+						currSysDeps[dep] = plugDep;
+					}
+				} else {
+					currSysDeps[dep] = plugDep;
+				}
+			}
+
+			pkg.systemDependencies = currSysDeps;
+			pkg.save();
+
+			installDependencies(plug, plugPkg, cb);
+		};
+
 		var checkSystemDependencies = function (plug, plugPkg, cb) {
 			if (plugPkg && plugPkg.systemDependencies) {
-				var sysDeps = plugPkg.systemDependencies;
-				var iterator = [];
-				var warnings = [];
-				var i = 0;
 
-				for (var bin in sysDeps) {
-					iterator.push({
-						plugin : plugPkg.name,
-						bin : bin,
-						version : sysDeps[bin]
-					});
-				}
-
-				(function check(i) {
-					var dep = iterator[i];
-
-					grunt.helper("check_dependency", dep, function (warning) {
-						if (warning) {
-							if (warning === true && cb) {
-								cb(warning);
-							} else {
-								warnings.push(warning);
-							}
-						}
-
-						if (iterator[++i]) {
-							check(i);
-						} else {
-							var j, k, warn;
-
-							if (warnings.length) {
-								var prompt = require("prompt");
-								prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
-								prompt.delimiter = prompt.delimter || " ";
-
-								for (j = 0, k = warnings.length; j < k; j++) {
-									warn = warnings[j];
-									console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
-									". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
-								}
-
-								console.log();
-
-								prompt.start();
-
-								prompt.get([{
-									name: "force",
-									message: "WARNING: ".yellow + (warnings.length + " compatibility warning" + (warnings.length > 1 ? "s were" : " was") +
-									" found. This might lead to RED Boilerplate issues. Are you sure you want to continue?").magenta,
-									validator: /^y$|^n$/i,
-									"default": "Y/n"
-								}], function (err, props) {
-									var assert = grunt.helper("get_assertion", props.force);
-
-									if (assert) {
-										pkg.config.warnings = pkg.config.warnings || [];
-										pkg.config.warnings = pkg.config.warnings.concat(warnings);
-										pkg.save();
-
-										installDependencies(plug, plugPkg, cb);
-									} else {
-										if (cb) {
-											cb(true);
-										}
-									}
-								});
-							} else {
-								installDependencies(plug, plugPkg, cb);
-							}
-						}
-					});
-				}(i));
+				grunt.helper("check_dependencies", plugPkg, function () {
+					saveSystemDependencies(plug, plugPkg, cb);
+				}, function (error) {
+					cb(error);
+				});
 			} else {
 				installDependencies(plug, plugPkg, cb);
 			}
