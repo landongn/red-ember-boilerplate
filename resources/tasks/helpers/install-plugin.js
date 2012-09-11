@@ -156,11 +156,17 @@ module.exports = function (grunt) {
 				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
 				var plugSrc = "./" + plug + "/package.json";
-				var plugSrcPkg;
+				var plugSrcPkg, install;
 
 				if (plugInitScript) {
 					pkg.scripts = pkg.scripts || {};
-					pkg.scripts.install = pkg.scripts.install ? [pkg.scripts.install, plugInitScript].join("; ") : plugInitScript;
+					install = pkg.scripts.install;
+
+					if (install && install.indexOf(plugInitScript) === -1) {
+						pkg.scripts.install = [install, plugInitScript].join("; ");
+					} else {
+						pkg.scripts.install = plugInitScript;
+					}
 				}
 
 				if (fs.existsSync(plugSrc)) {
