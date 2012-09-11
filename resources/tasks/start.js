@@ -250,6 +250,36 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var getThisPartyStarted = function () {
+			if (pkg.config.initialized) {
+				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				done();
+			} else {
+				prompt = require("prompt");
+				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+				prompt.delimiter = prompt.delimter || " ";
+
+				grunt.log.writeln("");
+
+				grunt.utils.spawn({
+					cmd: "git",
+					args: ["status"]
+				}, checkGitInfo);
+			}
+		};
+
+		var checkSystemDependencies = function (sysDeps) {
+			if (sysDeps) {
+				grunt.helper("check_dependencies", sysDeps, function (name) {
+					getThisPartyStarted();
+				}, function (error) {
+					done(error);
+				});
+			} else {
+				getThisPartyStarted();
+			}
+		};
+
 		var installNPMModules = function () {
 			var child = cp.spawn("npm", ["install", "--production"], {
 				env: null,
@@ -258,38 +288,12 @@ module.exports = function (grunt) {
 			});
 
 			child.addListener("exit", function () {
-				if (pkg.config.initialized) {
-					grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
-					done();
-				} else {
-					prompt = require("prompt");
-					prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
-					prompt.delimiter = prompt.delimter || " ";
-
-					grunt.log.writeln("");
-
-					grunt.utils.spawn({
-						cmd: "git",
-						args: ["status"]
-					}, checkGitInfo);
-				}
+				checkSystemDependencies(pkg.systemDependencies);
 			});
 		};
 
-		var checkSystemDependencies = function (sysDeps) {
-			if (sysDeps) {
-				grunt.helper("check_dependencies", sysDeps, function (name) {
-					installNPMModules();
-				}, function (error) {
-					done(error);
-				});
-			} else {
-				installNPMModules();
-			}
-		};
-
 		(function () {
-			checkSystemDependencies(pkg.systemDependencies);
+			installNPMModules();
 		}());
 
 	});
