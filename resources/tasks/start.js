@@ -272,7 +272,7 @@ module.exports = function (grunt) {
 			i = (i || 0);
 
 			if (!pkg.scripts || !pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
-				getThisPartyStarted();
+				return getThisPartyStarted();
 			}
 
 			var initScript = pkg.scripts.initialize[i];
