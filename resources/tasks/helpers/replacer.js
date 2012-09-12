@@ -69,20 +69,29 @@ module.exports = function (grunt) {
 			"**/*.min.{js,css}"
 		]);
 
+		grunt.log.subhead("Replacing Files");
+
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
 
 			if (!grunt.file.isMatch(excludeFiles, current) && fs.statSync(current).isFile()) {
+
+				console.log(current);
+
 				var contents = grunt.file.read(current, "utf-8");
 				contents = grunt.helper("replace_vars", contents.toString());
 				grunt.file.write(current, contents);
 			}
 		}
 
+		grunt.log.subhead("Replacing Directories");
+
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
 
 			if (!grunt.file.isMatch(excludeFiles, current)) {
+				console.log(current);
+
 				newFile = grunt.helper("replace_vars", current.toString());
 
 				if (current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
