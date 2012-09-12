@@ -27,35 +27,32 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var doReplacement = function (plug, plugPkg, cb) {
+		var runInstaller = function (plug, plugPkg, cb) {
 			grunt.file.setBase("../");
 
-			// Replace variables
-			grunt.helper("replace_in_files", function () {
-				var install = (plugPkg.scripts || {}).install;
+			var install = (plugPkg.scripts || {}).install;
 
-				if (install) {
-					var args = install.split(" "),
-						cmd = args.shift(),
-						file = fs.realpathSync(args.join(""));
+			if (install) {
+				var args = install.split(" "),
+					cmd = args.shift(),
+					file = fs.realpathSync(args.join(""));
 
-					if (cmd === "node" && fs.existsSync(file)) {
-						var initializer = require(file);
+				if (cmd === "node" && fs.existsSync(file)) {
+					var initializer = require(file);
 
-						initializer.run(function (error) {
-							if (error) {
-								grunt.fail.warn(error);
-							}
+					initializer.run(function (error) {
+						if (error) {
+							grunt.fail.warn(error);
+						}
 
-							completeInstall(plug, plugPkg, cb);
-						});
-					} else {
 						completeInstall(plug, plugPkg, cb);
-					}
+					});
 				} else {
 					completeInstall(plug, plugPkg, cb);
 				}
-			});
+			} else {
+				completeInstall(plug, plugPkg, cb);
+			}
 		};
 
 		var updatePackageJSON = function (plug) {
@@ -87,6 +84,8 @@ module.exports = function (grunt) {
 		};
 
 		var copyFiles = function (plug, plugPkg, cb) {
+			console.log("foo?");
+
 			var wrench = require("wrench");
 			var scope = (plugPkg.config || {}).scope || "";
 			var repoPaths = grunt.file.expandFiles("./" + plug + "/**/*");
@@ -133,7 +132,17 @@ module.exports = function (grunt) {
 				}
 			}
 
-			doReplacement(plug, plugPkg, cb);
+			runInstaller(plug, plugPkg, cb);
+		};
+
+		var doReplacement = function (plug, plugPkg, cb) {
+			console.log("foo?");
+
+			// Replace variables
+			grunt.helper("replace_in_files", function () {
+				console.log("foo?");
+				copyFiles(plug, plugPkg, cb);
+			});
 		};
 
 		var installDependencies = function (plug, plugPkg, cb) {
@@ -199,12 +208,12 @@ module.exports = function (grunt) {
 				});
 
 				child.addListener("exit", function () {
-					copyFiles(plug, plugPkg, cb);
+					doReplacement(plug, plugPkg, cb);
 				});
 
 				return;
 			} else {
-				copyFiles(plug, plugPkg, cb);
+				doReplacement(plug, plugPkg, cb);
 			}
 		};
 
