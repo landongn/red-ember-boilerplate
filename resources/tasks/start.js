@@ -90,17 +90,40 @@ module.exports = function (grunt) {
 		};
 
 		var promptForSettings = function (plugins) {
-			var i, j, plugin;
+			var i, j, plugin,
+				installed = pkg.config.installed_plugins;
+
+			if (installed) {
+				var plugTitle;
+
+				for (var key in installed) {
+					if (!plugTitle) {
+						grunt.log.writeln();
+						grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+						plugTitle = true;
+					}
+
+					var plug = installed[key];
+
+					if (typeof plug !== "string") {
+						grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
+					} else {
+						grunt.log.writeln("[+] ".grey + key.cyan + " (%d)".replace("%d", plug).grey);
+					}
+				}
+			}
 
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				options.push({
-					name: plugin,
-					message: "Would you like to include %s?".replace("%s", plugin),
-					validator: /^y$|^n$/i,
-					"default": "Y/n"
-				});
+				if (!installed || !installed[plugin]) {
+					options.push({
+						name: plugin,
+						message: "Would you like to include %s?".replace("%s", plugin),
+						validator: /^y$|^n$/i,
+						"default": "Y/n"
+					});
+				}
 			}
 
 			var removeTmpDir = function (tmpDir) {
