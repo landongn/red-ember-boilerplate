@@ -20,6 +20,11 @@
 	"license": "MIT",
 	"devDependencies": {},
 	"optionalDependencies": {},
+	"systemDependencies": {
+		"grunt": ">=0.3.0",
+		"rbp": ">=2.2.0",
+		"foo": ">=0.1.0"
+	},
 	"engines": {
 		"node": "*"
 	}
