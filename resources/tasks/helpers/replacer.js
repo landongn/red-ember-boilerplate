@@ -51,7 +51,7 @@ module.exports = function (grunt) {
 
 	grunt.registerHelper("replace_in_files", function (cb) {
 		var wrench = require("wrench");
-		var files = grunt.file.expand("{*,{deploy,project,resources,scripts}/**/*}");
+		var files = grunt.file.expand("**/*");
 
 		var i, j, current, newFile,
 			stats;
