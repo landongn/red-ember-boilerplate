@@ -2,7 +2,7 @@
 
 module.exports = function (grunt) {
 
-	grunt.registerTask("start", "Get your party started", function (branch) {
+	grunt.registerTask("start", "Get your party started", function (branch, everything) {
 		var fs = require("fs");
 		var cp = require("child_process");
 
@@ -89,6 +89,74 @@ module.exports = function (grunt) {
 			finalizeInstall();
 		};
 
+		var removeTmpDir = function (tmpDir) {
+			var wrench = require("wrench");
+			grunt.file.setBase("../");
+
+			wrench.rmdirSyncRecursive(tmpDir, true);
+		};
+
+		var handleSettings = function(err, props) {
+			var name = props.name;
+			var title = props.title;
+
+			delete props.name;
+			delete props.title;
+
+			var plugArr = whitelist;
+			var i = 0;
+
+			for (var key in props) {
+				var assert = grunt.helper("get_assertion", props[key]);
+
+				if (assert) {
+					plugArr.push(key);
+				}
+			}
+
+			// Sort by name
+			plugArr = plugArr.sort();
+
+			var tmpDir = ".rbp-temp";
+
+			if (!fs.existsSync(tmpDir)) {
+				grunt.file.mkdir(tmpDir);
+			}
+
+			grunt.helper("store_vars", name, title, function () {
+				grunt.file.setBase(tmpDir);
+
+				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+				grunt.log.writeln();
+
+				(function install (count) {
+					if (!plugArr[count]) {
+						removeTmpDir(tmpDir);
+						finalizeInstall();
+						return;
+					}
+
+					grunt.helper("install_plugin", plugArr[count], null, function (stop) {
+						if (stop === true) {
+							removeTmpDir(tmpDir);
+							done(false);
+							return;
+						}
+
+						count++;
+
+						if (plugArr[count]) {
+							install(count);
+						} else {
+							removeTmpDir(tmpDir);
+							showAvailableTasks();
+						}
+					});
+				}(i));
+
+			});
+		};
+
 		var promptForSettings = function (plugins) {
 			var i, j, plugin,
 				installed = pkg.config.installed_plugins;
@@ -126,123 +194,85 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var removeTmpDir = function (tmpDir) {
-				var wrench = require("wrench");
-				grunt.file.setBase("../");
+			if (everything) {
+				handleSettings(null, function () {
+					var opts = {};
 
-				wrench.rmdirSyncRecursive(tmpDir, true);
-			};
-
-			grunt.helper("prompt", {}, options, function(err, props) {
-				var name = props.name;
-				var title = props.title;
-
-				delete props.name;
-				delete props.title;
-
-				var plugArr = whitelist;
-				var i = 0;
-
-				for (var key in props) {
-					var assert = grunt.helper("get_assertion", props[key]);
-
-					if (assert) {
-						plugArr.push(key);
+					for (i = 0, j = options.length; i < j; i++) {
+						opts[options[i].name] = "y";
 					}
-				}
 
-				// Sort by name
-				plugArr = plugArr.sort();
-
-				var tmpDir = ".rbp-temp";
-
-				if (!fs.existsSync(tmpDir)) {
-					grunt.file.mkdir(tmpDir);
-				}
-
-				grunt.helper("store_vars", name, title, function () {
-					grunt.file.setBase(tmpDir);
-
-					grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
-					grunt.log.writeln();
-
-					(function install (count) {
-						if (!plugArr[count]) {
-							removeTmpDir(tmpDir);
-							finalizeInstall();
-							return;
-						}
-
-						grunt.helper("install_plugin", plugArr[count], null, function (stop) {
-							if (stop === true) {
-								removeTmpDir(tmpDir);
-								done(false);
-								return;
-							}
-
-							count++;
-
-							if (plugArr[count]) {
-								install(count);
-							} else {
-								removeTmpDir(tmpDir);
-								showAvailableTasks();
-							}
-						});
-					}(i));
-
-				});
-			});
+					return opts;
+				}());
+			} else {
+				grunt.helper("prompt", {}, options, handleSettings);
+			}
 		};
 
 		var gatherPlugins = function () {
 			grunt.helper("check_for_available_plugins", promptForSettings);
 		};
 
+		var handleRemote = function (err, props) {
+			if (props.remote) {
+				remote = props.remote;
+
+				grunt.utils.spawn({
+					cmd: "git",
+					args: ["remote", "add", "origin", props.remote]
+				}, gatherPlugins);
+			} else {
+				gatherPlugins();
+			}
+		};
+
 		var addOrigin = function () {
-			prompt.start();
+			if (everything) {
+				handleRemote(null, {
+					remote : null
+				});
+			} else {
+				prompt.start();
 
-			prompt.get([{
-				name: "remote",
-				message: "Github repository url (This can be left blank)?",
-				validator: /(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/,
-				required: false,
-				"default": null
-			}], function (err, props) {
-				if (props.remote) {
-					remote = props.remote;
+				prompt.get([{
+					name: "remote",
+					message: "Github repository url (This can be left blank)?",
+					validator: /(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/,
+					required: false,
+					"default": null
+				}], handleRemote);
+			}
+		};
 
-					grunt.utils.spawn({
-						cmd: "git",
-						args: ["remote", "add", "origin", props.remote]
-					}, gatherPlugins);
-				} else {
-					gatherPlugins();
-				}
-			});
+		var handleInit = function (err, props) {
+			var assert = grunt.helper("get_assertion", props.init);
+
+			if (assert) {
+				grunt.utils.spawn({
+					cmd: "git",
+					args: ["init"]
+				}, addOrigin);
+			} else {
+				gatherPlugins();
+			}
 		};
 
 		var initializeRBP = function (ungit) {
 			if (ungit) {
-				prompt.start();
+				if (everything) {
+					handleInit(null, {
+						init : "y"
+					});
+				} else {
+					prompt.start();
 
-				prompt.get([{
-					name: "init",
-					message: "Would you like to create a git repository?".grey,
-					validator: /[y\/n]+/i,
-					"default": "Y/n"
-				}], function (err, props) {
-					var assert = grunt.helper("get_assertion", props.init);
-
-					if (assert) {
-						grunt.utils.spawn({
-							cmd: "git",
-							args: ["init"]
-						}, addOrigin);
-					} else {
-						gatherPlugins();
-					}
-				});
+					prompt.get([{
+						name: "init",
+						message: "Would you like to create a git repository?".grey,
+						validator: /[y\/n]+/i,
+						"default": "Y/n"
+					}], handleInit);
+				}
 			} else {
 				gatherPlugins();
 			}
