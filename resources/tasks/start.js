@@ -84,7 +84,6 @@ module.exports = function (grunt) {
 			grunt.log.writeln("");
 			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
-			grunt.task.run("tasks");
 			finalizeInstall();
 		};
 
@@ -257,7 +256,6 @@ module.exports = function (grunt) {
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
 				grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
-				grunt.task.run("tasks");
 				done();
 			} else {
 				prompt = require("prompt");
