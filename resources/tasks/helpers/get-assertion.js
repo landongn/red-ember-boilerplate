@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
 
 	grunt.registerHelper("get_assertion", function (value) {
-		return (value.toLowerCase() === "y") ? true : false;
+		return (value === "Y/n" || value.toLowerCase() === "y") ? true : false;
 	});
 
 };

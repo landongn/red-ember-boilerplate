@@ -120,7 +120,7 @@ module.exports = function (grunt) {
 					options.push({
 						name: plugin,
 						message: "Would you like to include %s?".replace("%s", plugin),
-						validator: /^y$|^n$/i,
+						validator: /[y\/n]+/i,
 						"default": "Y/n"
 					});
 				}
@@ -229,7 +229,7 @@ module.exports = function (grunt) {
 				prompt.get([{
 					name: "init",
 					message: "Would you like to create a git repository?".grey,
-					validator: /^y$|^n$/i,
+					validator: /[y\/n]+/i,
 					"default": "Y/n"
 				}], function (err, props) {
 					var assert = grunt.helper("get_assertion", props.init);
@@ -258,7 +258,7 @@ module.exports = function (grunt) {
 				prompt.get([{
 					name: "unstaged",
 					message: "WARNING: ".yellow + "There are unstaged files in your git repository. These may be overwritten. Are you sure you want to continue?".magenta,
-					validator: /^y$|^n$/i,
+					validator: /[y\/n]+/i,
 					"default": "Y/n"
 				}], function (err, props) {
 					var assert = grunt.helper("get_assertion", props.unstaged);
