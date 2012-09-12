@@ -56,7 +56,6 @@ module.exports = function(grunt) {
 				c = a[1],
 				opts = a[2];
 
-
 			if (b.length > 1) {
 				b[0] = b[0].grey;
 				b[1] = b[1].white;
@@ -65,12 +64,12 @@ module.exports = function(grunt) {
 			b = b.join(":");
 
 			if (hasInitialized && b !== "tasks" && (!opts || opts !== "none")) {
-				grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.white, col1len - 1), '', c.cyan]);
+				grunt.log.writetableln(widths, ['', b.white, '', c.cyan]);
 
 				if (opts) {
 					for (var key in opts) {
 						if (key !== "" && opts.hasOwnProperty(key)) {
-							grunt.log.writetableln(widths, ['', grunt.utils._.pad(b.grey + (":" + key).white, col1len), '', '']);
+							grunt.log.writetableln(widths, ['', b.grey + (":" + key).white, '', '']);
 						}
 					}
 				}
