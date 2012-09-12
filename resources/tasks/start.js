@@ -42,10 +42,9 @@ module.exports = function (grunt) {
 			var path;
 
 			for (var i = 0, j = builtIns.length; i < j; i++) {
-				path = fs.realpathSync("node_modules/grunt/tasks/" + builtIns[i] + ".js");
+				path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
 
-				console.log(path, fs.existsSync(path));
-				if (fs.existsSync(path)) {
+				if (fs.existsSync("./" + path)) {
 					fs.unlinkSync(path);
 				}
 			}
