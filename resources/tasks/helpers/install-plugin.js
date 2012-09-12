@@ -48,7 +48,6 @@ module.exports = function (grunt) {
 			}
 
 			pkg.config.installed_plugins[plug] = {
-				name : plugPkg.name,
 				version : plugPkg.version,
 				description : plugPkg.description
 			};
