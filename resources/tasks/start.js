@@ -160,11 +160,11 @@ module.exports = function (grunt) {
 					grunt.file.mkdir(tmpDir);
 				}
 
-				grunt.file.setBase(tmpDir);
-
 				grunt.helper("store_vars", name, title, function () {
+					grunt.file.setBase(tmpDir);
 
 					grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+					grunt.log.writeln();
 
 					(function install (count) {
 						if (!plugArr[count]) {
