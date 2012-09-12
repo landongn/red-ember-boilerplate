@@ -68,8 +68,6 @@ module.exports = function (grunt) {
 			"**/*.min.{js,css}"
 		]);
 
-		grunt.log.subhead("Replacing Files");
-
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
 
@@ -80,8 +78,6 @@ module.exports = function (grunt) {
 				grunt.file.write(current, contents);
 			}
 		}
-
-		grunt.log.subhead("Replacing Directories");
 
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
