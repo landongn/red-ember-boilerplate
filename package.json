@@ -1,6 +1,6 @@
 {
 	"name": "red-boilerplate",
-	"version": "2.5.2-alpha",
+	"version": "2.5.2",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "RED Interactive's boilerplate to initialize common projects.",
 	"repository": {
