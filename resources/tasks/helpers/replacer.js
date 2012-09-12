@@ -57,7 +57,11 @@ module.exports = function (grunt) {
 			stats;
 
 		var excludeDirs = [
-			".git"
+			".{git,sass-cache}",
+			"env",
+			"node_modules",
+			"uploads",
+			"resources/compass/gems"
 		];
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
