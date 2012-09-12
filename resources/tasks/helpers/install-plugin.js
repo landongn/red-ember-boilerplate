@@ -28,6 +28,9 @@ module.exports = function (grunt) {
 			var initialize;
 
 			if (plugInitScript) {
+				pkg.scripts = pkg.scripts || {};
+				pkg.scripts.initialize = pkg.scripts.initialize || {};
+
 				initialize = pkg.scripts.initialize;
 
 				if (initialize && initialize.length) {
