@@ -106,7 +106,7 @@ module.exports = function (grunt) {
 					var plug = installed[key];
 
 					if (typeof plug !== "string") {
-						grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
+						grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
 					} else {
 						grunt.log.writeln("[+] ".grey + key.cyan + " (%d)".replace("%d", plug).grey);
 					}

@@ -43,7 +43,6 @@ module.exports = function (grunt) {
 			}
 
 			if (plugSrcPkg) {
-				plugPkg.name = plugSrcPkg.name || plugPkg.name;
 				plugPkg.version = plugSrcPkg.version || plugPkg.version;
 				plugPkg.description = plugSrcPkg.description || plugPkg.description;
 			}
