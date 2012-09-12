@@ -9,6 +9,7 @@ module.exports = function (grunt) {
 
 		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
 		var branchOverride = plug.split("@");
+		var plugSrcPkg;
 
 		if (branchOverride.length) {
 			plug = branchOverride[0];
@@ -21,6 +22,36 @@ module.exports = function (grunt) {
 			}
 
 			grunt.file.setBase(".rbp-temp");
+
+			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
+
+			var initialize;
+
+			if (plugInitScript) {
+				initialize = pkg.scripts.initialize;
+
+				if (initialize && initialize.length) {
+					if (initialize.indexOf(plugInitScript) === -1) {
+						pkg.scripts.initialize.push(plugInitScript);
+					}
+				} else {
+					pkg.scripts.initialize = [plugInitScript];
+				}
+			}
+
+			if (plugSrcPkg) {
+				plugPkg.name = plugSrcPkg.name || plugPkg.name;
+				plugPkg.version = plugSrcPkg.version || plugPkg.version;
+				plugPkg.description = plugSrcPkg.description || plugPkg.description;
+			}
+
+			pkg.config.installed_plugins[plug] = {
+				name : plugPkg.name,
+				version : plugPkg.version,
+				description : plugPkg.description
+			};
+
+			pkg.save();
 
 			if (cb) {
 				cb();
@@ -159,39 +190,11 @@ module.exports = function (grunt) {
 			}
 
 			if (!isRBP) {
-				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
+				var plugSrcPath = fs.realpathSync("./%s/package.json".replace("%s", plug));
 
-				var plugSrc = "./" + plug + "/package.json";
-				var plugSrcPkg, initialize;
-
-				if (plugInitScript) {
-					pkg.scripts = pkg.scripts || {};
-					initialize = pkg.scripts.initialize;
-
-					if (initialize && initialize.length) {
-						if (initialize.indexOf(plugInitScript) === -1) {
-							pkg.scripts.initialize.push(plugInitScript);
-						}
-					} else {
-						pkg.scripts.initialize = [plugInitScript];
-					}
+				if (fs.existsSync(plugSrcPath)) {
+					plugSrcPkg = require(plugSrcPath);
 				}
-
-				if (fs.existsSync(plugSrc)) {
-					plugSrcPkg = grunt.file.readJSON(plugSrc);
-
-					plugPkg.name = plugSrcPkg.name || plugPkg.name;
-					plugPkg.version = plugSrcPkg.version || plugPkg.version;
-					plugPkg.description = plugSrcPkg.description || plugPkg.description;
-				}
-
-				pkg.config.installed_plugins[plug] = {
-					name : plugPkg.name,
-					version : plugPkg.version,
-					description : plugPkg.description
-				};
-
-				pkg.save();
 			}
 
 			if (callUpdate) {
