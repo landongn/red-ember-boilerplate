@@ -50,7 +50,7 @@ module.exports = function(grunt) {
 		// Widths for options/tasks table output.
 		var widths = [1, col1len, 2, 76 - col1len];
 
-		grunt.log.writeln("");
+		grunt.log.writeln();
 		tasks.forEach(function(a) {
 			var b = a[0].split(":"),
 				c = a[1],
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
 				}
 			}
 		});
-		grunt.log.writeln("");
+		grunt.log.writeln();
 
 		done();
 	});

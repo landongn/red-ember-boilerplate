@@ -83,7 +83,7 @@ module.exports = function (grunt) {
 		};
 
 		var showAvailableTasks = function () {
-			grunt.log.writeln("");
+			grunt.log.writeln();
 			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
 			finalizeInstall();
@@ -286,7 +286,7 @@ module.exports = function (grunt) {
 				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 				prompt.delimiter = prompt.delimter || " ";
 
-				grunt.log.writeln("");
+				grunt.log.writeln();
 
 				grunt.utils.spawn({
 					cmd: "git",

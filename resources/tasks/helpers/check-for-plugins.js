@@ -49,16 +49,16 @@ module.exports = function (grunt) {
 			});
 
 			req.on("error", function(err) {
-				console.log("error: " + err.message);
+				grunt.log.writeln("error: " + err.message);
 			});
 
 			req.end();
 		};
 
 		// Spacer
-		console.log("");
-		console.log(("[!]".magenta + " Checking for available plugins.".grey).bold);
-		console.log("    Pinging GitHub at %s".replace("%s", pkg.repository.url).grey);
+		grunt.log.writeln();
+		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
+		grunt.log.writeln("    Pinging GitHub at %s".replace("%s", pkg.repository.url).grey);
 
 		getJSON(options, function (branches) {
 			var i, j, branch;

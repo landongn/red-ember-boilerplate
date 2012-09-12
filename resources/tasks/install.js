@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 
 		if (!plugin) {
 			grunt.helper("check_for_available_plugins", function (plugins) {
-				grunt.log.writeln("");
+				grunt.log.writeln();
 				grunt.log.writeln("Install plugins with grunt install:my-plugin-name");
 
 				var i, j, plugin;
@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 				}
 
 				if (installed.length) {
-					grunt.log.writeln("");
+					grunt.log.writeln();
 					grunt.log.writeln("[*]" + " Installed modules:".yellow);
 
 					for (i = 0, j = installed.length; i < j; i++) {
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 				}
 
 				if (available.length) {
-					grunt.log.writeln("");
+					grunt.log.writeln();
 					grunt.log.writeln("[*]" + " Available modules:".yellow);
 
 					for (i = 0, j = available.length; i < j; i++) {

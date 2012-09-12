@@ -272,7 +272,7 @@ module.exports = function (grunt) {
 				var action = " " + (isRBP ? "Updating" : "Installing") + " ";
 				var source = (plugRepo ? plugRepo.url : plugPath);
 
-				grunt.log.writeln("");
+				grunt.log.writeln();
 				grunt.log.writeln(("[!]".magenta + (action + p.name + " from " + source).grey).bold);
 
 				if (plugRepo) {

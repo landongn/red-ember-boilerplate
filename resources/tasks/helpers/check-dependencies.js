@@ -118,7 +118,7 @@ module.exports = function (grunt) {
 							". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
 						}
 
-						console.log();
+						grunt.log.writeln();
 
 						prompt.start();
 
