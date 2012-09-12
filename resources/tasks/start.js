@@ -83,24 +83,47 @@ module.exports = function (grunt) {
 		};
 
 		var showAvailableTasks = function () {
-			grunt.log.writeln("");
+			grunt.log.writeln();
 			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
 			finalizeInstall();
 		};
 
 		var promptForSettings = function (plugins) {
-			var i, j, plugin;
+			var i, j, plugin,
+				installed = pkg.config.installed_plugins;
+
+			if (installed) {
+				var plugTitle;
+
+				for (var key in installed) {
+					if (!plugTitle) {
+						grunt.log.writeln();
+						grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+						plugTitle = true;
+					}
+
+					var plug = installed[key];
+
+					if (typeof plug !== "string") {
+						grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
+					} else {
+						grunt.log.writeln("[+] ".grey + key.cyan + " (%d)".replace("%d", plug).grey);
+					}
+				}
+			}
 
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				options.push({
-					name: plugin,
-					message: "Would you like to include %s?".replace("%s", plugin),
-					validator: /^y$|^n$/i,
-					"default": "Y/n"
-				});
+				if (!installed || !installed[plugin]) {
+					options.push({
+						name: plugin,
+						message: "Would you like to include %s?".replace("%s", plugin),
+						validator: /^y$|^n$/i,
+						"default": "Y/n"
+					});
+				}
 			}
 
 			var removeTmpDir = function (tmpDir) {
@@ -137,11 +160,11 @@ module.exports = function (grunt) {
 					grunt.file.mkdir(tmpDir);
 				}
 
-				grunt.file.setBase(tmpDir);
-
 				grunt.helper("store_vars", name, title, function () {
+					grunt.file.setBase(tmpDir);
 
 					grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+					grunt.log.writeln();
 
 					(function install (count) {
 						if (!plugArr[count]) {
@@ -263,7 +286,7 @@ module.exports = function (grunt) {
 				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 				prompt.delimiter = prompt.delimter || " ";
 
-				grunt.log.writeln("");
+				grunt.log.writeln();
 
 				grunt.utils.spawn({
 					cmd: "git",
@@ -282,12 +305,12 @@ module.exports = function (grunt) {
 			var initScript = pkg.scripts.initialize[i];
 			var args = initScript.split(" "),
 				cmd = args.shift(),
-				file = fs.realpathSync(args.join(""));
+				file = args.join("");
 
-			if (cmd === "node" && fs.existsSync(file)) {
+			if (cmd === "node" && fs.existsSync("./" + file)) {
 				grunt.log.subhead(args);
 
-				var initializer = require(file);
+				var initializer = require(fs.realpathSync(file));
 
 				initializer.run(function (error) {
 					if (error) {

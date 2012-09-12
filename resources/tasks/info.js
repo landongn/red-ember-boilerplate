@@ -21,43 +21,43 @@ module.exports = function(grunt) {
 		var keys = ["name", "version", "author", "description"];
 		var i, j;
 
-		console.log();
+		grunt.log.writeln();
 
 		for (i = 0, j = keys.length; i < j; i++) {
 			if (pkg[keys[i]]) {
-				console.log((i === 0 ? "[*] " : "    ").cyan + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]));
+				grunt.log.writeln((i === 0 ? "[*] " : "    ").cyan + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]));
 			}
 		}
 
 		if (pkg.repository) {
-			console.log("    " + "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
+			grunt.log.writeln("    " + "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
-		console.log();
-		console.log("[*] ".cyan + "RED Boilerplate %s".replace("%s", rbp.version).magenta);
-		console.log("    via %u @ branch %b".grey.replace("%u", rbp.repository.url).replace("%b", rbp.repository.branch));
-		console.log();
+		grunt.log.writeln();
+		grunt.log.writeln("[*] ".cyan + "RED Boilerplate %s".replace("%s", rbp.version).magenta);
+		grunt.log.writeln("    via %u @ branch %b".grey.replace("%u", rbp.repository.url).replace("%b", rbp.repository.branch));
+		grunt.log.writeln();
 
 		var plugTitle;
 
 		for (var key in pkg.config.installed_plugins) {
 			if (!plugTitle) {
-				console.log("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+				grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
 				plugTitle = true;
 			}
 
 			var plug = pkg.config.installed_plugins[key];
 
 			if (typeof plug !== "string") {
-				console.log("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
+				grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
 			} else {
-				console.log("[+] ".grey + key.cyan + " (%d)".replace("%d", plug).grey);
+				grunt.log.writeln("[+] ".grey + key.cyan + " (%d)".replace("%d", plug).grey);
 			}
 		}
 
 		if (pkg.config.warnings) {
-			console.log();
-			console.log("[!] The following warnings were ignored:".yellow);
+			grunt.log.writeln();
+			grunt.log.writeln("[!] The following warnings were ignored:".yellow);
 
 			var warnings = pkg.config.warnings;
 			var warn, k;

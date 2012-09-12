@@ -9,6 +9,7 @@ module.exports = function (grunt) {
 
 		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
 		var branchOverride = plug.split("@");
+		var plugSrcPkg;
 
 		if (branchOverride.length) {
 			plug = branchOverride[0];
@@ -21,6 +22,37 @@ module.exports = function (grunt) {
 			}
 
 			grunt.file.setBase(".rbp-temp");
+
+			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
+
+			var initialize;
+
+			if (plugInitScript) {
+				pkg.scripts = pkg.scripts || {};
+				pkg.scripts.initialize = pkg.scripts.initialize || {};
+
+				initialize = pkg.scripts.initialize;
+
+				if (initialize && initialize.length) {
+					if (initialize.indexOf(plugInitScript) === -1) {
+						pkg.scripts.initialize.push(plugInitScript);
+					}
+				} else {
+					pkg.scripts.initialize = [plugInitScript];
+				}
+			}
+
+			if (plugSrcPkg) {
+				plugPkg.version = plugSrcPkg.version || plugPkg.version;
+				plugPkg.description = plugSrcPkg.description || plugPkg.description;
+			}
+
+			pkg.config.installed_plugins[plug] = {
+				version : plugPkg.version,
+				description : plugPkg.description
+			};
+
+			pkg.save();
 
 			if (cb) {
 				cb();
@@ -35,10 +67,10 @@ module.exports = function (grunt) {
 			if (install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					file = fs.realpathSync(args.join(""));
+					file = args.join("");
 
-				if (cmd === "node" && fs.existsSync(file)) {
-					var initializer = require(file);
+				if (cmd === "node" && fs.existsSync("./" + file)) {
+					var initializer = require(fs.realpathSync(file));
 
 					initializer.run(function (error) {
 						if (error) {
@@ -143,10 +175,13 @@ module.exports = function (grunt) {
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
+			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {
 				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
 					pkg.dependencies[dep] = plugPkg.dependencies[dep];
+					pluginDeps.push(dep + "@" + plugPkg.dependencies[dep]);
+
 					callUpdate = true;
 				}
 			}
@@ -154,48 +189,19 @@ module.exports = function (grunt) {
 			for (dep in plugPkg.devDependencies) {
 				if (!pkg.devDependencies[dep] || pkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
 					pkg.devDependencies[dep] = plugPkg.devDependencies[dep];
-					callUpdate = true;
 				}
 			}
 
 			if (!isRBP) {
-				var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
+				var plugSrcPath = "%s/package.json".replace("%s", plug);
 
-				var plugSrc = "./" + plug + "/package.json";
-				var plugSrcPkg, initialize;
-
-				if (plugInitScript) {
-					pkg.scripts = pkg.scripts || {};
-					initialize = pkg.scripts.initialize;
-
-					if (initialize && initialize.length) {
-						if (initialize.indexOf(plugInitScript) === -1) {
-							pkg.scripts.initialize.push(plugInitScript);
-						}
-					} else {
-						pkg.scripts.initialize = [plugInitScript];
-					}
+				if (fs.existsSync("./" + plugSrcPath)) {
+					plugSrcPkg = require(fs.realpathSync(plugSrcPath));
 				}
-
-				if (fs.existsSync(plugSrc)) {
-					plugSrcPkg = grunt.file.readJSON(plugSrc);
-
-					plugPkg.name = plugSrcPkg.name || plugPkg.name;
-					plugPkg.version = plugSrcPkg.version || plugPkg.version;
-					plugPkg.description = plugSrcPkg.description || plugPkg.description;
-				}
-
-				pkg.config.installed_plugins[plug] = {
-					name : plugPkg.name,
-					version : plugPkg.version,
-					description : plugPkg.description
-				};
-
-				pkg.save();
 			}
 
 			if (callUpdate) {
-				var child = cp.spawn("npm", ["update"], {
+				var child = cp.spawn("npm", ["install"].concat(pluginDeps), {
 					cwd: "../",
 					env: null,
 					setsid: true,
@@ -269,7 +275,7 @@ module.exports = function (grunt) {
 				var action = " " + (isRBP ? "Updating" : "Installing") + " ";
 				var source = (plugRepo ? plugRepo.url : plugPath);
 
-				grunt.log.writeln("");
+				grunt.log.writeln();
 				grunt.log.writeln(("[!]".magenta + (action + p.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
