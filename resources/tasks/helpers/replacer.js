@@ -51,42 +51,44 @@ module.exports = function (grunt) {
 
 	grunt.registerHelper("replace_in_files", function (cb) {
 		var wrench = require("wrench");
-		var directories = grunt.file.expandDirs("**/*");
+		var files = grunt.file.expand("**/*");
 
-		var i, j, current, newFile;
+		var i, j, current, newFile,
+			stats;
 
-		var exclude = [
-			"{node_modules,.git,.sass-cache}",
-			"env/**/*",
-			"node_modules/**/*",
-			".{git,sass-cache}/**/*",
+		var excludeDirs = [
+			".git"
+		];
+
+		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
+			return dir + "/**/*";
+		})).concat([
 			"**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
 			"**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
 			"**/*.min.{js,css}"
-		];
-
-		for (i = 0, j = directories.length; i < j; i++) {
-			current = directories[i];
-
-			if (!grunt.file.isMatch(exclude, current)) {
-				newFile = grunt.helper("replace_vars", current.toString());
-
-				if (current !== newFile && fs.existsSync(current)) {
-					wrench.copyDirSyncRecursive(current, newFile);
-					wrench.rmdirSyncRecursive(current, true);
-				}
-			}
-		}
-
-		var files = grunt.file.expandFiles("**/*");
+		]);
 
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
 
-			if (!grunt.file.isMatch(exclude, current)) {
+			if (!grunt.file.isMatch(excludeFiles, current) && fs.statSync(current).isFile()) {
+
 				var contents = grunt.file.read(current, "utf-8");
 				contents = grunt.helper("replace_vars", contents.toString());
 				grunt.file.write(current, contents);
+			}
+		}
+
+		for (i = 0, j = files.length; i < j; i++) {
+			current = files[i];
+
+			if (!grunt.file.isMatch(excludeFiles, current)) {
+				newFile = grunt.helper("replace_vars", current.toString());
+
+				if (current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
+					wrench.copyDirSyncRecursive(current, newFile);
+					wrench.rmdirSyncRecursive(current, true);
+				}
 			}
 		}
 

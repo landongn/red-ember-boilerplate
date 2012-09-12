@@ -51,7 +51,7 @@ module.exports = function (grunt) {
 		};
 
 		var finalizeInstall = function () {
-			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+			removeBuiltIns();
 
 			var rbp = {
 				name: pkg.name,
@@ -62,6 +62,7 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			pkg.name = pkg.config.vars.PROJECT_NAME;
+			pkg.description = "";
 			pkg.version = "0.0.0";
 
 			var url = pkg.repository.url;
@@ -75,6 +76,9 @@ module.exports = function (grunt) {
 			pkg.config.initialized = true;
 			pkg.save();
 
+			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
+			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+
 			done();
 		};
 
@@ -82,7 +86,6 @@ module.exports = function (grunt) {
 			grunt.log.writeln("");
 			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
-			grunt.task.run("tasks");
 			finalizeInstall();
 		};
 
@@ -108,8 +111,6 @@ module.exports = function (grunt) {
 			};
 
 			grunt.helper("prompt", {}, options, function(err, props) {
-				removeBuiltIns();
-
 				var name = props.name;
 				var title = props.title;
 
@@ -252,7 +253,10 @@ module.exports = function (grunt) {
 
 		var getThisPartyStarted = function () {
 			if (pkg.config.initialized) {
+				grunt.log.writeln();
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
+
 				done();
 			} else {
 				prompt = require("prompt");
