@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 		}
 
 		if (pkg.repository) {
-			console.log("    " + "Project Repository:".grey + " %s".replace("%s", pkg.repository.url));
+			console.log("    " + "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
 		console.log();
