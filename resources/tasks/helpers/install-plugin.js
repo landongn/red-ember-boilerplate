@@ -187,7 +187,6 @@ module.exports = function (grunt) {
 			for (dep in plugPkg.devDependencies) {
 				if (!pkg.devDependencies[dep] || pkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
 					pkg.devDependencies[dep] = plugPkg.devDependencies[dep];
-					callUpdate = true;
 				}
 			}
 
@@ -200,7 +199,7 @@ module.exports = function (grunt) {
 			}
 
 			if (callUpdate) {
-				var child = cp.spawn("npm", ["update"], {
+				var child = cp.spawn("npm", ["install"], {
 					cwd: "../",
 					env: null,
 					setsid: true,
