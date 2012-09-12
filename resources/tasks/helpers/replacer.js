@@ -75,8 +75,6 @@ module.exports = function (grunt) {
 
 			if (!grunt.file.isMatch(excludeFiles, current) && fs.statSync(current).isFile()) {
 
-				console.log(current);
-
 				var contents = grunt.file.read(current, "utf-8");
 				contents = grunt.helper("replace_vars", contents.toString());
 				grunt.file.write(current, contents);
@@ -89,8 +87,6 @@ module.exports = function (grunt) {
 			current = files[i];
 
 			if (!grunt.file.isMatch(excludeFiles, current)) {
-				console.log(current);
-
 				newFile = grunt.helper("replace_vars", current.toString());
 
 				if (current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {

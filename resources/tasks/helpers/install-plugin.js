@@ -84,8 +84,6 @@ module.exports = function (grunt) {
 		};
 
 		var copyFiles = function (plug, plugPkg, cb) {
-			console.log("foo?");
-
 			var wrench = require("wrench");
 			var scope = (plugPkg.config || {}).scope || "";
 			var repoPaths = grunt.file.expandFiles("./" + plug + "/**/*");
@@ -136,11 +134,8 @@ module.exports = function (grunt) {
 		};
 
 		var doReplacement = function (plug, plugPkg, cb) {
-			console.log("foo?");
-
 			// Replace variables
 			grunt.helper("replace_in_files", function () {
-				console.log("foo?");
 				copyFiles(plug, plugPkg, cb);
 			});
 		};
