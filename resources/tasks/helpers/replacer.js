@@ -57,8 +57,7 @@ module.exports = function (grunt) {
 			stats;
 
 		var excludeDirs = [
-			"resources/compass/gems",
-			".{git,sass-cache}"
+			".git"
 		];
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
@@ -88,8 +87,6 @@ module.exports = function (grunt) {
 
 		for (i = 0, j = files.length; i < j; i++) {
 			current = files[i];
-
-			console.log("unfiltered:", current);
 
 			if (!grunt.file.isMatch(excludeFiles, current)) {
 				console.log(current);
