@@ -42,15 +42,18 @@ module.exports = function (grunt) {
 			var path;
 
 			for (var i = 0, j = builtIns.length; i < j; i++) {
-				path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
+				path = fs.realpathSync("node_modules/grunt/tasks/" + builtIns[i] + ".js");
 
-				if (fs.existsSync("./" + path)) {
+				console.log(path, fs.existsSync(path));
+				if (fs.existsSync(path)) {
 					fs.unlinkSync(path);
 				}
 			}
 		};
 
 		var finalizeInstall = function () {
+			removeBuiltIns();
+
 			var rbp = {
 				name: pkg.name,
 				version: pkg.version,
@@ -171,7 +174,6 @@ module.exports = function (grunt) {
 		};
 
 		var gatherPlugins = function () {
-			removeBuiltIns();
 			grunt.helper("check_for_available_plugins", promptForSettings);
 		};
 
