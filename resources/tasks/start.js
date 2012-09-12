@@ -305,12 +305,12 @@ module.exports = function (grunt) {
 			var initScript = pkg.scripts.initialize[i];
 			var args = initScript.split(" "),
 				cmd = args.shift(),
-				file = fs.realpathSync(args.join(""));
+				file = args.join("");
 
-			if (cmd === "node" && fs.existsSync(file)) {
+			if (cmd === "node" && fs.existsSync("./" + file)) {
 				grunt.log.subhead(args);
 
-				var initializer = require(file);
+				var initializer = require(fs.realpathSync(file));
 
 				initializer.run(function (error) {
 					if (error) {

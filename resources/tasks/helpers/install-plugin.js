@@ -66,10 +66,10 @@ module.exports = function (grunt) {
 			if (install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					file = fs.realpathSync(args.join(""));
+					file = args.join("");
 
-				if (cmd === "node" && fs.existsSync(file)) {
-					var initializer = require(file);
+				if (cmd === "node" && fs.existsSync("./" + file)) {
+					var initializer = require(fs.realpathSync(file));
 
 					initializer.run(function (error) {
 						if (error) {
@@ -190,10 +190,10 @@ module.exports = function (grunt) {
 			}
 
 			if (!isRBP) {
-				var plugSrcPath = fs.realpathSync("./%s/package.json".replace("%s", plug));
+				var plugSrcPath = "%s/package.json".replace("%s", plug);
 
-				if (fs.existsSync(plugSrcPath)) {
-					plugSrcPkg = require(plugSrcPath);
+				if (fs.existsSync("./" + plugSrcPath)) {
+					plugSrcPkg = require(fs.realpathSync(plugSrcPath));
 				}
 			}
 
