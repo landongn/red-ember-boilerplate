@@ -26,8 +26,9 @@ module.exports = function (grunt) {
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 
 		// Load on-update
-		require("./helpers/on-update");
-		grunt.helper("on_update", function () {
+		var update = require("./utils/on-update");
+
+		update.run(function () {
 			done();
 		});
 	});
