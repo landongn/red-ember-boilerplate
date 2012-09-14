@@ -1,4 +1,4 @@
-module.exports = function (cb) {
+module.exports = (function () {
 	var pkg = require("./pkg");
 	var fs = require("fs");
 	var path = require("path");
@@ -42,7 +42,7 @@ module.exports = function (cb) {
 				}
 			}
 		},
-		run : function () {
+		run : function (cb) {
 			var versions = this.versions,
 				version;
 
