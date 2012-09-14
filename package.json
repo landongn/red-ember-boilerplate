@@ -2,7 +2,7 @@
 	"name": "red-boilerplate",
 	"version": "2.5.7",
 	"author": "RED Interactive <geeks@ff0000.com>",
-	"description": "RED Interactive's boilerplate to initialize common projects.",
+	"description": "A highly customizable boilerplate to initialize common projects.",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/ff0000/red-boilerplate.git"
@@ -22,8 +22,7 @@
 	"devDependencies": {},
 	"optionalDependencies": {},
 	"systemDependencies": {
-		"grunt": ">=0.3.0",
-		"rbp": ">=2.3.0"
+		"grunt": ">=0.3.0"
 	},
 	"engines": {
 		"node": "*"

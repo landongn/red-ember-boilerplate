@@ -139,7 +139,7 @@ module.exports = function (grunt) {
 				for (var key in installed) {
 					if (!plugTitle) {
 						grunt.log.writeln();
-						grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+						grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 						plugTitle = true;
 					}
 

@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 		}
 
 		grunt.log.writeln();
-		grunt.log.writeln("[*] ".cyan + "RED Boilerplate %s".replace("%s", org.version).magenta);
+		grunt.log.writeln("[*] ".cyan + "Boilerplate version: %s".replace("%s", org.version).magenta);
 		grunt.log.writeln("    via %u @ branch %b".grey.replace("%u", org.repository.url).replace("%b", org.repository.branch));
 		grunt.log.writeln();
 
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 
 		for (var key in pkg.config.installed_plugins) {
 			if (!plugTitle) {
-				grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 

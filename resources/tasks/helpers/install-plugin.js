@@ -313,7 +313,7 @@ module.exports = function (grunt) {
 						cb();
 					}
 				} else {
-					grunt.log.writeln("[!]".magenta + (" Grabbing the RED Boilerplate from " + repo).grey);
+					grunt.log.writeln("[!]".magenta + (" Grabbing the boilerplate from " + repo).grey);
 
 					grunt.utils.spawn({
 						cmd: "git",
