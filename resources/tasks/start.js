@@ -29,30 +29,7 @@ module.exports = function (grunt) {
 			"default": projectTitle || "Sample Project Title"
 		}];
 
-		var removeBuiltIns = function () {
-			var builtIns = [
-				"init",
-				"concat",
-				"min",
-				"qunit",
-				"server",
-				"test"
-			];
-
-			var path;
-
-			for (var i = 0, j = builtIns.length; i < j; i++) {
-				path = "node_modules/grunt/tasks/" + builtIns[i] + ".js";
-
-				if (fs.existsSync("./" + path)) {
-					fs.unlinkSync(path);
-				}
-			}
-		};
-
 		var finalizeInstall = function () {
-			removeBuiltIns();
-
 			var rbp = {
 				name: pkg.name,
 				version: pkg.version,
