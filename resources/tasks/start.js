@@ -5,9 +5,11 @@ module.exports = function (grunt) {
 	grunt.registerTask("start", "Get your party started", function (branch, everything) {
 		var fs = require("fs");
 		var cp = require("child_process");
+		var path = require("path");
 
 		var done = this.async();
 		var pkg = require("./utils/pkg");
+		var localPkg = require("./utils/local-pkg");
 
 		var whitelist = [];
 
@@ -326,15 +328,37 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var checkIfPartyStarted = function () {
+			var local = localPkg.config,
+				requiredPaths = local.requiredPaths,
+				i, j, req;
+
+			for (i = 0, j = requiredPaths.length; i < j; i++) {
+				if (!fs.existsSync("./" + requiredPaths[i])) {
+					local.installed = false;
+				}
+			}
+
+			if (local.installed === true) {
+				getThisPartyStarted();
+			} else {
+				local.installed = true;
+				localPkg.config = local;
+
+				localPkg.save();
+				runInitializeScripts();
+			}
+		};
+
 		var checkSystemDependencies = function (sysDeps) {
 			if (sysDeps) {
 				grunt.helper("check_dependencies", sysDeps, function (name) {
-					runInitializeScripts();
+					checkIfPartyStarted();
 				}, function (error) {
 					done(error);
 				});
 			} else {
-				runInitializeScripts();
+				checkIfPartyStarted();
 			}
 		};
 
