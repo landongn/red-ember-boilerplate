@@ -4,7 +4,6 @@ var fs = require("fs");
 var path = require("path");
 
 var pkgFile = path.join(__dirname, "../../config/local.json");
-console.log(pkgFile);
 
 if (!fs.existsSync(pkgFile)) {
 	var defaultPkgFile = pkgFile.replace(".json", "-default.json");
