@@ -11,6 +11,8 @@ module.exports = function (cb) {
 		}
 
 		delete pkg.config[origVal];
+
+		pkg.save();
 	}
 
 	return {
