@@ -2,6 +2,7 @@
 module.exports = function (grunt) {
 
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
+		var done = this.async();
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
@@ -23,6 +24,10 @@ module.exports = function (grunt) {
 
 		branch = branch || pkg.config.org.repository.branch || "master";
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
+
+		grunt.helper("on_update", function () {
+			done();
+		});
 	});
 
 };
