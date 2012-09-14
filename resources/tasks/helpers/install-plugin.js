@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 		var pkg = require("../utils/pkg");
 
 		var bpName = (pkg.config && pkg.config.org) ? pkg.config.org.name : pkg.name;
-		var isRBP = (plug.indexOf(bpName) !== -1);
+		var isSelf = (plug.indexOf(bpName) !== -1);
 
 		var branchOverride = plug.split("@");
 		var plugSrcPkg;
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			if (isRBP) {
+			if (isSelf) {
 				updatePackageJSON(plug);
 				exclude.push("**/project/**/*");
 			}
@@ -151,7 +151,7 @@ module.exports = function (grunt) {
 
 			wrench.rmdirSyncRecursive(plug, true);
 
-			if (!isRBP) {
+			if (!isSelf) {
 				var plugPaths = grunt.file.expandFiles("**/*");
 
 				for (i = 0, j = plugPaths.length; i < j; i++) {
@@ -194,7 +194,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (!isRBP) {
+			if (!isSelf) {
 				var plugSrcPath = "%s/package.json".replace("%s", plug);
 
 				if (fs.existsSync("./" + plugSrcPath)) {
@@ -274,7 +274,7 @@ module.exports = function (grunt) {
 
 				var plugRepo = p.repository;
 
-				var action = " " + (isRBP ? "Updating" : "Installing") + " ";
+				var action = " " + (isSelf ? "Updating" : "Installing") + " ";
 				var source = (plugRepo ? plugRepo.url : plugPath);
 
 				grunt.log.writeln();

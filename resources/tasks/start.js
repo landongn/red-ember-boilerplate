@@ -229,7 +229,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var initializeRBP = function (ungit) {
+		var initializeBoilerplate = function (ungit) {
 			if (ungit) {
 				if (everything) {
 					handleInit(null, {
@@ -266,13 +266,13 @@ module.exports = function (grunt) {
 					var assert = grunt.helper("get_assertion", props.unstaged);
 
 					if (assert) {
-						initializeRBP(ungit);
+						initializeBoilerplate(ungit);
 					} else {
 						done(false);
 					}
 				});
 			} else {
-				initializeRBP(ungit);
+				initializeBoilerplate(ungit);
 			}
 		};
 
