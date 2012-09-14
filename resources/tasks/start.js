@@ -53,17 +53,12 @@ module.exports = function (grunt) {
 			pkg.config.initialized = true;
 			pkg.save();
 
+			grunt.log.writeln();
+			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
 			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
 			done();
-		};
-
-		var showAvailableTasks = function () {
-			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
-
-			finalizeInstall();
 		};
 
 		var removeTmpDir = function (tmpDir) {
@@ -126,7 +121,7 @@ module.exports = function (grunt) {
 							install(count);
 						} else {
 							removeTmpDir(tmpDir);
-							showAvailableTasks();
+							finalizeInstall();
 						}
 					});
 				}(i));
