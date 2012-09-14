@@ -25,6 +25,8 @@ module.exports = function (grunt) {
 		branch = branch || pkg.config.org.repository.branch || "master";
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 
+		// Load on-update
+		require("./helpers/on-update");
 		grunt.helper("on_update", function () {
 			done();
 		});
