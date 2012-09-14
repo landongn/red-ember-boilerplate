@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 	grunt.registerTask("tasks", "List all tasks", function () {
 
 		var done = this.async();
+		var pkg = require("./utils/pkg");
 		var path = require('path');
 		var hasInitialized;
 
@@ -26,7 +27,12 @@ module.exports = function(grunt) {
 			return [col1, o.info];
 		});
 
-		var tasks = Object.keys(grunt.task._tasks).map(function(name) {
+		var taskNames = Object.keys(grunt.task._tasks).filter(function (task) {
+			var ignoreTasks = pkg.config.ignoreTasks || [];
+			return ignoreTasks.indexOf(task) == -1;
+		});
+
+		var tasks = taskNames.map(function(name) {
 			var arr = [];
 			col1len = Math.max(col1len, name.length);
 			var info = grunt.task._tasks[name].info;
