@@ -16,7 +16,7 @@
 		"vars": {},
 		"tmpDir": ".rbp-temp",
 		"ignoreTasks": ["init", "concat", "min", "qunit", "test"],
-		"installed_plugins": {}
+		"installedPlugins": {}
 	},
 	"license": "MIT",
 	"devDependencies": {},

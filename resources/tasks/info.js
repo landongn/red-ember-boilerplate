@@ -40,13 +40,13 @@ module.exports = function(grunt) {
 
 		var plugTitle;
 
-		for (var key in pkg.config.installed_plugins) {
+		for (var key in pkg.config.installedPlugins) {
 			if (!plugTitle) {
 				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 
-			var plug = pkg.config.installed_plugins[key];
+			var plug = pkg.config.installedPlugins[key];
 
 			if (typeof plug !== "string") {
 				grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);

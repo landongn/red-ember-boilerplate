@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 				for (i = 0, j = plugins.length; i < j; i++) {
 					plugin = plugins[i];
 
-					if (!pkg.config.installed_plugins[plugin]) {
+					if (!pkg.config.installedPlugins[plugin]) {
 						available.push(plugin);
 					} else {
 						installed.push(plugin);

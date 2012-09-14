@@ -131,7 +131,7 @@ module.exports = function (grunt) {
 
 		var promptForSettings = function (plugins) {
 			var i, j, plugin,
-				installed = pkg.config.installed_plugins;
+				installed = pkg.config.installedPlugins;
 
 			if (installed) {
 				var plugTitle;

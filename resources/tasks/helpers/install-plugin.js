@@ -50,7 +50,7 @@ module.exports = function (grunt) {
 					plugPkg.description = plugSrcPkg.description || plugPkg.description;
 				}
 
-				pkg.config.installed_plugins[plug] = {
+				pkg.config.installedPlugins[plug] = {
 					version : plugPkg.version,
 					description : plugPkg.description
 				};
@@ -351,7 +351,7 @@ module.exports = function (grunt) {
 			});
 		};
 
-		if (!isUpdate && pkg.config.installed_plugins[plug]) {
+		if (!isUpdate && pkg.config.installedPlugins[plug]) {
 			var prompt = require("prompt");
 			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";
