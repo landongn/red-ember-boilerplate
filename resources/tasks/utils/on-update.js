@@ -29,6 +29,11 @@ module.exports = (function () {
 			"2.6.0" : function () {
 				if (pkg.config) {
 
+					// pkg.config.tmpDir
+					if (!("tmpDir" in pkg.config)) {
+						pkg.config.tmpDir = ".rbp-temp";
+					}
+
 					// pkg.config.rbp -> pkg.config.org
 					if ("rbp" in pkg.config) {
 						rename(pkg.config, "rbp", "org");
