@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 		var taskNames = Object.keys(grunt.task._tasks).filter(function (task) {
 			var ignoreTasks = pkg.config.ignoreTasks || [];
 			return ignoreTasks.indexOf(task) == -1;
-		});
+		}).sort();
 
 		var tasks = taskNames.map(function(name) {
 			var arr = [];
