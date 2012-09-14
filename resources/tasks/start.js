@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 		}];
 
 		var finalizeInstall = function () {
-			var rbp = {
+			var org = {
 				name: pkg.name,
 				version: pkg.version,
 				repository: pkg.repository
@@ -45,10 +45,10 @@ module.exports = function (grunt) {
 			var url = pkg.repository.url;
 			pkg.repository.url = remote || "";
 
-			rbp.repository.url = url;
-			rbp.repository.branch = branch || "master";
+			org.repository.url = url;
+			org.repository.branch = branch || "master";
 
-			pkg.config.rbp = rbp;
+			pkg.config.org = org;
 
 			pkg.config.initialized = true;
 			pkg.save();
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
 			// Sort by name
 			plugArr = plugArr.sort();
 
-			var tmpDir = ".rbp-temp";
+			var tmpDir = pkg.config.tmpDir;
 
 			if (!fs.existsSync(tmpDir)) {
 				grunt.file.mkdir(tmpDir);

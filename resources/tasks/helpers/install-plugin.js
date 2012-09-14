@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 		var path = require("path");
 		var pkg = require("../utils/pkg");
 
-		var bpName = (pkg.config && pkg.config.rbp) ? pkg.config.rbp.name : pkg.name;
+		var bpName = (pkg.config && pkg.config.org) ? pkg.config.org.name : pkg.name;
 		var isRBP = (plug.indexOf(bpName) !== -1);
 
 		var branchOverride = plug.split("@");
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 				fs.unlinkSync("install.js");
 			}
 
-			grunt.file.setBase(".rbp-temp");
+			grunt.file.setBase(pkg.config.tmpDir);
 
 			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
@@ -96,20 +96,20 @@ module.exports = function (grunt) {
 				return;
 			}
 
-			var rbp = pkg.config.rbp;
-			var rbpPkg = grunt.file.readJSON(json);
+			var org = pkg.config.org;
+			var orgPkg = grunt.file.readJSON(json);
 			var props = ["name", "version", "repository"];
 			var prop, curr;
 
 			for (i = 0, j = props.length; i < j; i++) {
 				prop = props[i];
-				curr = rbpPkg[prop];
+				curr = orgPkg[prop];
 
 				if (typeof curr === "string") {
-					rbp[prop] = curr;
+					org[prop] = curr;
 				} else {
 					for (var key in curr) {
-						rbp[prop][key] = curr[key];
+						org[prop][key] = curr[key];
 					}
 				}
 			}
@@ -270,7 +270,7 @@ module.exports = function (grunt) {
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
 
-				var p = (plugPkg.config && plugPkg.config.rbp) ? plugPkg.config.rbp : plugPkg;
+				var p = (plugPkg.config && plugPkg.config.org) ? plugPkg.config.org : plugPkg;
 
 				var plugRepo = p.repository;
 
@@ -333,7 +333,7 @@ module.exports = function (grunt) {
 		};
 
 		var initialize = function () {
-			var p = (pkg.config && pkg.config.rbp) ? pkg.config.rbp : pkg;
+			var p = (pkg.config && pkg.config.org) ? pkg.config.org : pkg;
 
 			grunt.utils.spawn({
 				cmd: "git",

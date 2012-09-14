@@ -51,7 +51,7 @@ module.exports = function (grunt) {
 				done();
 			});
 		} else {
-			var tmpDir = ".rbp-temp";
+			var tmpDir = pkg.config.tmpDir;
 			var fs = require("fs");
 			var wrench = require("wrench");
 

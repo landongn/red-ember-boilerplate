@@ -5,11 +5,11 @@ module.exports = function (grunt) {
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
-		pkg.config.rbp = pkg.config.rbp || {};
-		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
+		pkg.config.org = pkg.config.org || {};
+		pkg.config.org.repository = pkg.config.org.repository || {};
 
 		// Set plugin if not deflined
-		plugin = plugin || pkg.config.rbp.name;
+		plugin = plugin || pkg.config.org.name;
 
 		var branch;
 		var bits = plugin.split("@");
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		branch = branch || pkg.config.rbp.repository.branch || "master";
+		branch = branch || pkg.config.org.repository.branch || "master";
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 	});
 
