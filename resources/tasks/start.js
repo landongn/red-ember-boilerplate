@@ -335,14 +335,14 @@ module.exports = function (grunt) {
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {
 				if (!fs.existsSync("./" + requiredPaths[i])) {
-					local.installed = false;
+					local.initialized = false;
 				}
 			}
 
-			if (local.installed === true) {
+			if (local.initialized === true) {
 				getThisPartyStarted();
 			} else {
-				local.installed = true;
+				local.initialized = true;
 				localPkg.config = local;
 
 				localPkg.save();
