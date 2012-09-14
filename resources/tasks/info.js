@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 			}
 		});
 
-		var pkg = require("../../package.json");
+		var pkg = require("./utils/pkg");
 		var rbp = pkg.config.rbp;
 
 		var keys = ["name", "version", "author", "description"];
