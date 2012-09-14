@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		var http = require("http");
 		var https = require("https");
 
-		var repo = pkg.repository.url;
+		var repo = (pkg.config.rbp || pkg).repository.url;
 		var parts = url.parse(repo);
 		var host = "api.github.com";
 		var pathname = parts.pathname.replace(".git", "");
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
 		// Spacer
 		grunt.log.writeln();
 		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
-		grunt.log.writeln("    Pinging GitHub at %s".replace("%s", pkg.repository.url).grey);
+		grunt.log.writeln("    Pinging GitHub at %s".replace("%s", repo).grey);
 
 		getJSON(options, function (branches) {
 			var i, j, branch;
