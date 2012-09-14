@@ -44,15 +44,17 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plugSrcPkg) {
-				plugPkg.version = plugSrcPkg.version || plugPkg.version;
-				plugPkg.description = plugSrcPkg.description || plugPkg.description;
-			}
+			if (!isSelf) {
+				if (plugSrcPkg) {
+					plugPkg.version = plugSrcPkg.version || plugPkg.version;
+					plugPkg.description = plugSrcPkg.description || plugPkg.description;
+				}
 
-			pkg.config.installed_plugins[plug] = {
-				version : plugPkg.version,
-				description : plugPkg.description
-			};
+				pkg.config.installed_plugins[plug] = {
+					version : plugPkg.version,
+					description : plugPkg.description
+				};
+			}
 
 			pkg.save();
 
