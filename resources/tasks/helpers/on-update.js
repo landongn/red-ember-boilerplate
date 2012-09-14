@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 			pkg.config[newVal] = {};
 
 			for (var key in pkg.config[origVal]) {
-				pkg.config[origVal][key] = pkg.config[newVal][key];
+				pkg.config[newVal][key] = pkg.config[origVal][key];
 			}
 
 			delete pkg.config[origVal];
@@ -33,13 +33,13 @@ module.exports = function (grunt) {
 			if (pkg.config) {
 
 				// pkg.config.rbp -> pkg.config.org
-				if ("org" in pkg.config) {
-					rename(pkg.config, "org", "rbp");
+				if ("rbp" in pkg.config) {
+					rename(pkg.config, "rbp", "org");
 				}
 
 				// pkg.config.installed_plugins -> pkg.config.installedPlugins
-				if ("installedPlugins" in pkg.config) {
-					rename(pkg.config, "installedPlugins", "installed_plugins");
+				if ("installed_plugins" in pkg.config) {
+					rename(pkg.config, "installed_plugins", "installedPlugins");
 				}
 
 			}
