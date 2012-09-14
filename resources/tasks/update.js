@@ -1,10 +1,15 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	grunt.registerTask("update", "Update RBP", function (plugin) {
-		plugin = plugin || "red-boilerplate";
-
+	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
 		var pkg = require("./utils/pkg");
+
+		// Sanity check
+		pkg.config.rbp = pkg.config.rbp || {};
+		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
+
+		// Set plugin if not deflined
+		plugin = plugin || pkg.config.rbp.name;
 
 		var branch;
 		var bits = plugin.split("@");
@@ -15,10 +20,6 @@ module.exports = function (grunt) {
 			plugin = bits[0];
 			branch = bits[1];
 		}
-
-		// Sanity check
-		pkg.config.rbp = pkg.config.rbp || {};
-		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
 
 		branch = branch || pkg.config.rbp.repository.branch || "master";
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));

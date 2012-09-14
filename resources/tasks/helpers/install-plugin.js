@@ -7,7 +7,9 @@ module.exports = function (grunt) {
 		var path = require("path");
 		var pkg = require("../utils/pkg");
 
-		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
+		var bpName = (pkg.config && pkg.config.rbp) ? pkg.config.rbp.name : pkg.name;
+		var isRBP = (plug.indexOf(bpName) !== -1);
+
 		var branchOverride = plug.split("@");
 		var plugSrcPkg;
 
