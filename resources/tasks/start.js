@@ -5,9 +5,11 @@ module.exports = function (grunt) {
 	grunt.registerTask("start", "Get your party started", function (branch, everything) {
 		var fs = require("fs");
 		var cp = require("child_process");
+		var path = require("path");
 
 		var done = this.async();
 		var pkg = require("./utils/pkg");
+		var localPkg = require("./utils/local-pkg");
 
 		var whitelist = [];
 
@@ -53,17 +55,12 @@ module.exports = function (grunt) {
 			pkg.config.initialized = true;
 			pkg.save();
 
+			grunt.log.writeln();
+			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
 			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
 			done();
-		};
-
-		var showAvailableTasks = function () {
-			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
-
-			finalizeInstall();
 		};
 
 		var removeTmpDir = function (tmpDir) {
@@ -126,7 +123,7 @@ module.exports = function (grunt) {
 							install(count);
 						} else {
 							removeTmpDir(tmpDir);
-							showAvailableTasks();
+							finalizeInstall();
 						}
 					});
 				}(i));
@@ -331,15 +328,37 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var checkIfPartyStarted = function () {
+			var local = localPkg.config,
+				requiredPaths = local.requiredPaths,
+				i, j, req;
+
+			for (i = 0, j = requiredPaths.length; i < j; i++) {
+				if (!fs.existsSync("./" + requiredPaths[i])) {
+					local.initialized = false;
+				}
+			}
+
+			if (local.initialized === true) {
+				getThisPartyStarted();
+			} else {
+				local.initialized = true;
+				localPkg.config = local;
+
+				localPkg.save();
+				runInitializeScripts();
+			}
+		};
+
 		var checkSystemDependencies = function (sysDeps) {
 			if (sysDeps) {
 				grunt.helper("check_dependencies", sysDeps, function (name) {
-					runInitializeScripts();
+					checkIfPartyStarted();
 				}, function (error) {
 					done(error);
 				});
 			} else {
-				runInitializeScripts();
+				checkIfPartyStarted();
 			}
 		};
 

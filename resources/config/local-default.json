@@ -1,0 +1,6 @@
+{
+	"config" : {
+		"initialized" : false,
+		"requiredPaths" : ["node_modules"]
+	}
+}
