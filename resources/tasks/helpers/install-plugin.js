@@ -9,7 +9,9 @@ module.exports = function (grunt) {
 		var pkg = require("../utils/pkg");
 		var localPkg = require("../utils/local-pkg");
 
-		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
+		var bpName = (pkg.config && pkg.config.org) ? pkg.config.org.name : pkg.name;
+		var isSelf = (plug.indexOf(bpName) !== -1);
+
 		var branchOverride = plug.split("@");
 		var plugSrcPkg;
 
@@ -23,7 +25,7 @@ module.exports = function (grunt) {
 				fs.unlinkSync("install.js");
 			}
 
-			grunt.file.setBase(".rbp-temp");
+			grunt.file.setBase(pkg.config.tmpDir);
 
 			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
@@ -44,15 +46,17 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plugSrcPkg) {
-				plugPkg.version = plugSrcPkg.version || plugPkg.version;
-				plugPkg.description = plugSrcPkg.description || plugPkg.description;
-			}
+			if (!isSelf) {
+				if (plugSrcPkg) {
+					plugPkg.version = plugSrcPkg.version || plugPkg.version;
+					plugPkg.description = plugSrcPkg.description || plugPkg.description;
+				}
 
-			pkg.config.installed_plugins[plug] = {
-				version : plugPkg.version,
-				description : plugPkg.description
-			};
+				pkg.config.installedPlugins[plug] = {
+					version : plugPkg.version,
+					description : plugPkg.description
+				};
+			}
 
 			pkg.save();
 
@@ -96,20 +100,20 @@ module.exports = function (grunt) {
 				return;
 			}
 
-			var rbp = pkg.config.rbp;
-			var rbpPkg = grunt.file.readJSON(json);
+			var org = pkg.config.org;
+			var orgPkg = grunt.file.readJSON(json);
 			var props = ["name", "version", "repository"];
 			var prop, curr;
 
 			for (i = 0, j = props.length; i < j; i++) {
 				prop = props[i];
-				curr = rbpPkg[prop];
+				curr = orgPkg[prop];
 
 				if (typeof curr === "string") {
-					rbp[prop] = curr;
+					org[prop] = curr;
 				} else {
 					for (var key in curr) {
-						rbp[prop][key] = curr[key];
+						org[prop][key] = curr[key];
 					}
 				}
 			}
@@ -133,7 +137,7 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			if (isRBP) {
+			if (isSelf) {
 				updatePackageJSON(plug);
 				exclude.push("**/project/**/*");
 			}
@@ -151,7 +155,7 @@ module.exports = function (grunt) {
 
 			wrench.rmdirSyncRecursive(plug, true);
 
-			if (!isRBP) {
+			if (!isSelf) {
 				var plugPaths = grunt.file.expandFiles("**/*");
 
 				for (i = 0, j = plugPaths.length; i < j; i++) {
@@ -209,7 +213,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (!isRBP) {
+			if (!isSelf) {
 				var plugSrcPath = "%s/package.json".replace("%s", plug);
 
 				if (fs.existsSync("./" + plugSrcPath)) {
@@ -285,11 +289,11 @@ module.exports = function (grunt) {
 			}, function (err, result, code) {
 				var plugPkg = grunt.file.readJSON("./package.json");
 
-				var p = (plugPkg.config && plugPkg.config.rbp) ? plugPkg.config.rbp : plugPkg;
+				var p = (plugPkg.config && plugPkg.config.org) ? plugPkg.config.org : plugPkg;
 
 				var plugRepo = p.repository;
 
-				var action = " " + (isRBP ? "Updating" : "Installing") + " ";
+				var action = " " + (isSelf ? "Updating" : "Installing") + " ";
 				var source = (plugRepo ? plugRepo.url : plugPath);
 
 				grunt.log.writeln();
@@ -328,7 +332,7 @@ module.exports = function (grunt) {
 						cb();
 					}
 				} else {
-					grunt.log.writeln("[!]".magenta + (" Grabbing the RED Boilerplate from " + repo).grey);
+					grunt.log.writeln("[!]".magenta + (" Grabbing the boilerplate from " + repo).grey);
 
 					grunt.utils.spawn({
 						cmd: "git",
@@ -348,7 +352,7 @@ module.exports = function (grunt) {
 		};
 
 		var initialize = function () {
-			var p = (pkg.config && pkg.config.rbp) ? pkg.config.rbp : pkg;
+			var p = (pkg.config && pkg.config.org) ? pkg.config.org : pkg;
 
 			grunt.utils.spawn({
 				cmd: "git",
@@ -364,7 +368,7 @@ module.exports = function (grunt) {
 			});
 		};
 
-		if (!isUpdate && pkg.config.installed_plugins[plug]) {
+		if (!isUpdate && pkg.config.installedPlugins[plug]) {
 			var prompt = require("prompt");
 			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";

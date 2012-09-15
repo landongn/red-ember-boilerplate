@@ -1,27 +1,37 @@
 /*global module:false*/
 module.exports = function (grunt) {
 
-	grunt.registerTask("update", "Update RBP", function (plugin) {
-		plugin = plugin || "red-boilerplate";
+	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
+		var done = this.async();
 
-		var pkg = require("./utils/pkg");
+		// Load on-update
+		var update = require("./utils/on-update");
 
-		var branch;
-		var bits = plugin.split("@");
+		update.run(function () {
+			var pkg = require("./utils/pkg");
 
-		if (bits.length === 1) {
-			plugin = bits[0];
-		} else {
-			plugin = bits[0];
-			branch = bits[1];
-		}
+			// Sanity check
+			pkg.config.org = pkg.config.org || {};
+			pkg.config.org.repository = pkg.config.org.repository || {};
 
-		// Sanity check
-		pkg.config.rbp = pkg.config.rbp || {};
-		pkg.config.rbp.repository = pkg.config.rbp.repository || {};
+			// Set plugin if not deflined
+			plugin = plugin || pkg.config.org.name;
 
-		branch = branch || pkg.config.rbp.repository.branch || "master";
-		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
+			var branch;
+			var bits = plugin.split("@");
+
+			if (bits.length === 1) {
+				plugin = bits[0];
+			} else {
+				plugin = bits[0];
+				branch = bits[1];
+			}
+
+			branch = branch || pkg.config.org.repository.branch || "master";
+			grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
+
+			done();
+		});
 	});
 
 };

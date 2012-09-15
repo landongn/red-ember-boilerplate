@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		var http = require("http");
 		var https = require("https");
 
-		var repo = (pkg.config.rbp || pkg).repository.url;
+		var repo = (pkg.config.org || pkg).repository.url;
 		var parts = url.parse(repo);
 		var host = "api.github.com";
 		var pathname = parts.pathname.replace(".git", "");

@@ -16,7 +16,7 @@ module.exports = function(grunt) {
 		});
 
 		var pkg = require("./utils/pkg");
-		var rbp = pkg.config.rbp;
+		var org = pkg.config.org;
 
 		var keys = ["name", "version", "author", "description"];
 		var i, j;
@@ -34,19 +34,19 @@ module.exports = function(grunt) {
 		}
 
 		grunt.log.writeln();
-		grunt.log.writeln("[*] ".cyan + "RED Boilerplate %s".replace("%s", rbp.version).magenta);
-		grunt.log.writeln("    via %u @ branch %b".grey.replace("%u", rbp.repository.url).replace("%b", rbp.repository.branch));
+		grunt.log.writeln("[*] ".cyan + "Boilerplate version: %s".replace("%s", org.version).magenta);
+		grunt.log.writeln("    via %u @ branch %b".grey.replace("%u", org.repository.url).replace("%b", org.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;
 
-		for (var key in pkg.config.installed_plugins) {
+		for (var key in pkg.config.installedPlugins) {
 			if (!plugTitle) {
-				grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 
-			var plug = pkg.config.installed_plugins[key];
+			var plug = pkg.config.installedPlugins[key];
 
 			if (typeof plug !== "string") {
 				grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
