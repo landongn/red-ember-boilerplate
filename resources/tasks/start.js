@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 		}];
 
 		var finalizeInstall = function () {
-			var rbp = {
+			var org = {
 				name: pkg.name,
 				version: pkg.version,
 				repository: pkg.repository
@@ -47,10 +47,10 @@ module.exports = function (grunt) {
 			var url = pkg.repository.url;
 			pkg.repository.url = remote || "";
 
-			rbp.repository.url = url;
-			rbp.repository.branch = branch || "master";
+			org.repository.url = url;
+			org.repository.branch = branch || "master";
 
-			pkg.config.rbp = rbp;
+			pkg.config.org = org;
 
 			pkg.config.initialized = true;
 			pkg.save();
@@ -91,7 +91,7 @@ module.exports = function (grunt) {
 			// Sort by name
 			plugArr = plugArr.sort();
 
-			var tmpDir = ".rbp-temp";
+			var tmpDir = pkg.config.tmpDir;
 
 			if (!fs.existsSync(tmpDir)) {
 				grunt.file.mkdir(tmpDir);
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
 
 		var promptForSettings = function (plugins) {
 			var i, j, plugin,
-				installed = pkg.config.installed_plugins;
+				installed = pkg.config.installedPlugins;
 
 			if (installed) {
 				var plugTitle;
@@ -141,7 +141,7 @@ module.exports = function (grunt) {
 				for (var key in installed) {
 					if (!plugTitle) {
 						grunt.log.writeln();
-						grunt.log.writeln("[*] ".cyan + "Installed RED Boilerplate plugins:".magenta);
+						grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 						plugTitle = true;
 					}
 
@@ -231,7 +231,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var initializeRBP = function (ungit) {
+		var initializeBoilerplate = function (ungit) {
 			if (ungit) {
 				if (everything) {
 					handleInit(null, {
@@ -268,13 +268,13 @@ module.exports = function (grunt) {
 					var assert = grunt.helper("get_assertion", props.unstaged);
 
 					if (assert) {
-						initializeRBP(ungit);
+						initializeBoilerplate(ungit);
 					} else {
 						done(false);
 					}
 				});
 			} else {
-				initializeRBP(ungit);
+				initializeBoilerplate(ungit);
 			}
 		};
 
