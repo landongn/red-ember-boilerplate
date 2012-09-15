@@ -2,16 +2,22 @@
 module.exports = function (grunt) {
 
 	grunt.registerMultiTask("build", "Build your project.", function () {
-		grunt.helper("check_initialized", function (initialized) {
-			if (!initialized) {
-				return false;
-			}
-		});
-
+		var done = this.async();
 		this.requiresConfig("build");
-		grunt.task.run(this.data);
-	});
 
-	grunt.config.set("build.start", "start");
+		grunt.helper("check_initialized", function (initialized) {
+			var tasks = [];
+
+			if (!initialized) {
+				tasks.push("start");
+			}
+
+			tasks.push(this.data);
+			grunt.task.run(tasks);
+
+			done();
+		}.bind(this));
+
+	});
 
 };

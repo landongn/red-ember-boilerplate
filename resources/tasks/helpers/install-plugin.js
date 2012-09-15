@@ -5,7 +5,9 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+
 		var pkg = require("../utils/pkg");
+		var localPkg = require("../utils/local-pkg");
 
 		var isRBP = (plug.indexOf("red-boilerplate") !== -1);
 		var branchOverride = plug.split("@");
@@ -172,6 +174,21 @@ module.exports = function (grunt) {
 			});
 		};
 
+		var saveLocalPaths = function (paths) {
+			paths = localPkg.config.requiredPaths.concat(paths);
+			localPkg.config.requiredPaths = paths;
+
+			localPkg.save();
+		};
+
+		var findLocalPaths = function (plug, plugPkg, cb) {
+			if (plugPkg.config && plugPkg.config.requiredPaths) {
+				saveLocalPaths(plugPkg.config.requiredPaths);
+			}
+
+			doReplacement(plug, plugPkg, cb);
+		};
+
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
@@ -209,12 +226,12 @@ module.exports = function (grunt) {
 				});
 
 				child.addListener("exit", function () {
-					doReplacement(plug, plugPkg, cb);
+					findLocalPaths(plug, plugPkg, cb);
 				});
 
 				return;
 			} else {
-				doReplacement(plug, plugPkg, cb);
+				findLocalPaths(plug, plugPkg, cb);
 			}
 		};
 

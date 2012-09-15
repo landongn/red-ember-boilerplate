@@ -85,6 +85,7 @@ node_modules
 
 # RED Boilerplate
 .rbp-temp
+resources/config/local.json
 
 # RBP Plugins
 .bundle
