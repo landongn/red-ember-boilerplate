@@ -3,15 +3,14 @@
 var fs = require("fs");
 var path = require("path");
 
-var pkgFile = path.join(__dirname, "../../config/local.json");
+var localPkg = path.join(__dirname, "../../config/local.json");
+var pkgFile = localPkg;
 
 if (!fs.existsSync(pkgFile)) {
-	var defaultPkgFile = pkgFile.replace(".json", "-default.json");
+	pkgFile = pkgFile.replace(".json", "-default.json");
 
-	if (fs.existsSync(defaultPkgFile)) {
-		fs.renameSync(defaultPkgFile, pkgFile);
-	} else {
-		console.error("File not found: %f".replace("%f", defaultPkgFile));
+	if (!fs.existsSync(pkgFile)) {
+		console.error("File not found: %f".replace("%f", pkgFile));
 		process.exit();
 	}
 }
@@ -28,7 +27,7 @@ pkg.save = function () {
 		}
 	}
 
-	fs.writeFileSync(pkgFile, JSON.stringify(obj, null, "\t"));
+	fs.writeFileSync(localPkg, JSON.stringify(obj, null, "\t"));
 };
 
 module.exports = pkg;
