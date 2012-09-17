@@ -108,6 +108,13 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 Changelog
 ==========
 
+2.7.1
+------------------
+- Adding a proper changelog.
+- Adding `grunt bump` to help when cutting project releases.
+- Save warnings to `resources/config/local.json` instead of `package.json`
+- Ensure newlines at end of JSON files.
+
 2.7.0
 ------------------
 - This release focuses on making RED Boilerplate organization agnostic. RED Boilerplate will continue to make it easier for other organizations to customize it for their respective users.
