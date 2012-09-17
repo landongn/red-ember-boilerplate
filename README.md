@@ -169,9 +169,9 @@ Changelog
 
 2.5.0
 ------------------
--.gitignore
-    - Ignore project/static/css/**/*.css files
-    - Ignore project/static/js/**/*.min.js files
+- .gitignore
+    - Ignore `project/static/css/**/*.css` files
+    - Ignore `project/static/js/**/*.min.js` files
 
 - grunt.js
     - Remove superfluous {##} wrappers in metadata
