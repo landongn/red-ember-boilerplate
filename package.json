@@ -15,7 +15,13 @@
 	"config": {
 		"vars": {},
 		"tmpDir": ".rbp-temp",
-		"ignoreTasks": ["init", "concat", "min", "qunit", "test"],
+		"ignoreTasks": [
+			"init",
+			"concat",
+			"min",
+			"qunit",
+			"test"
+		],
 		"installedPlugins": {}
 	},
 	"license": "MIT",
