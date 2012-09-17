@@ -27,7 +27,7 @@ pkg.save = function () {
 		}
 	}
 
-	fs.writeFileSync(localPkg, JSON.stringify(obj, null, "\t"));
+	fs.writeFileSync(localPkg, JSON.stringify(obj, null, "\t") + "\n");
 };
 
 module.exports = pkg;

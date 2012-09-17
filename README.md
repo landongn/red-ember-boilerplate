@@ -103,3 +103,102 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 - `dependencies` (optional): An object containing any `npm` dependencies.
 - `scripts.install` (optional): A parameter containing any scripts to run on plugin install
 - `config.scope` (optional): A parameter to scope your plugin to a specified directory.
+
+
+Changelog
+==========
+
+2.7.1
+------------------
+- Adding a proper changelog.
+- Adding `grunt bump` to help when cutting project releases.
+- Save warnings to `resources/config/local.json` instead of `package.json`
+- Ensure newlines at end of JSON files.
+
+2.7.0
+------------------
+- This release focuses on making RED Boilerplate organization agnostic. RED Boilerplate will continue to make it easier for other organizations to customize it for their respective users.
+- A note on this release: It introduces functionality to run some cleanup tasks on update. Due to the nature of this functionality, `grunt update` will need to be run twice in succession on the initial update.
+
+2.6.0
+------------------
+- Adding a local.json file to help detect if `grunt start` was run locally.
+- When running `grunt build`, `grunt start` is only run when necessary.
+- grunt.helper("check_initialized") now also detects if `grunt start` was run locally.
+- Plugins have access to a config array of required directory paths.
+
+2.5.7
+------------------
+- Remove grunt as a local dependency
+- Add a config.ignoreTasks array of tasks to ignore.
+- Don't delete grunt tasks, instead filter out of `grunt tasks` using config.ignoreTasks
+
+2.5.6
+------------------
+- Fixed a bug where `grunt install` attempts to pull from current project repo.
+
+2.5.5
+------------------
+- Removed padding from tasks table output.
+
+2.5.4
+------------------
+- Add default system dependencies to package.json
+- Relax validation on prompts, accept default Y or N values without requiring an input.
+- `grunt start` now takes an optional parameter. `grunt start:master:kitchensink` will bypass most prompts and install all plugins by default.
+
+2.5.3
+------------------
+- Replaced console.log with grunt.log.writeln
+- Fixed a bug where `npm install` sometimes skipped random modules by listing out all modules to install. This had the added benefit of severely cutting down install time.
+- Remove extra name parameter in installed_plugins object.
+- Fixed a bug where detecting initialize script may sometimes error out.
+- Fixed a bug where detecting plugin package.json files may error out.
+- Re-add some excluded directories to resolve a bug in the initial `grunt start` task.
+- If `grunt start` is interrupted, don't re-prompt any modules marked as installed.
+- Don't mark modules as installed until the end of the install process.
+
+2.5.2
+------------------
+- Drastically improve installation time by limiting variable replacement scope.
+- Re-add Grunt as a dependency. It's the only way (for now) to remove default tasks from the tasks list.
+
+2.5.1
+------------------
+- Fix issues with relative paths.
+
+2.5.0
+------------------
+-.gitignore
+    - Ignore project/static/css/**/*.css files
+    - Ignore project/static/js/**/*.min.js files
+
+- grunt.js
+    - Remove superfluous {##} wrappers in metadata
+
+- package.json
+    - Remove grunt as a dependency, since RED Boilerplate doesn't depend on a specific version.
+
+- resources/tasks/helpers/check-dependencies.js
+    - Updating helper to take multiple dependencies
+
+- resources/tasks/helpers/install-plugin.js
+    - Instead of spawning new processes for plugin installation, require each plugin initializer and report any errors.
+    - Save system dependencies to package.json for later use.
+    - Concatenate system dependencies to avoid duplicates.
+    - Don't use scripts.install, use scripts.initialize to allow for dependency checks before attempting each install.
+
+- resources/tasks/helpers/install-plugin.js
+    - Instead of spawning new processes for plugin installation, require each plugin initializer and report any errors.
+    - Check system dependencies on `grunt start` before attempting to continue.
+
+2.4.1
+------------------
+- Stop overwriting dependency warnings.
+- Fix warning color output.
+
+2.4.0
+------------------
+- Save dependency warnings to `package.json`.
+- Prettify output.
+- When possible, grab the package name / description / version from the incoming plugin's git repository.

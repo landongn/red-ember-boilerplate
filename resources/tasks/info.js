@@ -16,6 +16,7 @@ module.exports = function(grunt) {
 		});
 
 		var pkg = require("./utils/pkg");
+		var localPkg = require("./utils/local-pkg");
 		var org = pkg.config.org;
 
 		var keys = ["name", "version", "author", "description"];
@@ -55,12 +56,12 @@ module.exports = function(grunt) {
 			}
 		}
 
-		if (pkg.config.warnings) {
+		if (localPkg.config.warnings) {
+			var warnings = (pkg.config.warnings || []).concat(localPkg.config.warnings),
+				warn, k;
+
 			grunt.log.writeln();
 			grunt.log.writeln("[!] The following warnings were ignored:".yellow);
-
-			var warnings = pkg.config.warnings;
-			var warn, k;
 
 			for (j = 0, k = warnings.length; j < k; j++) {
 				warn = warnings[j];
