@@ -61,7 +61,9 @@ module.exports = function (grunt) {
 				done();
 			}
 
-			if ((plugins.indexOf(plugin) === -1) && (pkg.config && (plugin.split("@")[0] !== pkg.config.org.name))) {
+			var cleanPlugin = plugin.split("@")[0];
+
+			if ((plugins.indexOf(cleanPlugin) === -1) && (pkg.config && (cleanPlugin !== pkg.config.org.name))) {
 				showPlugins();
 
 				grunt.log.writeln();
