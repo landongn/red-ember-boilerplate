@@ -1,0 +1,13 @@
+{
+	"name": "statix",
+	"description": "Statix is a static website generator.",
+	"version": "0.0.4",
+	"scripts": {
+		"update" : "npm update statix -g"
+	},
+	"systemDependencies": {
+		"node": ">= 0.8.7",
+		"npm": ">= 1.1.59",
+		"statix": ">=1.2.2"
+	}
+}

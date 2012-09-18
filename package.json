@@ -1,6 +1,6 @@
 {
-	"name": "red-boilerplate",
-	"version": "2.7.2",
+	"name": "robin",
+	"version": "3.0.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "A highly customizable boilerplate to initialize common projects.",
 	"repository": {
@@ -14,7 +14,7 @@
 	},
 	"config": {
 		"vars": {},
-		"tmpDir": ".rbp-temp",
+		"tmpDir": ".robin",
 		"ignoreTasks": [
 			"init",
 			"concat",

@@ -1,0 +1,20 @@
+{
+	"name": "red-start",
+	"description": "Easy creation of Django projects and applications based the layout used at RED Interactive Agency.",
+	"version": "0.0.4",
+	"scripts" : {
+		"install": "node resources/initialize/red-start.js",
+		"initialize": "node resources/initialize/red-start.js"
+	},
+	"systemDependencies": {
+		"python": ">= 2.7.2",
+		"pip": ">= 1.1.0",
+		"virtualenv": ">= 1.7.2",
+		"red-start": ">= 0.1.7"
+	},
+	"config": {
+		"requiredPaths": [
+			"env"
+		]
+	}
+}
