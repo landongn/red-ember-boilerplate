@@ -108,6 +108,12 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 Changelog
 ==========
 
+2.7.2
+------------------
+- Fixed syntax issue in README.
+- Fail when receiving an error while checking executable version.
+- Strip @x.x.x from plugin name when checking for available plugins.
+
 2.7.1
 ------------------
 - Adding a proper changelog.
@@ -169,9 +175,9 @@ Changelog
 
 2.5.0
 ------------------
--.gitignore
-    - Ignore project/static/css/**/*.css files
-    - Ignore project/static/js/**/*.min.js files
+- .gitignore
+    - Ignore `project/static/css/**/*.css` files
+    - Ignore `project/static/js/**/*.min.js` files
 
 - grunt.js
     - Remove superfluous {##} wrappers in metadata
