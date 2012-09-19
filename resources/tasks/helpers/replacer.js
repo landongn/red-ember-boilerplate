@@ -2,6 +2,7 @@
 module.exports = function (grunt) {
 
 	var pkg = require("../utils/pkg");
+	var localPkg = require("../utils/local-pkg");
 	var fs = require("fs");
 
 	grunt.registerHelper("is_okay", function (file, include, exclude) {
@@ -56,13 +57,7 @@ module.exports = function (grunt) {
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = [
-			".{git,sass-cache}",
-			"env",
-			"node_modules",
-			"uploads",
-			"resources/compass/gems"
-		];
+		var excludeDirs = localPkg.config.excludePaths || [];
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
 			return dir + "/**/*";
