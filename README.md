@@ -108,6 +108,10 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 Changelog
 ==========
 
+2.7.3
+------------------
+- Adding hook for new Caboose 2.0 functionality.
+
 2.7.2
 ------------------
 - Fixed syntax issue in README.
