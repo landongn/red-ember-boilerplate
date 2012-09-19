@@ -190,8 +190,8 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var localExcPaths = localPkg.config.excludedPaths || [];
-			var plugExcPaths = plugPkg.config.excludedPaths || [];
+			var localExcPaths = localPkg.config.excludePaths || [];
+			var plugExcPaths = plugPkg.config.excludePaths || [];
 
 			for (i = 0, j = plugExcPaths.length; i < j; i++) {
 				if (localExcPaths.indexOf(plugExcPaths[i]) === -1) {
@@ -200,7 +200,7 @@ module.exports = function (grunt) {
 			}
 
 			localPkg.config.requiredPaths = localReqPaths;
-			localPkg.config.excludedPaths = localExcPaths;
+			localPkg.config.excludePaths = localExcPaths;
 
 			localPkg.save();
 		};
