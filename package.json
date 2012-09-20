@@ -14,14 +14,12 @@
 	},
 	"config": {
 		"vars": {},
-		"tmpDir": ".robin",
-		"ignoreTasks": [
-			"init",
-			"concat",
-			"min",
-			"qunit",
-			"test"
-		],
+		"dirs": {
+			"tmp": ".robin",
+			"plugins": "robin/plugins",
+			"resources": "robin/resources"
+		},
+		"ignoreTasks": [],
 		"installedPlugins": {}
 	},
 	"license": "MIT",
