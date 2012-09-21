@@ -108,6 +108,14 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 Changelog
 ==========
 
+2.7.4
+------------------
+- Moved `require.js` out of `TEMPLATE_DEBUG` conditional. It should always load regardless of flag.
+- Adding a `config.excludedPaths` setting to `local.json`, removing hardcoded exclude paths from variable replacement functionality.
+- `resources/tasks/utils/on-update.js` now runs *after* update comes down the pipe.
+- Removing unused `resources/tasks/utils/exec-queue.js`
+- Adding on-update task for 2.7.4 update.
+
 2.7.3
 ------------------
 - Adding hook for new Caboose 2.0 functionality.
