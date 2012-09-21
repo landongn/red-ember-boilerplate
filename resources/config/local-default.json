@@ -1,6 +1,11 @@
 {
 	"config" : {
 		"initialized" : false,
-		"requiredPaths" : ["node_modules"]
+		"requiredPaths" : [
+			"node_modules"
+		],
+		"excludePaths" : [
+			"node_modules"
+		]
 	}
 }

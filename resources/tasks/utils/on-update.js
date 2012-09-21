@@ -1,5 +1,7 @@
 module.exports = (function () {
 	var pkg = require("./pkg");
+	var localPkg = require("./local-pkg");
+
 	var fs = require("fs");
 	var path = require("path");
 
@@ -11,8 +13,6 @@ module.exports = (function () {
 		}
 
 		delete pkg.config[origVal];
-
-		pkg.save();
 	}
 
 	return {
@@ -45,6 +45,21 @@ module.exports = (function () {
 					}
 
 				}
+			},
+
+			"2.7.4" : function () {
+				if (localPkg.config && !localPkg.config.excludePaths) {
+
+					// Add default excludePaths array
+					localPkg.config.excludePaths = [
+						".{git,sass-cache}",
+						"env",
+						"node_modules",
+						"uploads",
+						"resources/compass/gems"
+					];
+
+				}
 			}
 		},
 		run : function (cb) {
@@ -54,6 +69,9 @@ module.exports = (function () {
 			for (version in versions) {
 				versions[version]();
 			}
+
+			pkg.save();
+			localPkg.save();
 
 			if (cb) {
 				cb();

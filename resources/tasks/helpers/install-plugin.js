@@ -178,16 +178,36 @@ module.exports = function (grunt) {
 			});
 		};
 
-		var saveLocalPaths = function (paths) {
-			paths = localPkg.config.requiredPaths.concat(paths);
-			localPkg.config.requiredPaths = paths;
+		var saveLocalPaths = function (plugPkg) {
+			var i, j;
+
+			var localReqPaths = localPkg.config.requiredPaths || [];
+			var plugReqPaths = plugPkg.config.requiredPaths || [];
+
+			for (i = 0, j = plugReqPaths.length; i < j; i++) {
+				if (localReqPaths.indexOf(plugReqPaths[i]) === -1) {
+					localReqPaths.push(plugReqPaths[i]);
+				}
+			}
+
+			var localExcPaths = localPkg.config.excludePaths || [];
+			var plugExcPaths = plugPkg.config.excludePaths || [];
+
+			for (i = 0, j = plugExcPaths.length; i < j; i++) {
+				if (localExcPaths.indexOf(plugExcPaths[i]) === -1) {
+					localExcPaths.push(plugExcPaths[i]);
+				}
+			}
+
+			localPkg.config.requiredPaths = localReqPaths;
+			localPkg.config.excludePaths = localExcPaths;
 
 			localPkg.save();
 		};
 
 		var findLocalPaths = function (plug, plugPkg, cb) {
 			if (plugPkg.config && plugPkg.config.requiredPaths) {
-				saveLocalPaths(plugPkg.config.requiredPaths);
+				saveLocalPaths(plugPkg);
 			}
 
 			doReplacement(plug, plugPkg, cb);

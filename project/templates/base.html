@@ -66,8 +66,8 @@
 			</footer>
 		</div>
 
-		{% if settings.TEMPLATE_DEBUG %}
 		<script src="{{STATIC_URL}}js/libs/require.js"></script>
+		{% if settings.TEMPLATE_DEBUG %}
 		<script src="{{STATIC_URL}}js/config.js"></script>
 		<script>
 			require.config({

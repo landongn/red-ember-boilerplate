@@ -88,7 +88,19 @@ module.exports = function (grunt) {
 				if (stop === true) {
 					done(false);
 				} else {
-					done();
+					if (isUpdate) {
+						var path = require("path");
+						var updatePath = path.join(__dirname, "./utils/on-update");
+
+						delete require.cache[updatePath + ".js"];
+
+						var update = require(updatePath);
+						update.run(function () {
+							done();
+						});
+					} else {
+						done();
+					}
 				}
 			});
 		});
