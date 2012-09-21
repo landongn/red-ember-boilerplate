@@ -108,6 +108,10 @@ Each plugin must include its own `package.json` file. RBP will read through the 
 Changelog
 ==========
 
+2.7.5
+------------------
+- Fixed bug where `check-dependencies.js` looked for `localPkg.name` instead of `pkg.name`.
+
 2.7.4
 ------------------
 - Moved `require.js` out of `TEMPLATE_DEBUG` conditional. It should always load regardless of flag.

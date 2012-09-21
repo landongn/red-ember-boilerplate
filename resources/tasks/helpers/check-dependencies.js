@@ -71,6 +71,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerHelper("check_dependencies", function (plugPkg, success, failure) {
+		var pkg = require("../utils/pkg");
 		var localPkg = require("../utils/local-pkg");
 		var sysDeps = plugPkg.systemDependencies || plugPkg;
 
@@ -80,7 +81,7 @@ module.exports = function (grunt) {
 
 		for (var bin in sysDeps) {
 			iterator.push({
-				plugin : plugPkg.name || localPkg.name,
+				plugin : plugPkg.name || pkg.name,
 				bin : bin,
 				version : sysDeps[bin]
 			});
