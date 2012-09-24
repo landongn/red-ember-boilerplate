@@ -63,11 +63,11 @@ module.exports = function (grunt) {
 			done();
 		};
 
-		var removeTmpDir = function (tmpDir) {
+		var removeTmpDir = function (robinDir) {
 			var wrench = require("wrench");
 			grunt.file.setBase("../");
 
-			wrench.rmdirSyncRecursive(tmpDir, true);
+			wrench.rmdirSyncRecursive(robinDir, true);
 		};
 
 		var handleSettings = function(err, props) {
@@ -91,28 +91,28 @@ module.exports = function (grunt) {
 			// Sort by name
 			plugArr = plugArr.sort();
 
-			var tmpDir = pkg.config.tmpDir;
+			var robinDir = pkg.config.dirs.robin;
 
-			if (!fs.existsSync(tmpDir)) {
-				grunt.file.mkdir(tmpDir);
+			if (!fs.existsSync(robinDir)) {
+				grunt.file.mkdir(robinDir);
 			}
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.file.setBase(tmpDir);
+				grunt.file.setBase(robinDir);
 
 				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
 				grunt.log.writeln();
 
 				(function install (count) {
 					if (!plugArr[count]) {
-						removeTmpDir(tmpDir);
+						removeTmpDir(robinDir);
 						finalizeInstall();
 						return;
 					}
 
 					grunt.helper("install_plugin", plugArr[count], null, function (stop) {
 						if (stop === true) {
-							removeTmpDir(tmpDir);
+							removeTmpDir(robinDir);
 							done(false);
 							return;
 						}
@@ -122,7 +122,7 @@ module.exports = function (grunt) {
 						if (plugArr[count]) {
 							install(count);
 						} else {
-							removeTmpDir(tmpDir);
+							removeTmpDir(robinDir);
 							finalizeInstall();
 						}
 					});

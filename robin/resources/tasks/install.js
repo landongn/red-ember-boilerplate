@@ -70,20 +70,20 @@ module.exports = function (grunt) {
 				grunt.fail.warn(plugin.red.bold + " is not an available plugin".yellow);
 			}
 
-			var tmpDir = pkg.config.tmpDir;
+			var robinDir = pkg.config.dirs.robin;
 			var fs = require("fs");
 			var wrench = require("wrench");
 
-			if (fs.existsSync(tmpDir)) {
-				wrench.rmdirSyncRecursive(tmpDir, true);
+			if (fs.existsSync(robinDir)) {
+				wrench.rmdirSyncRecursive(robinDir, true);
 			}
 
-			grunt.file.mkdir(tmpDir);
-			grunt.file.setBase(tmpDir);
+			grunt.file.mkdir(robinDir);
+			grunt.file.setBase(robinDir);
 
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
 				grunt.file.setBase("../");
-				wrench.rmdirSyncRecursive(tmpDir, true);
+				wrench.rmdirSyncRecursive(robinDir, true);
 
 				if (stop === true) {
 					done(false);

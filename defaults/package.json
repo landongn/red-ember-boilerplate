@@ -1,11 +1,11 @@
 {
-	"name": "robin",
-	"version": "3.0.0",
+	"name": "__PROJECT_NAME__",
+	"version": "0.1.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
-	"description": "A highly customizable boilerplate to initialize common projects.",
+	"description": "",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/ff0000/red-boilerplate.git"
+		"url": "__PROJECT_REPOSITORY__"
 	},
 	"dependencies": {
 		"prompt": "0.1.x",

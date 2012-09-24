@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 				fs.unlinkSync("install.js");
 			}
 
-			grunt.file.setBase(pkg.config.tmpDir);
+			grunt.file.setBase(pkg.config.dirs.robin);
 
 			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
 
