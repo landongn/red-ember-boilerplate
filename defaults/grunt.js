@@ -9,6 +9,7 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.loadTasks(".robin/resources/**/*");
+	grunt.loadTasks(".robin/resources/tasks");
+	grunt.loadTasks(".robin/resources/tasks/helpers");
 
 };
