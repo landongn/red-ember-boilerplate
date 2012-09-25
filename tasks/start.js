@@ -187,97 +187,6 @@ module.exports = function (grunt) {
 			grunt.helper("check_for_available_plugins", promptForSettings);
 		};
 
-		var handleRemote = function (err, props) {
-			if (props.remote) {
-				remote = props.remote;
-
-				grunt.utils.spawn({
-					cmd: "git",
-					args: ["remote", "add", "origin", props.remote]
-				}, gatherPlugins);
-			} else {
-				gatherPlugins();
-			}
-		};
-
-		var addOrigin = function () {
-			if (everything) {
-				handleRemote(null, {
-					remote : null
-				});
-			} else {
-				prompt.start();
-
-				prompt.get([{
-					name: "remote",
-					message: "Github repository url (This can be left blank)?",
-					validator: /(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/,
-					required: false,
-					"default": null
-				}], handleRemote);
-			}
-		};
-
-		var handleInit = function (err, props) {
-			var assert = grunt.helper("get_assertion", props.init);
-
-			if (assert) {
-				grunt.utils.spawn({
-					cmd: "git",
-					args: ["init"]
-				}, addOrigin);
-			} else {
-				gatherPlugins();
-			}
-		};
-
-		var initializeBoilerplate = function (ungit) {
-			if (ungit) {
-				if (everything) {
-					handleInit(null, {
-						init : "y"
-					});
-				} else {
-					prompt.start();
-
-					prompt.get([{
-						name: "init",
-						message: "Would you like to create a git repository?".grey,
-						validator: /[y\/n]+/i,
-						"default": "Y/n"
-					}], handleInit);
-				}
-			} else {
-				gatherPlugins();
-			}
-		};
-
-		var checkGitInfo = function (err, result, code) {
-			var unstaged = result.indexOf("Untracked files:") !== -1;
-			var ungit = result.indexOf("fatal: Not a git repository") !== -1;
-
-			if (unstaged) {
-				prompt.start();
-
-				prompt.get([{
-					name: "unstaged",
-					message: "WARNING: ".yellow + "There are unstaged files in your git repository. These may be overwritten. Are you sure you want to continue?".magenta,
-					validator: /[y\/n]+/i,
-					"default": "Y/n"
-				}], function (err, props) {
-					var assert = grunt.helper("get_assertion", props.unstaged);
-
-					if (assert) {
-						initializeBoilerplate(ungit);
-					} else {
-						done(false);
-					}
-				});
-			} else {
-				initializeBoilerplate(ungit);
-			}
-		};
-
 		var getThisPartyStarted = function () {
 			if (pkg.config.initialized) {
 				grunt.log.writeln();
@@ -295,7 +204,7 @@ module.exports = function (grunt) {
 				grunt.utils.spawn({
 					cmd: "git",
 					args: ["status"]
-				}, checkGitInfo);
+				}, gatherPlugins);
 			}
 		};
 

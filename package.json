@@ -17,7 +17,8 @@
 		"dirs": {
 			"robin": ".robin",
 			"plugins": "robin/plugins",
-			"resources": "robin/resources"
+			"tasks": "robin/tasks",
+			"config": "robin/config"
 		},
 		"ignoreTasks": [],
 		"installedPlugins": {}
