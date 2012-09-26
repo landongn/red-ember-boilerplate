@@ -79,10 +79,8 @@ module.exports = function (grunt) {
 			}
 
 			grunt.file.mkdir(robinDir);
-			grunt.file.setBase(robinDir);
 
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
-				grunt.file.setBase("../");
 				wrench.rmdirSyncRecursive(robinDir, true);
 
 				if (stop === true) {
