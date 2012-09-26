@@ -189,7 +189,7 @@ module.exports = function (grunt) {
 					stdio: "inherit"
 				});
 
-				child.addListener("exit", function () {
+				child.on("exit", function () {
 					findLocalPaths(plug, plugPkg, cb);
 				});
 
@@ -254,13 +254,21 @@ module.exports = function (grunt) {
 					var plugBranch = plugRepo.branch || "master";
 					var plugPath = path.join(pkg.config.dirs.robin, plug);
 
-					console.log(plugPath);
 					grunt.file.mkdir(plugPath);
 
-					grunt.utils.spawn({
-						cmd: "git",
-						args: ["clone", "--branch", plugBranch, plugRepo.url, plugPath]
-					}, function (err, result, code) {
+					var child = cp.spawn("git", [
+						"clone",
+						"--depth", "1",
+						"--branch", plugBranch,
+						plugRepo.url,
+						plugPath
+					], {
+						env: null,
+						setsid: true,
+						stdio: "inherit"
+					});
+
+					child.on("exit", function () {
 						checkSystemDependencies(plug, plugPkg, cb);
 					});
 				} else {
