@@ -64,9 +64,9 @@ module.exports = function (grunt) {
 			if (install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					file = args.join("");
+					file = path.join(pkg.config.dirs.robin, "components", plug, args.join(""));
 
-				if (cmd === "node" && fs.existsSync("./" + file)) {
+				if (cmd === "node" && fs.existsSync(file)) {
 					var initializer = require(fs.realpathSync(file));
 
 					initializer.run(function (error) {
