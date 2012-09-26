@@ -99,7 +99,7 @@ module.exports = function (grunt) {
 			if (!grunt.file.isMatch(excludeFiles, current)) {
 				newFile = grunt.helper("replace_vars", current.toString());
 
-				if (current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
+				if (newFile && current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
 					var wrench = require("wrench");
 					wrench.copyDirSyncRecursive(current, newFile);
 					wrench.rmdirSyncRecursive(current, true);
