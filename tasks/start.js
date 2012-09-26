@@ -8,8 +8,11 @@ module.exports = function (grunt) {
 		var path = require("path");
 
 		var done = this.async();
+
 		var pkg = require("./utils/pkg");
-		var localPkg = require("./utils/local-pkg");
+
+		// Don't require until we know we need it
+		var localPkg;
 
 		var whitelist = [];
 
@@ -220,6 +223,8 @@ module.exports = function (grunt) {
 		};
 
 		var checkIfPartyStarted = function () {
+			localPkg = require("./utils/local-pkg");
+
 			var local = localPkg.config,
 				requiredPaths = local.requiredPaths,
 				i, j, req;
