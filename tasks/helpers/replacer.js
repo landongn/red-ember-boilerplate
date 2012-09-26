@@ -51,7 +51,6 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerHelper("replace_in_files", function (cb) {
-		var wrench = require("wrench");
 		var files = grunt.file.expand("**/*");
 
 		var i, j, current, newFile,
@@ -85,6 +84,7 @@ module.exports = function (grunt) {
 				newFile = grunt.helper("replace_vars", current.toString());
 
 				if (current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
+					var wrench = require("wrench");
 					wrench.copyDirSyncRecursive(current, newFile);
 					wrench.rmdirSyncRecursive(current, true);
 				}
