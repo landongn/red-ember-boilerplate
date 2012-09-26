@@ -184,7 +184,6 @@ module.exports = function (grunt) {
 
 			if (callUpdate) {
 				var child = cp.spawn("npm", ["install"].concat(pluginDeps), {
-					cwd: "../",
 					env: null,
 					setsid: true,
 					stdio: "inherit"
