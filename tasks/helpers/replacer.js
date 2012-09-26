@@ -2,7 +2,6 @@
 module.exports = function (grunt) {
 
 	var pkg = require("../utils/pkg");
-	var localPkg = require("../utils/local-pkg");
 	var fs = require("fs");
 
 	grunt.registerHelper("is_okay", function (file, include, exclude) {
@@ -51,6 +50,12 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerHelper("replace_in_files", function (cb) {
+		var path = require("path");
+		var updatePath = path.join(__dirname, "../utils/local-pkg");
+
+		delete require.cache[updatePath + ".js"];
+
+		var localPkg = require("../utils/local-pkg");
 		var files = grunt.file.expand("**/*");
 
 		var i, j, current, newFile,
