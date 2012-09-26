@@ -30,7 +30,7 @@ module.exports = {
 	installExternalScripts : function () {
 		var fs = require("fs"),
 			path = require("path"),
-			installpath = path.join(__dirname, "project/static/js/libs/_install");
+			installpath = path.join(process.cwd(), "project/static/js/libs/_install");
 
 		this.exec("node", [path.join(installpath, "installer")], null, false, function (success) {
 			if (!success) {
