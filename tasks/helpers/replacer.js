@@ -26,6 +26,8 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerHelper("replace_vars", function (str) {
+		var hasMatch;
+
 		for (var p in pkg.config.vars) {
 			var re = new RegExp("([\\t,\\s]*)({?#?__" + p + "__#?}?)", "g");
 			var re2 = new RegExp("([\\t,\\s]*)({#__" + p + "__#})([\\s\\S]*)({#\\/__" + p + "__#})", "g");
@@ -43,7 +45,13 @@ module.exports = function (grunt) {
 				} else {
 					str = str.replace(re2, "$1$2\n$1" + repl + "\n$1$4");
 				}
+
+				hasMatch = true;
 			}
+		}
+
+		if (!hasMatch) {
+			return false;
 		}
 
 		return str;
@@ -78,7 +86,10 @@ module.exports = function (grunt) {
 
 				var contents = grunt.file.read(current, "utf-8");
 				contents = grunt.helper("replace_vars", contents.toString());
-				grunt.file.write(current, contents);
+
+				if (contents) {
+					grunt.file.write(current, contents);
+				}
 			}
 		}
 
