@@ -48,10 +48,10 @@ module.exports = (function () {
 			},
 
 			"2.7.4" : function () {
-				if (localPkg.config && !localPkg.config.excludePaths) {
+				if (localPkg.config && !localPkg.config.excludedPaths) {
 
-					// Add default excludePaths array
-					localPkg.config.excludePaths = [
+					// Add default excludedPaths array
+					localPkg.config.excludedPaths = [
 						".{git,sass-cache}",
 						"env",
 						"node_modules",

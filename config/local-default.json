@@ -5,7 +5,7 @@
 			".robin",
 			"node_modules"
 		],
-		"excludePaths" : [
+		"excludedPaths" : [
 			".robin",
 			"node_modules"
 		]

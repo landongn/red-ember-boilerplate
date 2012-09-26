@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = localPkg.config.excludePaths || [];
+		var excludeDirs = localPkg.config.excludedPaths || [];
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
 			return dir + "/**/*";
