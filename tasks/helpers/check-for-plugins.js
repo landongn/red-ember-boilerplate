@@ -9,8 +9,8 @@ module.exports = function (grunt) {
 		// Spacer
 		grunt.log.writeln();
 		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
-		grunt.log.writeln("    Pinging GitHub at %s".replace("%s", repo).grey);
 
+		var plugins = [];
 		var pluginsDir = pkg.config.dirs.robin + "/components";
 
 		if (fs.existsSync(pluginsDir)) {
