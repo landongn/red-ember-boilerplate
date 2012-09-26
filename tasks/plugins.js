@@ -7,10 +7,10 @@ module.exports = function (grunt) {
 		fs = require("fs");
 
 	var plugins = pkg.config.installedPlugins,
-		i, j, plugDir, helperDir;
+		key, plugDir, helperDir;
 
-	for (i = 0, j = plugins.length; i < j; i++) {
-		plugDir = pkg.config.dirs.robin + "/components/" + plugins[i] + "resources/tasks";
+	for (key in plugins) {
+		plugDir = pkg.config.dirs.robin + "/components/" + key + "/resources/tasks";
 		helperDir = plugDir + "/helpers";
 
 		if (fs.existsSync(plugDir)) {
