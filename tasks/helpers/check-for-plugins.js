@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 	grunt.registerHelper("check_for_available_plugins", function (cb) {
 		var fs = require("fs");
 		var pkg = require("../utils/pkg");
+		var colors = require("colors");
 
 		// Spacer
 		grunt.log.writeln();
@@ -17,8 +18,6 @@ module.exports = function (grunt) {
 			var branches = grunt.file.expandDirs(pluginsDir + "/*");
 			var i, j, branch;
 
-			console.log(branches);
-
 			for (i = 0, j = branches.length; i < j; i++) {
 				branch = branches[i];
 
@@ -26,8 +25,13 @@ module.exports = function (grunt) {
 					continue;
 				}
 
-				plugins.push(require(branch + "/package.json").name);
+				var plugin = require(branch + "/package.json"),
+					name = plugin.name;
+
+				plugins.push(name);
 			}
+
+			grunt.log.writeln(("    " + plugins.join(", ")).grey);
 
 			if (cb) {
 				cb(plugins.sort());
