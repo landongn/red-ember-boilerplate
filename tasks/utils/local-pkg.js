@@ -1,13 +1,24 @@
 /*jslint node: true */
 /*global jake, desc, task */
 var fs = require("fs");
+var pkg = require("./pkg");
 var path = require("path");
 
-var localPkg = path.join(__dirname, "../../config/local.json");
+var configDir = path.join(process.cwd(), pkg.config.dirs.config);
+
+var localPkg = path.join(configDir, "local.json");
+var defaultLocalPkg = path.join(__dirname, "../../config/local-default.json");
+
 var pkgFile = localPkg;
 
 if (!fs.existsSync(pkgFile)) {
-	pkgFile = pkgFile.replace(".json", "-default.json");
+
+	if (!fs.existsSync(configDir)) {
+		var wrench = require("wrench");
+		wrench.mkdirSyncRecursive(configDir);
+	}
+
+	pkgFile = defaultLocalPkg;
 
 	if (!fs.existsSync(pkgFile)) {
 		console.error("File not found: %f".replace("%f", pkgFile));
