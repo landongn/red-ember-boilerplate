@@ -15,8 +15,8 @@
 		"bundle": ">= 1.2.0"
 	},
 	"scripts": {
-		"install" : "node resources/initialize/caboose.js",
-		"initialize" : "node resources/initialize/caboose.js"
+		"install" : "node config/init/caboose.js",
+		"initialize" : "node config/init/caboose.js"
 	},
 	"config": {
 		"scope": "resources/compass",

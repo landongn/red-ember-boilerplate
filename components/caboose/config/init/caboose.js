@@ -40,7 +40,7 @@ module.exports = {
 	moveGemfileToRoot : function () {
 		var fs = require("fs"),
 			path = require("path"),
-			gempath = path.join(__dirname, "../tasks/config/Gemfile");
+			gempath = path.join(__dirname, "../Gemfile");
 
 		if (fs.existsSync(gempath)) {
 			this.exec("mv", [gempath, gempath + ".lock", "."], null, false, function (success) {
