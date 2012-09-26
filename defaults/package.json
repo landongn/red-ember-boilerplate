@@ -17,10 +17,16 @@
 		"dirs": {
 			"robin": ".robin",
 			"plugins": "robin/plugins",
-			"resources": "robin/resources"
+			"tasks": "robin/tasks",
+			"config": "robin/config"
 		},
 		"ignoreTasks": [],
-		"installedPlugins": {}
+		"installedPlugins": {},
+		"org": {
+			"name": null,
+			"version": "0.1.0",
+			"repository": {}
+		}
 	},
 	"license": "MIT",
 	"devDependencies": {},
