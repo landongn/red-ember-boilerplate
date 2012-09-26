@@ -2,9 +2,11 @@
 	"config" : {
 		"initialized" : false,
 		"requiredPaths" : [
+			".robin",
 			"node_modules"
 		],
 		"excludePaths" : [
+			".robin",
 			"node_modules"
 		]
 	}

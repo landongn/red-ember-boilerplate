@@ -15,6 +15,9 @@
 	"config": {
 		"requiredPaths": [
 			"env"
+		],
+		"excludedPaths": [
+			"env"
 		]
 	}
 }

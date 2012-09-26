@@ -23,6 +23,9 @@
 		"requiredPaths": [
 			".bundle",
 			"resources/compass/gems"
+		],
+		"excludedPaths": [
+			"resources/compass/gems"
 		]
 	}
 }
