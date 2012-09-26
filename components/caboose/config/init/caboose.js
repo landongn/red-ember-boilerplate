@@ -27,6 +27,31 @@ module.exports = {
 		});
 	},
 
+	copy : function (source, destination) {
+		var fs = require("fs"),
+			BUF_LENGTH = 64 * 1024,
+			_buff = new Buffer(BUF_LENGTH);
+
+		function _copyFileSync(srcFile, destFile) {
+			var bytesRead, fdr, fdw, pos;
+			fdr = fs.openSync(srcFile, "r");
+			fdw = fs.openSync(destFile, "w");
+			bytesRead = 1;
+			pos = 0;
+
+			while (bytesRead > 0) {
+				bytesRead = fs.readSync(fdr, _buff, 0, BUF_LENGTH, pos);
+				fs.writeSync(fdw, _buff, 0, bytesRead);
+				pos += bytesRead;
+			}
+
+			fs.closeSync(fdr);
+			return fs.closeSync(fdw);
+		}
+
+		return _copyFileSync(source, destination);
+	},
+
 	installGems : function () {
 		this.exec("bundle", ["install", "--path", "resources/compass/gems"], null, false, function (success, data) {
 			if (!success) {
@@ -43,16 +68,11 @@ module.exports = {
 			gempath = path.join(__dirname, "../Gemfile");
 
 		if (fs.existsSync(gempath)) {
-			this.exec("mv", [gempath, gempath + ".lock", "."], null, false, function (success) {
-				if (success) {
-					this.installGems();
-				} else {
-					return this.exit("Failed to move %s".replace("%s", gempath));
-				}
-			}.bind(this));
-		} else {
-			this.installGems();
+			this.copy(gempath, process.cwd() + "/Gemfile");
+			this.copy(gempath + ".lock", process.cwd() + "/Gemfile.lock");
 		}
+
+		this.installGems();
 	},
 
 	exit : function (error) {
