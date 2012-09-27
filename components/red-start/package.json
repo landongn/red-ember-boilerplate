@@ -13,7 +13,7 @@
 		"red-start": ">= 0.1.7"
 	},
 	"config": {
-		"replaceVars": true,
+		"replaceVars": false,
 		"requiredPaths": [
 			"env"
 		],
