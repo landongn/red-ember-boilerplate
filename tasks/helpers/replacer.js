@@ -57,14 +57,14 @@ module.exports = function (grunt) {
 		return str;
 	});
 
-	grunt.registerHelper("replace_in_files", function (cb) {
+	grunt.registerHelper("replace_in_files", function (cb, root) {
 		var path = require("path");
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
 
 		delete require.cache[updatePath + ".js"];
 
 		var localPkg = require("../utils/local-pkg");
-		var files = grunt.file.expand("**/*");
+		var files = grunt.file.expand(path.join(root || "", "**/*"));
 
 		var i, j, current, newFile,
 			stats;
