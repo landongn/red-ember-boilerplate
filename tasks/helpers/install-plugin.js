@@ -114,7 +114,9 @@ module.exports = function (grunt) {
 			if (plugPkg.config.localFiles) {
 				var pluginsDir = path.join(pkg.config.dirs.robin, "components");
 				var localDir = path.join(pluginsDir, plug, plugPkg.config.localFiles);
-				var localPaths = grunt.file.expandFiles(localDir + "/**/*");
+				var localPaths = grunt.file.expandFiles({
+					dot : true
+				}, localDir + "/**/*");
 
 				for (i = 0, j = localPaths.length; i < j; i++) {
 					file = localPaths[i];

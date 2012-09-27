@@ -2,8 +2,7 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		jshint = require("jshint").JSHINT,
-		jshintOptions = require(".jshintrc");
+		jshint = require("jshint").JSHINT;
 
 	var FILES = path.join("project", "static", "js", "**/*[^.min].js");
 
@@ -35,6 +34,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
+		var jshintOptions = grunt.file.readJSON(".jshintrc");
 
 		if (mode === "browser") {
 			jshintOptions.node = false;
@@ -44,9 +44,15 @@ module.exports = function (grunt) {
 
 		var hasErrors = false;
 
-		var exclude = grunt.file.read(".jshintignore").split("\n");
+		var exclude = grunt.file.read(".jshintignore").trim().split("\n");
 		var files = grunt.file.expandFiles(FILES).filter(function (file) {
-			return !grunt.file.isMatch(exclude, file);
+			return exclude.every(function (x) {
+				x = x.replace(/\./g, "\\.");
+				x = x.replace(/^\*/g, ".*");
+
+				var match = (new RegExp(x).test(file));
+				return !match;
+			});
 		});
 
 		for (var i = 0; i < files.length; i ++) {
@@ -55,27 +61,27 @@ module.exports = function (grunt) {
 			fa[fa.length - 1] = fa[fa.length - 1].white;
 			var filename = fa.join("/").grey;
 
-			var contents = fs.readFileSync(file, "utf-8");
+			var contents = grunt.file.read(file);
 
 			if (!jshint(contents, jshintOptions)) {
 				hasErrors = true;
 
 				grunt.log.writeln();
-				grunt.log.writeln(pad("", 4) + "Err ".red + filename);
+				grunt.log.writeln("Err ".red + filename);
 
 				for (var j = 0; j < jshint.errors.length; j ++) {
 					var err = jshint.errors[j],
-						line = ["line", pad(err.line, 3, " "), ": char", pad(err.character, 3, " "), pad("", 2)].join(" ").grey.bold,
+						line = ["line", pad(err.line, 1, " "), ": char", pad(err.character, 1, " "), pad("", 1)].join(" ").grey.bold,
 						reason = err.reason.yellow;
 
-					grunt.log.writeln(pad("", 8) + line + reason);
-					grunt.log.writeln(pad("", 30) + trim(err.evidence).white);
+					grunt.log.writeln(pad("", 4) + line + reason);
+					grunt.log.writeln(pad("", 22) + trim(err.evidence).white);
 					grunt.log.writeln();
 				}
 			}
 
 			else {
-				grunt.log.writeln(pad("", 4) + "Ok  ".green + filename);
+				grunt.log.writeln("Ok  ".green + filename);
 			}
 		}
 

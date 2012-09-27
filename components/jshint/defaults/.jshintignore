@@ -3,6 +3,6 @@ node_modules
 *.min.js
 project/static/js/libs
 project/static/js/test
-ssla_analytics
+ssla-analytics
 zynga/src
 plugins
