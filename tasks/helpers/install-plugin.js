@@ -84,6 +84,21 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var renameFiles = function (paths, exclude, plug, scope) {
+			var i, j, file;
+
+			for (i = 0, j = paths.length; i < j; i++) {
+				file = paths[i];
+
+				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+
+					grunt.log.writeln(("Writing " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
+					grunt.file.copy(file, newFile);
+				}
+			}
+		};
+
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
 			var plugDir = path.join(pkg.config.dirs.robin, plug);
@@ -100,15 +115,13 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			for (i = 0, j = repoPaths.length; i < j; i++) {
-				file = repoPaths[i];
+			renameFiles(repoPaths, exclude, plug, scope);
 
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+			if (plugPkg.localFiles) {
+				var localFiles = path.join(plugDir, plugPkg.localFiles, "**/*");
+				var localPaths = grunt.file.expandFiles(localFiles);
 
-					grunt.log.writeln(("Writing " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
-					grunt.file.copy(file, newFile);
-				}
+				renameFiles(localPaths, exclude, plug, scope);
 			}
 
 			runInstaller(plug, plugPkg, cb);
