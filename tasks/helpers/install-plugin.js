@@ -154,8 +154,7 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			if (doReplacement) {
-				var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
-				var plugDir = path.join(pluginDir, plug);
+				var plugDir = path.join(pkg.config.dirs.robin, plug);
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
