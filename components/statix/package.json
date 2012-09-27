@@ -11,7 +11,7 @@
 		"statix": ">=1.2.2"
 	},
 	"config": {
-		"localFiles": "local",
+		"localFiles": "defaults",
 		"replaceVars": false
 	}
 }

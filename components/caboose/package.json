@@ -21,6 +21,7 @@
 	"config": {
 		"scope": "resources/compass",
 		"replaceVars": false,
+		"localFiles": "defaults",
 		"requiredPaths": [
 			".bundle",
 			"resources/compass/gems"
