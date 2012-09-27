@@ -39,17 +39,17 @@ module.exports = function (grunt) {
 					msg = msg.split(lineBreak);
 					msg.shift();
 
-					grunt.log.subhead("    Built with the following modules:".grey);
+					grunt.log.subhead("Built with the following modules:".grey);
 
 					msg = msg.join("").replace(/\n/g, "\n    ");
 				}
 
 				if (msg.indexOf("Tracing dependencies for:") !== -1) {
-					grunt.log.subhead("    " + msg.trim().grey);
+					grunt.log.subhead(msg.trim().grey);
 				} else if (msg.indexOf("Uglifying file:") !== -1) {
-					grunt.log.writeln("    " + msg.trim().green);
+					grunt.log.writeln(msg.trim().green);
 				} else {
-					grunt.log.writeln("    " + msg.trim().grey);
+					grunt.log.writeln(msg.trim().grey);
 				}
 			}
 		};

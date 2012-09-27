@@ -38,10 +38,10 @@ module.exports = function (grunt) {
 
 				if (installed.length) {
 					for (i = 0, j = installed.length; i < j; i++) {
-						grunt.log.writeln("    " + installed[i].magenta);
+						grunt.log.writeln(installed[i].magenta);
 					}
 				} else {
-					grunt.log.writeln("    You haven't installed any modules!".grey);
+					grunt.log.writeln("You haven't installed any modules!".grey);
 				}
 
 				grunt.log.writeln();
@@ -49,10 +49,10 @@ module.exports = function (grunt) {
 
 				if (available.length) {
 					for (i = 0, j = available.length; i < j; i++) {
-						grunt.log.writeln("    " + available[i].cyan);
+						grunt.log.writeln(available[i].cyan);
 					}
 				} else {
-					grunt.log.writeln("    You've installed all available modules!".grey);
+					grunt.log.writeln("You've installed all available modules!".grey);
 				}
 			};
 

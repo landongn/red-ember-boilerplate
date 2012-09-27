@@ -26,17 +26,17 @@ module.exports = function(grunt) {
 
 		for (i = 0, j = keys.length; i < j; i++) {
 			if (pkg[keys[i]]) {
-				grunt.log.writeln((i === 0 ? "[*] " : "    ").cyan + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]));
+				grunt.log.writeln((i === 0 ? "[*] " : "").cyan + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]));
 			}
 		}
 
 		if (pkg.repository) {
-			grunt.log.writeln("    " + "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
+			grunt.log.writeln("Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
 		grunt.log.writeln();
 		grunt.log.writeln("[*] ".cyan + "Boilerplate version: %s".replace("%s", org.version).magenta);
-		grunt.log.writeln("    via %u @ branch %b".grey.replace("%u", org.repository.url).replace("%b", org.repository.branch));
+		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", org.repository.url).replace("%b", org.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;

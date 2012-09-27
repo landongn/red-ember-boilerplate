@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 				plugins.push(name);
 			}
 
-			grunt.log.writeln(("    " + plugins.join(", ")).grey);
+			grunt.log.writeln((plugins.join(", ")).grey);
 
 			if (cb) {
 				cb(plugins.sort());
