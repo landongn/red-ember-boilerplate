@@ -84,21 +84,6 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var renameFiles = function (paths, exclude, plug, scope) {
-			var i, j, file;
-
-			for (i = 0, j = paths.length; i < j; i++) {
-				file = paths[i];
-
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
-
-					grunt.log.writeln(("Writing " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
-					grunt.file.copy(file, newFile);
-				}
-			}
-		};
-
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
 			var plugDir = path.join(pkg.config.dirs.robin, plug);
@@ -115,13 +100,31 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			renameFiles(repoPaths, exclude, plug, scope);
+			for (i = 0, j = repoPaths.length; i < j; i++) {
+				file = repoPaths[i];
 
-			if (plugPkg.localFiles) {
-				var localFiles = path.join(plugDir, plugPkg.localFiles, "**/*");
-				var localPaths = grunt.file.expandFiles(localFiles);
+				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
-				renameFiles(localPaths, exclude, plug, scope);
+					grunt.log.writeln(("Writing " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
+					grunt.file.copy(file, newFile);
+				}
+			}
+
+			if (plugPkg.config.localFiles) {
+				var pluginsDir = path.join(pkg.config.dirs.robin, "components");
+				var localDir = path.join(pluginsDir, plug, plugPkg.config.localFiles);
+				var localPaths = grunt.file.expandFiles(localDir + "/**/*");
+
+				for (i = 0, j = localPaths.length; i < j; i++) {
+					file = localPaths[i];
+
+					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+						newFile = file.replace(localDir + "/", "");
+						grunt.log.writeln(("Writing " + newFile).grey);
+						grunt.file.copy(file, newFile);
+					}
+				}
 			}
 
 			runInstaller(plug, plugPkg, cb);
