@@ -59,7 +59,6 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
 			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
 
@@ -183,7 +182,6 @@ module.exports = function (grunt) {
 			if (pkg.config.initialized) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
-				grunt.log.writeln("[*] " + "Run `grunt tasks` for a list of available tasks.".cyan);
 
 				done();
 			} else {
