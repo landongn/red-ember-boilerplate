@@ -106,7 +106,7 @@ module.exports = function (grunt) {
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
 					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
-					grunt.log.writeln(("Writing " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
+					grunt.log.writeln(("Adding " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
 					grunt.file.copy(file, newFile);
 				}
 			}
@@ -119,19 +119,25 @@ module.exports = function (grunt) {
 				for (i = 0, j = localPaths.length; i < j; i++) {
 					file = localPaths[i];
 
-					if (fs.existsSync(file)) {
+					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
 						newFile = file.replace(localDir + "/", "");
+						grunt.log.writeln(("Adding " + newFile).grey);
+						grunt.file.copy(file, newFile);
+					}
+				}
 
-						if (!grunt.file.isMatch(exclude, file)) {
-							grunt.log.writeln(("Writing " + newFile).grey);
-							grunt.file.copy(file, newFile);
-						} else if (grunt.file.isMatch(".gitignore", file)) {
-							if (fs.existsSync(newFile)) {
-								grunt.file.write(newFile, grunt.file.read(newFile) + grunt.file.read(file));
-							} else {
-								grunt.file.copy(file, newFile);
-							}
-						}
+				var gitIgnore = localDir + "/.gitignore";
+				if (fs.existsSync(gitIgnore)) {
+					var currGitIgnore = process.cwd() + "/.gitignore";
+					grunt.log.writeln("Updating .gitignore");
+
+					if (fs.existsSync(currGitIgnore)) {
+						grunt.file.write(currGitIgnore, [
+							grunt.file.read(currGitIgnore),
+							grunt.file.read(gitIgnore)
+						].join("\n"));
+					} else {
+						grunt.file.copy(gitIgnore, currGitIgnore);
 					}
 				}
 			}
