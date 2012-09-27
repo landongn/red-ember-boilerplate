@@ -115,10 +115,16 @@ module.exports = function (grunt) {
 		};
 
 		var doReplacement = function (plug, plugPkg, cb) {
+			var doReplacement = plugPkg.replaceVars;
+
 			// Replace variables
-			grunt.helper("replace_in_files", function () {
+			if (doReplacement) {
+				grunt.helper("replace_in_files", function () {
+					copyFiles(plug, plugPkg, cb);
+				});
+			} else {
 				copyFiles(plug, plugPkg, cb);
-			});
+			}
 		};
 
 		var saveLocalPaths = function (plugPkg) {

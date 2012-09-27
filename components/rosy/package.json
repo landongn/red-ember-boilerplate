@@ -24,6 +24,7 @@
 		"install" : "node install.js"
 	},
 	"config": {
-		"scope": "project/static/js"
+		"scope": "project/static/js",
+		"replaceVars": true
 	}
 }

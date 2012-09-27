@@ -20,6 +20,7 @@
 	},
 	"config": {
 		"scope": "resources/compass",
+		"replaceVars": false,
 		"requiredPaths": [
 			".bundle",
 			"resources/compass/gems"

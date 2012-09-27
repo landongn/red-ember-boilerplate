@@ -9,5 +9,8 @@
 		"node": ">= 0.8.7",
 		"npm": ">= 1.1.59",
 		"statix": ">=1.2.2"
+	},
+	"config": {
+		"replaceVars": false
 	}
 }
