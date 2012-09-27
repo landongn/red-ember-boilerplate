@@ -1,60 +1,11 @@
 module.exports = function (grunt) {
 
 	var fs = require("fs"),
-	path = require("path"),
-	jshint = require("jshint").JSHINT,
-	config = require("../config/jshint.config.js"),
-	jshintOptions = config.jshint,
-	include = config.include,
-	exclude = config.exclude;
+		path = require("path"),
+		jshint = require("jshint").JSHINT,
+		jshintOptions = require(".jshintrc");
 
-	function isOkay(file, include, exclude) {
-		var ok = false,
-			re;
-
-		for (var i = 0; i < include.length; i ++) {
-			re = include[i];
-			if (re.test(file)) {
-				ok = true;
-				break;
-			}
-		}
-		for (i = 0; i < exclude.length; i ++) {
-			re = exclude[i];
-			if (re.test(file)) {
-				ok = false;
-				break;
-			}
-		}
-		return ok;
-	}
-
-	function getJSFiles(folder) {
-
-		var dirStats = fs.statSync(folder);
-		var jsFiles = [];
-
-		if (dirStats.isDirectory()) {
-
-			var files = fs.readdirSync(folder);
-
-			for (var i = 0; i < files.length; i ++) {
-
-				var file = files[i];
-
-				if (isOkay(folder + "/" + file, include, exclude)) {
-					jsFiles.push(folder + "/" + file);
-				} else {
-					jsFiles = jsFiles.concat(getJSFiles(folder + "/" + file));
-				}
-
-			}
-
-			return jsFiles;
-		}
-
-		return [];
-	}
+	var FILES = path.join("project", "static", "js", "**/*[^.min].js");
 
 	function pad(str, len, padChar) {
 
@@ -92,7 +43,11 @@ module.exports = function (grunt) {
 		}
 
 		var hasErrors = false;
-		var files = getJSFiles(path.join("project", "static", "js"));
+
+		var exclude = grunt.file.read(".jshintignore").split("\n");
+		var files = grunt.file.expandFiles(FILES).filter(function (file) {
+			return !grunt.file.isMatch(exclude, file);
+		});
 
 		for (var i = 0; i < files.length; i ++) {
 			var file = files[i];
@@ -128,7 +83,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("watch.jshint", {
-		files: "project/static/js/**/*[^.min].js",
+		files: FILES,
 		tasks: ["jshint"]
 	});
 
