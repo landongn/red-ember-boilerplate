@@ -17,8 +17,9 @@ module.exports = function(grunt) {
 
 	grunt.registerTask("statix:build", "Build with statix", function() {
 		var done = this.async();
+
 		var pkg = require("package.json");
-		var configPath = pkg.config.dirs.robin + "/components/statix/config";
+		var configPath = pkg.config.dirs.config + "/statix";
 
 		exec("statix", ["build"], configPath, function (success) {
 			done(1);
@@ -28,7 +29,7 @@ module.exports = function(grunt) {
 	grunt.registerTask("statix:server", "Run the statix server", function(p) {
 		port = p || 8000;
 		var done = this.async();
-		exec("statix", ["server", "-p", port, "-d", "../../../project"], configPath, function (success) {
+		exec("statix", ["server", "-p", port, "-d", process.cwd() + "/project"], configPath, function (success) {
 			done(1);
 			process.exit();
 		});
