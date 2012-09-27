@@ -4,8 +4,9 @@ module.exports = function (grunt) {
 
 	grunt.registerHelper("check_for_available_plugins", function (cb) {
 		var fs = require("fs");
+		var path = require("path");
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(pkg.config.dirs.robin + "/package.json");
+		var pristinePkg = require(pkg.config.dirs.robin, "package.json");
 		var colors = require("colors");
 
 		// Spacer
