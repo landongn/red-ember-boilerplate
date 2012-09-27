@@ -16,8 +16,8 @@
 		"vars": {},
 		"dirs": {
 			"robin": ".",
-			"plugins": "./plugins",
-			"tasks": "./tasks"
+			"plugins": "plugins",
+			"tasks": "tasks"
 		}
 	},
 	"license": "MIT",

@@ -7,6 +7,7 @@ module.exports = function (grunt) {
 		var path = require("path");
 
 		var pkg = require("../utils/pkg");
+		var pristinePkg = require(pkg.config.dirs.robin + "/package.json");
 		var localPkg = require("../utils/local-pkg");
 
 		var wrench = require("wrench");
@@ -64,7 +65,8 @@ module.exports = function (grunt) {
 			if (install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					file = path.join(pkg.config.dirs.robin, "components", plug, args.join(""));
+					pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins),
+					file = path.join(pluginDir, plug, args.join(""));
 
 				if (cmd === "node" && fs.existsSync(file)) {
 					var initializer = require(fs.realpathSync(file));
@@ -112,8 +114,8 @@ module.exports = function (grunt) {
 			}
 
 			if (plugPkg.config.localFiles) {
-				var pluginsDir = path.join(pkg.config.dirs.robin, "components");
-				var localDir = path.join(pluginsDir, plug, plugPkg.config.localFiles);
+				var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+				var localDir = path.join(pluginDir, plug, plugPkg.config.localFiles);
 				var localPaths = grunt.file.expandFiles({
 					dot : true
 				}, localDir + "/**/*");
@@ -279,7 +281,8 @@ module.exports = function (grunt) {
 		};
 
 		var installPlugin = function (plug, cb) {
-			var plugDir = pkg.config.dirs.robin + "/components/" + plug;
+			var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
 				var plugPkg = grunt.file.readJSON(plugDir + "/package.json");
