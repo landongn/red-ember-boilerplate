@@ -119,10 +119,19 @@ module.exports = function (grunt) {
 				for (i = 0, j = localPaths.length; i < j; i++) {
 					file = localPaths[i];
 
-					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
+					if (fs.existsSync(file)) {
 						newFile = file.replace(localDir + "/", "");
-						grunt.log.writeln(("Writing " + newFile).grey);
-						grunt.file.copy(file, newFile);
+
+						if (!grunt.file.isMatch(exclude, file)) {
+							grunt.log.writeln(("Writing " + newFile).grey);
+							grunt.file.copy(file, newFile);
+						} else if (grunt.file.isMatch(".gitignore", file)) {
+							if (fs.existsSync(newFile)) {
+								grunt.file.write(newFile, grunt.file.read(newFile) + grunt.file.read(file));
+							} else {
+								grunt.file.copy(file, newFile);
+							}
+						}
 					}
 				}
 			}
