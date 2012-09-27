@@ -66,6 +66,19 @@ module.exports = function (grunt) {
 			done();
 		};
 
+		var resetGit = function () {
+			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
+				cwd: pkg.config.dirs.robin,
+				env: null,
+				setsid: true,
+				stdio: "inherit"
+			});
+
+			child.on("exit", function () {
+				finalizeInstall();
+			});
+		};
+
 		var handleSettings = function(err, props) {
 			var name = props.name;
 			var title = props.title;
@@ -93,7 +106,7 @@ module.exports = function (grunt) {
 
 				(function install (count) {
 					if (!plugArr[count]) {
-						finalizeInstall();
+						resetGit();
 						return;
 					}
 
@@ -108,7 +121,7 @@ module.exports = function (grunt) {
 						if (plugArr[count]) {
 							install(count);
 						} else {
-							finalizeInstall();
+							resetGit();
 						}
 					});
 				}(i));

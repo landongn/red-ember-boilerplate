@@ -56,6 +56,19 @@ module.exports = function (grunt) {
 				}
 			};
 
+			var resetGit = function (err) {
+				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
+					cwd: pkg.config.dirs.robin,
+					env: null,
+					setsid: true,
+					stdio: "inherit"
+				});
+
+				child.on("exit", function () {
+					done(err);
+				});
+			};
+
 			if (!plugin) {
 				showPlugins(true);
 				done();
@@ -84,7 +97,7 @@ module.exports = function (grunt) {
 				wrench.rmdirSyncRecursive(robinDir, true);
 
 				if (stop === true) {
-					done(false);
+					resetGit(false);
 				} else {
 					if (isUpdate) {
 						var path = require("path");
@@ -94,10 +107,10 @@ module.exports = function (grunt) {
 
 						var update = require(updatePath);
 						update.run(function () {
-							done();
+							resetGit();
 						});
 					} else {
-						done();
+						resetGit();
 					}
 				}
 			});
