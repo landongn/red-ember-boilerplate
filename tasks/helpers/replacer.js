@@ -57,19 +57,25 @@ module.exports = function (grunt) {
 		return str;
 	});
 
-	grunt.registerHelper("replace_in_files", function (cb, root) {
+	grunt.registerHelper("replace_in_files", function (cb, opts) {
 		var path = require("path");
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
+
+		opts = opts || {};
+		var root = opts.root || process.cwd();
+		var config = opts.config || {};
 
 		delete require.cache[updatePath + ".js"];
 
 		var localPkg = require("../utils/local-pkg");
-		var files = grunt.file.expand(path.join(root || "", "**/*"));
+		var files = grunt.file.expand(config, path.join(root, "**/*"));
 
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = localPkg.config.excludedPaths || [];
+		var excludeDirs = (localPkg.config.excludedPaths || []).filter(function (path) {
+			return path.indexOf(root) !== -1;
+		});
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
 			return dir + "/**/*";

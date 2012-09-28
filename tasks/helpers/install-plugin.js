@@ -158,7 +158,12 @@ module.exports = function (grunt) {
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
-				}, plugDir);
+				}, {
+					root : plugDir,
+					config : {
+						dot : true
+					}
+				});
 			} else {
 				copyFiles(plug, plugPkg, cb);
 			}
