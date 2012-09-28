@@ -41,7 +41,7 @@ module.exports = function (grunt) {
 
 					grunt.log.subhead("Built with the following modules:".grey);
 
-					msg = msg.join("").replace(/\n/g, "\n    ");
+					msg = msg.join("");
 				}
 
 				if (msg.indexOf("Tracing dependencies for:") !== -1) {
