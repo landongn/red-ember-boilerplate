@@ -9,6 +9,7 @@ module.exports = function (grunt) {
 		}
 	});
 
+	// Load your custom tasks *after* these
 	grunt.loadTasks(".robin/tasks");
 	grunt.loadTasks(".robin/tasks/helpers");
 
