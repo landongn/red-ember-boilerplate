@@ -4,24 +4,24 @@ module.exports = function (grunt) {
 	// Project configuration.
 	grunt.config.set("compass", {
 		dev: {
-			config: "resources/compass/config.rb",
-			src: "resources/compass/sass",
+			src: "resources/compass/scss",
 			dest: "project/static/css",
-			linecomments: true,
-			forcecompile: false,
-			images: "project/static/img",
 			outputstyle: "expanded",
+			linecomments: true,
+			forcecompile: true,
+			images: "project/static/img",
+			fonts: "project/static/fonts",
 			relativeassets: true,
 			bundleExec: true
 		},
 		prod: {
-			config: "<config:compass.dev.config>",
 			src: "<config:compass.dev.src>",
 			dest: "<config:compass.dev.dest>",
 			outputstyle: "compressed",
 			linecomments: false,
-			forcecompile: true,
+			forcecompile: "<config:compass.dev.forcecompile>",
 			images: "<config:compass.dev.images>",
+			fonts: "<config:compass.dev.fonts>",
 			relativeassets: "<config:compass.dev.relativeassets>",
 			bundleExec: "<config:compass.dev.bundleExec>"
 		}
