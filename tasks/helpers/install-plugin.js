@@ -150,7 +150,7 @@ module.exports = function (grunt) {
 		};
 
 		var doReplacement = function (plug, plugPkg, cb) {
-			var doReplacement = plugPkg.replaceVars;
+			var doReplacement = plugPkg.config.replaceVars;
 
 			// Replace variables
 			if (doReplacement) {
