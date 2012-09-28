@@ -14,6 +14,7 @@
 	},
 	"config": {
 		"replaceVars": false,
+		"localFiles": "defaults",
 		"requiredPaths": [
 			"env"
 		],

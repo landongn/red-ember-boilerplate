@@ -1,0 +1,4 @@
+# Avoid committing minified JS
+project/static/js/*.min.js
+project/static/js/*/*.min.js
+project/static/js/*/*/*.min.js
