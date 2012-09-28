@@ -27,6 +27,8 @@
 			"resources/compass/gems"
 		],
 		"excludedPaths": [
+			".bundle",
+			".sass-cache",
 			"resources/compass/gems"
 		]
 	}
