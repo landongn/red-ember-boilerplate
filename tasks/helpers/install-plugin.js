@@ -135,7 +135,7 @@ module.exports = function (grunt) {
 				var gitIgnore = localDir + "/.gitignore";
 				if (fs.existsSync(gitIgnore)) {
 					var currGitIgnore = process.cwd() + "/.gitignore";
-					grunt.log.writeln("Updating .gitignore");
+					grunt.log.writeln("Updating .gitignore".grey);
 
 					if (fs.existsSync(currGitIgnore)) {
 						grunt.file.write(currGitIgnore, [
