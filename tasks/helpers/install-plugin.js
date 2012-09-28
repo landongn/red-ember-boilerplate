@@ -113,9 +113,11 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plugPkg.config.localFiles) {
-				var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
-				var localDir = path.join(pluginDir, plug, plugPkg.config.localFiles);
+			var localFiles = plugPkg.config.localFiles || "defaults";
+			var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+			var localDir = path.join(pluginDir, plug, localFiles);
+
+			if (fs.existsSync(localDir)) {
 				var localPaths = grunt.file.expandFiles({
 					dot : true
 				}, localDir + "/**/*");
