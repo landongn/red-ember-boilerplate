@@ -20,7 +20,14 @@
 			"tasks": "robin/tasks",
 			"config": "robin/config"
 		},
-		"ignoreTasks": [],
+		"ignoreTasks": [
+			"concat",
+			"init",
+			"lint",
+			"min",
+			"qunit",
+			"test"
+		],
 		"installedPlugins": {},
 		"org": {
 			"name": null,
