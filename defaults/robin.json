@@ -10,7 +10,6 @@
 	"vars": {},
 	"dirs": {
 		"robin": ".robin",
-		"plugins": "robin/plugins",
 		"tasks": "robin/tasks",
 		"config": "robin/config"
 	},

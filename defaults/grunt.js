@@ -13,4 +13,7 @@ module.exports = function (grunt) {
 	grunt.loadTasks(".robin/tasks");
 	grunt.loadTasks(".robin/tasks/helpers");
 
+	// Customize path in robin.json
+	grunt.loadTasks(require("robin.json").dirs.tasks);
+
 };
