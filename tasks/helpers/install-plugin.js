@@ -33,22 +33,21 @@ module.exports = function (grunt) {
 				wrench.rmdirSyncRecursive(plugPath);
 			}
 
-			var plugInitScript = plugPkg.scripts && plugPkg.scripts.initialize ? plugPkg.scripts.initialize : null;
-
-			var initialize;
+			var plugInitScript = (plugPkg.scripts || {}).install;
+			var install;
 
 			if (plugInitScript) {
 				pkg.scripts = pkg.scripts || {};
-				pkg.scripts.initialize = pkg.scripts.initialize || {};
+				pkg.scripts.install = pkg.scripts.install || {};
 
-				initialize = pkg.scripts.initialize;
+				install = pkg.scripts.install;
 
-				if (initialize && initialize.length) {
-					if (initialize.indexOf(plugInitScript) === -1) {
-						pkg.scripts.initialize.push(plugInitScript);
+				if (install && install.length) {
+					if (install.indexOf(plugInitScript) === -1) {
+						pkg.scripts.install.push(plugInitScript);
 					}
 				} else {
-					pkg.scripts.initialize = [plugInitScript];
+					pkg.scripts.install = [plugInitScript];
 				}
 			}
 
