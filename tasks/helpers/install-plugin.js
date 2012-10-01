@@ -171,36 +171,34 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var saveLocalPaths = function (plugPkg) {
+		var savePaths = function (plugPkg) {
 			var i, j;
 
-			var localReqPaths = localPkg.config.requiredPaths || [];
+			var reqPaths = pkg.requiredPaths || [];
 			var plugReqPaths = plugPkg.config.requiredPaths || [];
 
 			for (i = 0, j = plugReqPaths.length; i < j; i++) {
-				if (localReqPaths.indexOf(plugReqPaths[i]) === -1) {
-					localReqPaths.push(plugReqPaths[i]);
+				if (reqPaths.indexOf(plugReqPaths[i]) === -1) {
+					reqPaths.push(plugReqPaths[i]);
 				}
 			}
 
-			var localExcPaths = localPkg.config.excludedPaths || [];
+			var excPaths = pkg.excludedPaths || [];
 			var plugExcPaths = plugPkg.config.excludedPaths || [];
 
 			for (i = 0, j = plugExcPaths.length; i < j; i++) {
-				if (localExcPaths.indexOf(plugExcPaths[i]) === -1) {
-					localExcPaths.push(plugExcPaths[i]);
+				if (excPaths.indexOf(plugExcPaths[i]) === -1) {
+					excPaths.push(plugExcPaths[i]);
 				}
 			}
 
-			localPkg.config.requiredPaths = localReqPaths;
-			localPkg.config.excludedPaths = localExcPaths;
-
-			localPkg.save();
+			pkg.requiredPaths = reqPaths;
+			pkg.excludedPaths = excPaths;
 		};
 
 		var findLocalPaths = function (plug, plugPkg, cb) {
-			if (plugPkg.config && plugPkg.config.requiredPaths) {
-				saveLocalPaths(plugPkg);
+			if (plugPkg.config.requiredPaths || plugPkg.config.excludedPaths) {
+				savePaths(plugPkg);
 			}
 
 			doReplacement(plug, plugPkg, cb);

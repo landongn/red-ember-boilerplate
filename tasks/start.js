@@ -210,21 +210,19 @@ module.exports = function (grunt) {
 		var checkIfPartyStarted = function () {
 			localPkg = require("./utils/local-pkg");
 
-			var local = localPkg.config,
-				requiredPaths = local.requiredPaths,
+			var requiredPaths = pkg.requiredPaths,
 				i, j, req;
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {
 				if (!fs.existsSync("./" + requiredPaths[i])) {
-					local.initialized = false;
+					localPkg.initialized = false;
 				}
 			}
 
-			if (local.initialized === true) {
+			if (localPkg.initialized === true) {
 				getThisPartyStarted();
 			} else {
-				local.initialized = true;
-				localPkg.config = local;
+				localPkg.initialized = true;
 
 				localPkg.save();
 				runInitializeScripts();

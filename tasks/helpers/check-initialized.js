@@ -9,17 +9,16 @@ module.exports = function (grunt) {
 
 		if (initialized) {
 			var localPkg = require("../utils/local-pkg"),
-				local = localPkg.config,
-				requiredPaths = local.requiredPaths,
+				requiredPaths = pkg.requiredPaths,
 				i, j, req;
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {
 				if (!fs.existsSync("./" + requiredPaths[i])) {
-					local.initialized = false;
+					localPkg.initialized = false;
 				}
 			}
 
-			if (local.initialized === true) {
+			if (localPkg.initialized === true) {
 				done(true);
 			} else {
 				localPkg.save();
