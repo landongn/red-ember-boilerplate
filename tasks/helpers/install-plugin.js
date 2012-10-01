@@ -10,6 +10,16 @@ module.exports = function (grunt) {
 		var pristinePkg = require(pkg.dirs.robin + "/package.json");
 		var localPkg = require("../utils/local-pkg");
 
+		var branch;
+		var bits = plug.split("@");
+
+		if (bits.length === 1) {
+			plug = bits[0];
+		} else {
+			plug = bits[0];
+			branch = bits[1];
+		}
+
 		var wrench = require("wrench");
 
 		var bpName = pkg.name;
@@ -62,7 +72,7 @@ module.exports = function (grunt) {
 		var runInstaller = function (plug, plugPkg, cb) {
 			var install = (plugPkg.scripts || {}).install;
 
-			if (install) {
+			if (!isUpdate && install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
 					pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins),
@@ -303,7 +313,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
 
 				if (plugRepo) {
-					var plugBranch = plugRepo.branch || "master";
+					var plugBranch = branch || plugRepo.branch || "master";
 					var plugPath = path.join(pkg.dirs.robin, plug);
 
 					grunt.file.mkdir(plugPath);
@@ -331,7 +341,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		if (pkg.installedPlugins[plug]) {
+		if (!isUpdate && pkg.installedPlugins[plug]) {
 			grunt.log.writeln("You've already installed %s!".yellow.replace("%s", plug));
 
 			if (cb) {
