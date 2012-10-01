@@ -238,7 +238,7 @@ module.exports = function (grunt) {
 
 			grunt.file.write("package.json", JSON.stringify(projectPkg, null, "\t") + "\n");
 
-			var plugSrcPath = "%s/package.json".replace("%s", plug);
+			var plugSrcPath = "%r/%p/package.json".replace("%r", pkg.dirs.robin).replace("%p", plug);
 
 			if (fs.existsSync("./" + plugSrcPath)) {
 				plugSrcPkg = require(fs.realpathSync(plugSrcPath));
