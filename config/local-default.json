@@ -1,3 +1,4 @@
 {
-	"initialized" : false
+	"initialized": true,
+	"config": {}
 }
