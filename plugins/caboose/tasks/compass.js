@@ -32,7 +32,37 @@ module.exports = function (grunt) {
 		tasks: ["compass:dev"]
 	});
 
-	grunt.config.set("build.compass", "compass:prod");
+	grunt.registerTask("compass:bundle", function () {
+		var done = this.async();
+		var cp = require("child_process");
+
+		var child = cp.spawn("bundle", ["check"], {
+			stdio: "inherit"
+		});
+
+		child.on("exit", function (code) {
+			if (code !== 0) {
+				grunt.log.writeln();
+				grunt.log.writeln("Installing missing gems...");
+
+				child = cp.spawn("bundle", ["install"], {
+					stdio: "inherit"
+				});
+
+				child.on("exit", function (code) {
+					if (code !== 0) {
+						done(false);
+					} else {
+						done();
+					}
+				});
+			} else {
+				done();
+			}
+		});
+	});
+
+	grunt.registerTask("build:compass", ["compass:bundle", "compass:prod"]);
 
 	grunt.loadNpmTasks("grunt-compass");
 
