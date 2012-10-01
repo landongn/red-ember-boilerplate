@@ -3,30 +3,20 @@
 "use strict";
 
 module.exports = {
-	exec : function (exec, args, cwd, suppress, doneCB) {
+	exec : function (exec, args, doneCB) {
 		var cp = require("child_process");
-		process.stdin.resume();
 
 		var child = cp.spawn(exec, args || [], {
-			cwd: cwd,
-			env: null,
-			setsid: true
+			stdio: "inherit"
 		});
 
-		process.stdin.resume();
-		process.stdin.pipe(child.stdin, {end: false});
-
-		if (!suppress) {
-			child.stdout.pipe(process.stdout);
-		}
-
-		child.addListener("exit", function (code) {
+		child.on("exit", function (code) {
 			doneCB(!code);
 		});
 	},
 
 	runSetup : function () {
-		this.exec("sh", ["./scripts/setup.sh"], null, false, function (success) {
+		this.exec("sh", ["./scripts/setup.sh"], function (success) {
 			if (!success) {
 				return this.exit("Something went wrong attempting to run scripts/setup.sh");
 			}
@@ -36,7 +26,7 @@ module.exports = {
 	},
 
 	runRedStart : function () {
-		this.exec("red-start", ["--no-prompt", "--no-git"], null, false, function (success) {
+		this.exec("red-start", ["--no-prompt", "--no-git"], function (success) {
 			if (!success) {
 				return this.exit("An error occured attempting to run red-start.");
 			}
