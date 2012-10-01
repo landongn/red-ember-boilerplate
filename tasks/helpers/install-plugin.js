@@ -78,6 +78,8 @@ module.exports = function (grunt) {
 					pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins),
 					file = path.join(pluginDir, plug, args.join(""));
 
+				plugPkg.scripts.install = [cmd, file].join(" ");
+
 				if (cmd === "node" && fs.existsSync(file)) {
 					var initializer = require(fs.realpathSync(file));
 
