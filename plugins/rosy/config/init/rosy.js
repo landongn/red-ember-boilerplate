@@ -32,7 +32,11 @@ module.exports = {
 			path = require("path"),
 			installpath = path.join(process.cwd(), "project/static/js/libs/_install");
 
-		this.exec("node", [path.join(installpath, "installer")], null, false, function (success) {
+		if (!fs.existsSync(installpath + "installer.js")) {
+			return;
+		}
+
+		this.exec("node", [path.join(installpath, "installer.js")], null, false, function (success) {
 			if (!success) {
 				return this.exit("An error occurred while installing external libraries.");
 			}
