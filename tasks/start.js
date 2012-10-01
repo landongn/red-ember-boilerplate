@@ -46,10 +46,12 @@ module.exports = function (grunt) {
 		};
 
 		var resetGit = function () {
-			grunt.utils.spawn({
-				cmd: "git",
-				args: ["reset", "--hard", "HEAD"]
-			}, finalizeInstall);
+			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
+				cwd: pkg.dirs.robin,
+				stdio: "inherit"
+			});
+
+			child.on("exit", finalizeInstall);
 		};
 
 		var handleSettings = function(err, props) {
