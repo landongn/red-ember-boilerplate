@@ -181,11 +181,11 @@ module.exports = function (grunt) {
 		var runInitializeScripts = function (i) {
 			i = (i || 0);
 
-			if (!pkg.scripts || !pkg.scripts.initialize || !pkg.scripts.initialize[i]) {
+			if (!pkg.scripts || !pkg.scripts.install || !pkg.scripts.install[i]) {
 				return getThisPartyStarted();
 			}
 
-			var initScript = pkg.scripts.initialize[i];
+			var initScript = pkg.scripts.install[i];
 			var args = initScript.split(" "),
 				cmd = args.shift(),
 				file = args.join("");
