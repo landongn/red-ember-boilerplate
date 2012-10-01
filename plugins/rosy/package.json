@@ -21,7 +21,7 @@
 		"npm": ">= 1.1.59"
 	},
 	"scripts" : {
-		"install" : "node install.js"
+		"install" : "node config/init/rosy.js"
 	},
 	"config": {
 		"scope": "project/static/js",
