@@ -67,13 +67,12 @@ module.exports = function (grunt) {
 
 		delete require.cache[updatePath + ".js"];
 
-		var localPkg = require("../utils/local-pkg");
 		var files = grunt.file.expand(config, path.join(root, "**/*"));
 
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = (localPkg.config.excludedPaths || []).filter(function (path) {
+		var excludeDirs = (pkg.excludedPaths || []).filter(function (path) {
 			return path.indexOf(root) !== -1;
 		});
 
