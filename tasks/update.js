@@ -23,9 +23,27 @@ module.exports = function (grunt) {
 		}
 
 		branch = branch || pkg.repository.branch || "master";
-		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 
-		done();
+		if (plugin === pkg.name) {
+			var cp = require("child_process"),
+				args = "git submodule foreach git pull origin".split(" ");
+
+			args.push(branch);
+			var child = cp.spawn(args.shift(), args, {
+				stdio: "inherit"
+			});
+
+			child.on("exit", function (code) {
+				if (code !== 0) {
+					done(false);
+				} else {
+					done();
+				}
+			});
+		} else {
+			grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
+			done();
+		}
 	});
 
 };
