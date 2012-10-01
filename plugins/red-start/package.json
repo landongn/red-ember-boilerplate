@@ -3,8 +3,7 @@
 	"description": "Easy creation of Django projects and applications based the layout used at RED Interactive Agency.",
 	"version": "0.0.4",
 	"scripts" : {
-		"install": "node config/init/red-start.js",
-		"initialize": "node config/init/red-start.js"
+		"install": "node config/init/red-start.js"
 	},
 	"systemDependencies": {
 		"python": ">= 2.7.2",
