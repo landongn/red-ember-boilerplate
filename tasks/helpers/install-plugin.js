@@ -334,7 +334,7 @@ module.exports = function (grunt) {
 			grunt.log.writeln("You've already installed %s!".yellow.replace("%s", plug));
 
 			if (cb) {
-				cb(true);
+				cb();
 			}
 			return;
 		} else {
