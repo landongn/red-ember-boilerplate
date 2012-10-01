@@ -208,6 +208,18 @@ module.exports = function (grunt) {
 		};
 
 		var checkIfPartyStarted = function () {
+			// Make sure default paths exist
+			var dirs = pkg.dirs,
+				key, dir;
+
+			for (key in dirs) {
+				dir = path.join(process.cwd(), dirs[key]);
+
+				if (!fs.existsSync(dir)) {
+					grunt.file.mkdir(dir);
+				}
+			}
+
 			localPkg = require("./utils/local-pkg");
 
 			var requiredPaths = pkg.requiredPaths,
