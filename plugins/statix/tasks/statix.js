@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 		var done = this.async();
 
 		var pkg = require("package.json");
-		var configPath = pkg.config.dirs.config + "/statix";
+		var configPath = pkg.dirs.config + "/statix";
 
 		exec("statix", ["build"], configPath, function (success) {
 			done(1);

@@ -28,7 +28,7 @@ module.exports = function (grunt) {
 	grunt.registerHelper("replace_vars", function (str) {
 		var hasMatch;
 
-		for (var p in pkg.config.vars) {
+		for (var p in pkg.vars) {
 			var re = new RegExp("([\\t,\\s]*)({?#?__" + p + "__#?}?)", "g");
 			var re2 = new RegExp("([\\t,\\s]*)({#__" + p + "__#})([\\s\\S]*)({#\\/__" + p + "__#})", "g");
 
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
 				var prefix = prefixMatch ? prefixMatch[0] : "";
 
-				var repl = pkg.config.vars[p].split("\n").join("\n" + prefix);
+				var repl = pkg.vars[p].split("\n").join("\n" + prefix);
 
 				if (!re2.test(str)) {
 					str = str.replace(re, "$1" + repl, "g");

@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 	grunt.registerHelper("check_initialized", function (done) {
 		var fs = require("fs");
 		var pkg = require("../utils/pkg");
-		var initialized = pkg.config.initialized;
+		var initialized = pkg.initialized;
 
 		if (initialized) {
 			var localPkg = require("../utils/local-pkg"),

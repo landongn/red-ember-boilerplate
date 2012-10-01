@@ -1,0 +1,32 @@
+{
+	"name": "robin",
+	"version": "3.0.0",
+	"author": "RED Interactive <geeks@ff0000.com>",
+	"description": "A highly customizable boilerplate to initialize common projects.",
+	"repository": {
+		"type": "git",
+		"url": "__PROJECT_REPOSITORY__"
+	},
+	"vars": {},
+	"dirs": {
+		"robin": ".robin",
+		"plugins": "robin/plugins",
+		"tasks": "robin/tasks",
+		"config": "robin/config"
+	},
+	"ignoreTasks": [
+		"concat",
+		"init",
+		"lint",
+		"min",
+		"qunit",
+		"test"
+	],
+	"installedPlugins": {},
+	"systemDependencies": {
+		"grunt": ">=0.3.0"
+	},
+	"engines": {
+		"node": "*"
+	}
+}

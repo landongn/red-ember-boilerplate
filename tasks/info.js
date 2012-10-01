@@ -17,7 +17,6 @@ module.exports = function(grunt) {
 
 		var pkg = require("./utils/pkg");
 		var localPkg = require("./utils/local-pkg");
-		var org = pkg.config.org;
 
 		var keys = ["name", "version", "author", "description"];
 		var i, j;
@@ -35,19 +34,19 @@ module.exports = function(grunt) {
 		}
 
 		grunt.log.writeln();
-		grunt.log.writeln("[*] ".cyan + "Boilerplate version: %s".replace("%s", org.version).magenta);
-		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", org.repository.url).replace("%b", org.repository.branch));
+		grunt.log.writeln("[*] ".cyan + "Boilerplate version: %s".replace("%s", pkg.version).magenta);
+		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", pkg.repository.url).replace("%b", pkg.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;
 
-		for (var key in pkg.config.installedPlugins) {
+		for (var key in pkg.installedPlugins) {
 			if (!plugTitle) {
 				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 
-			var plug = pkg.config.installedPlugins[key];
+			var plug = pkg.installedPlugins[key];
 
 			if (typeof plug !== "string") {
 				grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
@@ -57,7 +56,7 @@ module.exports = function(grunt) {
 		}
 
 		if (localPkg.config.warnings) {
-			var warnings = (pkg.config.warnings || []).concat(localPkg.config.warnings),
+			var warnings = (pkg.warnings || []).concat(localPkg.config.warnings),
 				warn, k;
 
 			grunt.log.writeln();

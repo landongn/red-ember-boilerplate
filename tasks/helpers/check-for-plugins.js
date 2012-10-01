@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var path = require("path");
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(pkg.config.dirs.robin + "/package.json");
+		var pristinePkg = require(pkg.dirs.robin + "/package.json");
 		var colors = require("colors");
 
 		// Spacer
@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
 
 		var plugins = [];
-		var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+		var pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins);
 
 		if (fs.existsSync(pluginDir)) {
 			var branches = grunt.file.expandDirs(pluginDir + "/*");

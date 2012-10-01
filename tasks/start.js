@@ -19,8 +19,8 @@ module.exports = function (grunt) {
 		var prompt;
 		var remote;
 
-		var projectName = pkg.config.vars.PROJECT_NAME;
-		var projectTitle = pkg.config.vars.PROJECT_TITLE;
+		var projectName = pkg.vars.PROJECT_NAME;
+		var projectTitle = pkg.vars.PROJECT_TITLE;
 
 		var options = [{
 			name: "name",
@@ -35,27 +35,7 @@ module.exports = function (grunt) {
 		}];
 
 		var finalizeInstall = function () {
-			var org = {
-				name: pkg.name,
-				version: pkg.version,
-				repository: pkg.repository
-			};
-
-			pkg.save();
-
-			pkg.name = pkg.config.vars.PROJECT_NAME;
-			pkg.description = "";
-			pkg.version = "0.0.0";
-
-			var url = pkg.repository.url;
-			pkg.repository.url = remote || "";
-
-			org.repository.url = url;
-			org.repository.branch = branch || "master";
-
-			pkg.config.org = org;
-
-			pkg.config.initialized = true;
+			pkg.initialized = true;
 			pkg.save();
 
 			grunt.log.writeln();
@@ -124,7 +104,7 @@ module.exports = function (grunt) {
 
 		var promptForSettings = function (plugins) {
 			var i, j, plugin,
-				installed = pkg.config.installedPlugins;
+				installed = pkg.installedPlugins;
 
 			if (installed) {
 				var plugTitle;
@@ -179,7 +159,7 @@ module.exports = function (grunt) {
 		};
 
 		var getThisPartyStarted = function () {
-			if (pkg.config.initialized) {
+			if (pkg.initialized) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
 

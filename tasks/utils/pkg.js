@@ -2,7 +2,7 @@
 /*global jake, desc, task */
 var fs = require("fs");
 
-var pkgFile = process.cwd() + "/package.json";
+var pkgFile = process.cwd() + "/robin.json";
 var pkg = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
 
 pkg.save = function () {

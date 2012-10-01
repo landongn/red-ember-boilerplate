@@ -7,11 +7,10 @@ module.exports = function (grunt) {
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
-		pkg.config.org = pkg.config.org || {};
-		pkg.config.org.repository = pkg.config.org.repository || {};
+		pkg.repository = pkg.repository || {};
 
 		// Set plugin if not deflined
-		plugin = plugin || pkg.config.org.name;
+		plugin = plugin || pkg.name;
 
 		var branch;
 		var bits = plugin.split("@");
@@ -23,7 +22,7 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		branch = branch || pkg.config.org.repository.branch || "master";
+		branch = branch || pkg.repository.branch || "master";
 		grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 
 		done();

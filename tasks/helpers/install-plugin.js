@@ -7,17 +7,17 @@ module.exports = function (grunt) {
 		var path = require("path");
 
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(pkg.config.dirs.robin + "/package.json");
+		var pristinePkg = require(pkg.dirs.robin + "/package.json");
 		var localPkg = require("../utils/local-pkg");
 
 		var wrench = require("wrench");
 
-		var bpName = (pkg.config && pkg.config.org) ? pkg.config.org.name : pkg.name;
+		var bpName = pkg.name;
 
 		var plugSrcPkg;
 
 		var completeInstall = function (plug, plugPkg, cb) {
-			var plugPath = path.join(pkg.config.dirs.robin, plug);
+			var plugPath = path.join(pkg.dirs.robin, plug);
 
 			if (fs.existsSync(plugPath)) {
 				wrench.rmdirSyncRecursive(plugPath);
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 				plugPkg.description = plugSrcPkg.description || plugPkg.description;
 			}
 
-			pkg.config.installedPlugins[plug] = {
+			pkg.installedPlugins[plug] = {
 				version : plugPkg.version,
 				description : plugPkg.description
 			};
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
 			if (install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins),
+					pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins),
 					file = path.join(pluginDir, plug, args.join(""));
 
 				if (cmd === "node" && fs.existsSync(file)) {
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
 
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
-			var plugDir = path.join(pkg.config.dirs.robin, plug);
+			var plugDir = path.join(pkg.dirs.robin, plug);
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
 
@@ -108,13 +108,13 @@ module.exports = function (grunt) {
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
 					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
-					grunt.log.writeln(("Adding " + newFile.replace(pkg.config.dirs.robin + "/../", "")).grey);
+					grunt.log.writeln(("Adding " + newFile.replace(pkg.dirs.robin + "/../", "")).grey);
 					grunt.file.copy(file, newFile);
 				}
 			}
 
 			var localFiles = plugPkg.config.localFiles || "defaults";
-			var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
 			if (fs.existsSync(localDir)) {
@@ -156,7 +156,7 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			if (doReplacement) {
-				var plugDir = path.join(pkg.config.dirs.robin, plug);
+				var plugDir = path.join(pkg.dirs.robin, plug);
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
@@ -209,11 +209,12 @@ module.exports = function (grunt) {
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
+			var projectPkg = require("package.json");
 			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {
-				if (!pkg.dependencies[dep] || pkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
-					pkg.dependencies[dep] = plugPkg.dependencies[dep];
+				if (!projectPkg.dependencies[dep] || projectPkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
+					projectPkg.dependencies[dep] = plugPkg.dependencies[dep];
 					pluginDeps.push(dep + "@" + plugPkg.dependencies[dep]);
 
 					callUpdate = true;
@@ -221,10 +222,12 @@ module.exports = function (grunt) {
 			}
 
 			for (dep in plugPkg.devDependencies) {
-				if (!pkg.devDependencies[dep] || pkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
-					pkg.devDependencies[dep] = plugPkg.devDependencies[dep];
+				if (!projectPkg.devDependencies[dep] || projectPkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
+					projectPkg.devDependencies[dep] = plugPkg.devDependencies[dep];
 				}
 			}
+
+			grunt.file.write("package.json", JSON.stringify(projectPkg, null, "\t") + "\n");
 
 			var plugSrcPath = "%s/package.json".replace("%s", plug);
 
@@ -290,7 +293,7 @@ module.exports = function (grunt) {
 		};
 
 		var installPlugin = function (plug, cb) {
-			var pluginDir = path.join(pkg.config.dirs.robin, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(pkg.dirs.robin, pristinePkg.config.dirs.plugins);
 			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
@@ -303,7 +306,7 @@ module.exports = function (grunt) {
 
 				if (plugRepo) {
 					var plugBranch = plugRepo.branch || "master";
-					var plugPath = path.join(pkg.config.dirs.robin, plug);
+					var plugPath = path.join(pkg.dirs.robin, plug);
 
 					grunt.file.mkdir(plugPath);
 
@@ -330,7 +333,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		if (pkg.config.installedPlugins[plug]) {
+		if (pkg.installedPlugins[plug]) {
 			grunt.log.writeln("You've already installed %s!".yellow.replace("%s", plug));
 
 			if (cb) {

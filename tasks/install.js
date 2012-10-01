@@ -20,7 +20,7 @@ module.exports = function (grunt) {
 			for (i = 0, j = plugins.length; i < j; i++) {
 				current = plugins[i];
 
-				if (!pkg.config.installedPlugins[current]) {
+				if (!pkg.installedPlugins[current]) {
 					available.push(current);
 				} else {
 					installed.push(current);
@@ -72,7 +72,7 @@ module.exports = function (grunt) {
 
 			var cleanPlugin = plugin.split("@")[0];
 
-			if ((plugins.indexOf(cleanPlugin) === -1) && (pkg.config && (cleanPlugin !== pkg.config.org.name))) {
+			if ((plugins.indexOf(cleanPlugin) === -1) && (pkg && (cleanPlugin !== pkg.name))) {
 				showPlugins();
 
 				grunt.log.writeln();
