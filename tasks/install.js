@@ -57,10 +57,14 @@ module.exports = function (grunt) {
 			};
 
 			var resetGit = function (err) {
-				grunt.utils.spawn({
-					cmd: "git",
-					args: ["reset", "--hard", "HEAD"]
-				}, function () {
+				var cp = require("child_process");
+
+				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
+					cwd: pkg.dirs.robin,
+					stdio: "inherit"
+				});
+
+				child.on("exit", function () {
 					done(err);
 				});
 			};
