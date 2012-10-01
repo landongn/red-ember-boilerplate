@@ -32,8 +32,8 @@ module.exports = {
 			path = require("path"),
 			installpath = path.join(process.cwd(), "project/static/js/libs/_install");
 
-		if (!fs.existsSync(installpath + "installer.js")) {
-			return;
+		if (!fs.existsSync(path.join(installpath, "installer.js"))) {
+			return this.exit();
 		}
 
 		this.exec("node", [path.join(installpath, "installer.js")], null, false, function (success) {
