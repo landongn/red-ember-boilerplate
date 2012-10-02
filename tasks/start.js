@@ -2,7 +2,7 @@
 
 module.exports = function (grunt) {
 
-	grunt.registerTask("start", "Get your party started", function (branch, everything) {
+	grunt.registerTask("start", "Get your party started", function (branch, override) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
@@ -54,7 +54,13 @@ module.exports = function (grunt) {
 			child.on("exit", finalizeInstall);
 		};
 
-		var handleSettings = function(err, props) {
+		var handleSettings = function(err, props, overrideProps) {
+			var key;
+
+			for (key in overrideProps) {
+				props[key] = overrideProps[key];
+			}
+
 			var name = props.name;
 			var title = props.title;
 
@@ -64,7 +70,7 @@ module.exports = function (grunt) {
 			var plugArr = whitelist;
 			var i = 0;
 
-			for (var key in props) {
+			for (key in props) {
 				var assert = grunt.helper("get_assertion", props[key]);
 
 				if (assert) {
@@ -128,11 +134,15 @@ module.exports = function (grunt) {
 				}
 			}
 
+			var pluginOpts = [];
+			var overrideOpts = [];
+			var overrideProps = {};
+
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
 				if (!installed || !installed[plugin]) {
-					options.push({
+					pluginOpts.push({
 						name: plugin,
 						message: "Would you like to include %s?".replace("%s", plugin),
 						validator: /[y\/n]+/i,
@@ -141,19 +151,29 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (everything) {
-				handleSettings(null, function () {
-					var opts = {};
+			if (override) {
+				var assert = "y";
 
-					for (i = 0, j = options.length; i < j; i++) {
-						opts[options[i].name] = "y";
+				if (override === "bare") {
+					assert = "n";
+				}
+
+				override = override.split(",");
+
+				for (i = 0, j = pluginOpts.length; i < j; i++) {
+					if (override.length > 1) {
+						assert = (override.indexOf(pluginOpts[i].name) !== -1) ? "y" : "n";
 					}
 
-					return opts;
-				}());
-			} else {
-				grunt.helper("prompt", {}, options, handleSettings);
+					overrideProps[pluginOpts[i].name] = assert;
+				}
+
+				pluginOpts = [];
 			}
+
+			grunt.helper("prompt", {}, options.concat(pluginOpts), function (err, props) {
+				handleSettings(err, props, overrideProps);
+			});
 		};
 
 		var gatherPlugins = function () {
