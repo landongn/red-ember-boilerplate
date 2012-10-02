@@ -9,9 +9,29 @@ module.exports = function (grunt) {
 		}
 	});
 
+	// Robin tasks
 	// Load your custom tasks *after* these
-	grunt.loadTasks(".robin/tasks");
-	grunt.loadTasks(".robin/tasks/helpers");
+	(function () {
+		var fs = require("fs");
+		var path = require("path");
+
+		var robinDir = ".robin";
+		var taskDir = path.join(robinDir, "tasks");
+		var helperDir = path.join(taskDir, "helpers");
+
+		if (!fs.existsSync(taskDir)) {
+			var warn = [
+				"%s is not yet initialized".replace("%s", robinDir),
+				"Run `git submodule update --init` to enable",
+				"Then try this command again."
+			].join("\n       ").trim();
+
+			grunt.fail.warn(warn);
+		}
+
+		grunt.loadTasks(taskDir);
+		grunt.loadTasks(helperDir);
+	}());
 
 	// Customize path in robin.json
 	grunt.loadTasks(require("robin.json").dirs.tasks);
