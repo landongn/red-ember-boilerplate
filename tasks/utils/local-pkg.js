@@ -6,7 +6,7 @@ var path = require("path");
 
 var configDir = path.join(process.cwd(), pkg.dirs.config);
 
-var localPkg = path.join(configDir, "robin-local.json");
+var localPkg = path.join(configDir, "robyn-local.json");
 var defaultLocalPkg = path.join(__dirname, "../../config/local-default.json");
 
 var pkgFile = localPkg;

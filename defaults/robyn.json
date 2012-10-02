@@ -1,5 +1,5 @@
 {
-	"name": "robin",
+	"name": "robyn",
 	"version": "3.0.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "A highly customizable boilerplate to initialize common projects.",
@@ -9,9 +9,9 @@
 	},
 	"vars": {},
 	"dirs": {
-		"robin": ".robin",
-		"tasks": "robin/tasks",
-		"config": "robin/config"
+		"robyn": ".robyn",
+		"tasks": "robyn/tasks",
+		"config": "robyn/config"
 	},
 	"ignoreTasks": [
 		"concat",
@@ -22,12 +22,12 @@
 		"test"
 	],
 	"requiredPaths": [
-		".robin",
+		".robyn",
 		"node_modules"
 	],
 	"excludedPaths": [
 		".git",
-		".robin",
+		".robyn",
 		"node_modules"
 	],
 	"installedPlugins": {},

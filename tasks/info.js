@@ -16,7 +16,7 @@ module.exports = function(grunt) {
 		});
 
 		var pkg = require("package.json");
-		var robinPkg = require("./utils/pkg");
+		var robynPkg = require("./utils/pkg");
 		var localPkg = require("./utils/local-pkg");
 
 		var keys = ["name", "version", "author", "description"];
@@ -35,19 +35,19 @@ module.exports = function(grunt) {
 		}
 
 		grunt.log.writeln();
-		grunt.log.writeln("[*] ".cyan + "%n version: %v".replace("%n", robinPkg.name).replace("%v", robinPkg.version).magenta);
-		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", robinPkg.repository.url).replace("%b", robinPkg.repository.branch));
+		grunt.log.writeln("[*] ".cyan + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
+		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;
 
-		for (var key in robinPkg.installedPlugins) {
+		for (var key in robynPkg.installedPlugins) {
 			if (!plugTitle) {
 				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 
-			var plug = robinPkg.installedPlugins[key];
+			var plug = robynPkg.installedPlugins[key];
 
 			if (typeof plug !== "string") {
 				grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", key).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 		}
 
 		if (localPkg.config.warnings) {
-			var warnings = (robinPkg.warnings || []).concat(localPkg.config.warnings),
+			var warnings = (robynPkg.warnings || []).concat(localPkg.config.warnings),
 				warn, k;
 
 			grunt.log.writeln();

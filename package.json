@@ -1,5 +1,5 @@
 {
-	"name": "robin",
+	"name": "robyn",
 	"version": "3.0.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "A highly customizable boilerplate to initialize common projects.",
@@ -15,7 +15,7 @@
 	"config": {
 		"vars": {},
 		"dirs": {
-			"robin": ".",
+			"robyn": ".",
 			"plugins": "plugins",
 			"tasks": "tasks"
 		}

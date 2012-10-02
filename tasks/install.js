@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 				var cp = require("child_process");
 
 				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
-					cwd: pkg.dirs.robin,
+					cwd: pkg.dirs.robyn,
 					stdio: "inherit"
 				});
 

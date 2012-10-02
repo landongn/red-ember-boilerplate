@@ -15,13 +15,13 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var path = require("path");
 
-		var robinDir = ".robin";
-		var taskDir = path.join(robinDir, "tasks");
+		var robynDir = ".robyn";
+		var taskDir = path.join(robynDir, "tasks");
 		var helperDir = path.join(taskDir, "helpers");
 
 		if (!fs.existsSync(taskDir)) {
 			var warn = [
-				"%s is not yet initialized".replace("%s", robinDir),
+				"%s is not yet initialized".replace("%s", robynDir),
 				"Run `git submodule update --init` to enable",
 				"Then try this command again."
 			].join("\n       ").trim();
@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 		grunt.loadTasks(helperDir);
 	}());
 
-	// Customize path in robin.json
-	grunt.loadTasks(require("robin.json").dirs.tasks);
+	// Customize path in robyn.json
+	grunt.loadTasks(require("robyn.json").dirs.tasks);
 
 };

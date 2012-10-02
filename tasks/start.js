@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 
 		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
-				cwd: pkg.dirs.robin,
+				cwd: pkg.dirs.robyn,
 				stdio: "inherit"
 			});
 
