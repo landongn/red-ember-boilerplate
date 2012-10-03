@@ -16,11 +16,14 @@ module.exports = function (grunt) {
 	(function () {
 		var fs = require("fs");
 
-		var robynDir = ".robyn";
-		var taskDir = path.join(cwd, robynDir, "tasks");
-		var helperDir = path.join(taskDir, "helpers");
+		var robynDir = path.join(cwd, ".robyn"),
+			robynPkg = require(path.join(robynDir, "package.json")),
+			taskDir = path.join(robynDir, robynPkg.dirs.tasks),
+			helperDir = path.join(taskDir, "helpers");
 
 		if (!fs.existsSync(taskDir)) {
+			robynDir = robynDir.replace(cwd + "/", "");
+
 			var warn = [
 				"%s is not yet initialized".replace("%s", robynDir),
 				"Run `git submodule update --init` to enable",
