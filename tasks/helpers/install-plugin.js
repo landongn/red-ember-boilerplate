@@ -218,10 +218,6 @@ module.exports = function (grunt) {
 
 		var cloneExternalRepo = function (plug, plugPkg, cb) {
 			var plugRepo = plugPkg.repository;
-			var source = (plugRepo ? plugRepo.url : plugDir);
-
-			grunt.log.writeln();
-			grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
 
 			if (plugRepo) {
 				var plugBranch = branch || plugRepo.branch || "master";
@@ -341,6 +337,10 @@ module.exports = function (grunt) {
 
 			if (fs.existsSync(plugDir)) {
 				var plugPkg = grunt.file.readJSON(path.join(plugDir, "package.json"));
+				var source = (plugRepo ? plugRepo.url : plugDir);
+
+				grunt.log.writeln();
+				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
 
 				checkSystemDependencies(plug, plugPkg, cb);
 			} else if (cb) {
