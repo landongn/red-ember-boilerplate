@@ -119,7 +119,7 @@ module.exports = function (grunt) {
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
 					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
-					grunt.log.writeln(("Adding " + newFile.replace(pkg.dirs.robyn + "/../", "")).grey);
+					grunt.log.writeln(("Adding " + newFile.replace(path.join(cwd, pkg.dirs.robyn) + "/../", "")).grey);
 					grunt.file.copy(file, newFile);
 				}
 			}
