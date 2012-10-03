@@ -47,8 +47,6 @@ module.exports = function (grunt) {
 				plugins.push(plugin);
 			}
 
-			grunt.log.writeln((plugins.join(", ")).grey);
-
 			if (cb) {
 				cb(plugins.sort(compare));
 			}
