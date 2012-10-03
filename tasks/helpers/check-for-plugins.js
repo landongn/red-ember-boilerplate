@@ -17,6 +17,18 @@ module.exports = function (grunt) {
 		var plugins = [];
 		var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
 
+		function compare(a, b) {
+			if (a.name < b.name) {
+				return -1;
+			}
+
+			if (a.name > b.name) {
+				return 1;
+			}
+
+			return 0;
+		}
+
 		if (fs.existsSync(pluginDir)) {
 			var branches = grunt.file.expandDirs(pluginDir + "/*");
 			var i, j, branch, branchPath;
@@ -32,13 +44,13 @@ module.exports = function (grunt) {
 				var plugin = require(branchPath),
 					name = plugin.name;
 
-				plugins.push(name);
+				plugins.push(plugin);
 			}
 
 			grunt.log.writeln((plugins.join(", ")).grey);
 
 			if (cb) {
-				cb(plugins.sort());
+				cb(plugins.sort(compare));
 			}
 		} else if (cb) {
 			cb([]);
