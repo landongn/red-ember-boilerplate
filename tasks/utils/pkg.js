@@ -1,8 +1,9 @@
 /*jslint node: true */
 /*global jake, desc, task */
-var fs = require("fs");
+var fs = require("fs"),
+	path = require("path");
 
-var pkgFile = process.cwd() + "/robyn.json";
+var pkgFile = path.join(process.cwd(), "robyn.json");
 var pkg = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
 
 pkg.save = function () {

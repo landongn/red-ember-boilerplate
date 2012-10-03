@@ -16,6 +16,7 @@ module.exports = function (grunt) {
 			var i, j, current;
 			var available = [];
 			var installed = [];
+			var plug;
 
 			for (i = 0, j = plugins.length; i < j; i++) {
 				current = plugins[i];
@@ -23,7 +24,10 @@ module.exports = function (grunt) {
 				if (!pkg.installedPlugins[current]) {
 					available.push(current);
 				} else {
-					installed.push(current);
+					plug = pkg.installedPlugins[current];
+					plug.name = current;
+
+					installed.push(plug);
 				}
 			}
 
@@ -34,25 +38,29 @@ module.exports = function (grunt) {
 				}
 
 				grunt.log.writeln();
-				grunt.log.writeln("[*]" + " Installed modules:");
+				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
 
 				if (installed.length) {
+					var plug;
+
 					for (i = 0, j = installed.length; i < j; i++) {
-						grunt.log.writeln(installed[i].magenta);
+						plug = installed[i];
+
+						grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
 					}
 				} else {
-					grunt.log.writeln("You haven't installed any modules!".grey);
+					grunt.log.writeln("You haven't installed any plugins!".grey);
 				}
 
 				grunt.log.writeln();
-				grunt.log.writeln("[*]" + " Available modules:");
+				grunt.log.writeln("[*] ".cyan + "Available plugins:".magenta);
 
 				if (available.length) {
 					for (i = 0, j = available.length; i < j; i++) {
-						grunt.log.writeln(available[i].cyan);
+						grunt.log.writeln("[+] ".grey + available[i].cyan);
 					}
 				} else {
-					grunt.log.writeln("You've installed all available modules!".grey);
+					grunt.log.writeln("You've installed all available plugins!".grey);
 				}
 			};
 
