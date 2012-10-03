@@ -18,7 +18,7 @@ module.exports = function (grunt) {
 
 		var robynDir = path.join(cwd, ".robyn"),
 			robynPkg = require(path.join(robynDir, "package.json")),
-			taskDir = path.join(robynDir, robynPkg.dirs.tasks),
+			taskDir = path.join(robynDir, robynPkg.config.dirs.tasks),
 			helperDir = path.join(taskDir, "helpers");
 
 		if (!fs.existsSync(taskDir)) {
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 	}());
 
 	// Customize path in robyn.json
-	var robynPkg = path.join(cwd, "robyn.json");
-	grunt.loadTasks(require(robynPkg).dirs.tasks);
+	var pkg = path.join(cwd, "robyn.json");
+	grunt.loadTasks(require(pkg).dirs.tasks);
 
 };
