@@ -12,7 +12,12 @@ module.exports = function (grunt) {
 				tasks.push("start");
 			}
 
-			tasks.push(this.data);
+			if (typeof this.data === typeof []) {
+				tasks = tasks.concat(this.data);
+			} else {
+				tasks.push(this.data);
+			}
+
 			grunt.task.run(tasks);
 
 			done();

@@ -219,7 +219,7 @@ module.exports = function (grunt) {
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
-			var projectPkg = require("./package.json");
+			var projectPkg = require(path.join(cwd, "package.json"));
 			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {

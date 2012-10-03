@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 			}
 		});
 
-		var pkg = require("./package.json");
+		var pkg = require(path.join(process.cwd(), "package.json"));
 		var robynPkg = require("./utils/pkg");
 		var localPkg = require("./utils/local-pkg");
 
