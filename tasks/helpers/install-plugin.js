@@ -22,17 +22,10 @@ module.exports = function (grunt) {
 		}
 
 		var wrench = require("wrench");
-
 		var bpName = pkg.name;
-
-		var plugSrcPkg;
 
 		var completeInstall = function (plug, plugPkg, cb) {
 			var plugPath = path.join(cwd, pkg.dirs.robyn, plug);
-
-			if (fs.existsSync(plugPath)) {
-				wrench.rmdirSyncRecursive(plugPath);
-			}
 
 			var plugInitScript = (plugPkg.scripts || {}).install;
 			var install;
@@ -52,7 +45,11 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plugSrcPkg) {
+			var plugSrcPath = path.join(plugPath, "package.json");
+
+			if (fs.existsSync(plugSrcPath)) {
+				plugSrcPkg = require(plugSrcPath);
+
 				plugPkg.version = plugSrcPkg.version || plugPkg.version;
 				plugPkg.description = plugSrcPkg.description || plugPkg.description;
 			}
@@ -63,6 +60,10 @@ module.exports = function (grunt) {
 			};
 
 			pkg.save();
+
+			if (fs.existsSync(plugPath)) {
+				wrench.rmdirSyncRecursive(plugPath);
+			}
 
 			if (cb) {
 				cb();
@@ -234,12 +235,6 @@ module.exports = function (grunt) {
 			}
 
 			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
-
-			var plugSrcPath = "%r/%p/package.json".replace("%r", pkg.dirs.robyn).replace("%p", plug);
-
-			if (fs.existsSync("./" + plugSrcPath)) {
-				plugSrcPkg = require(fs.realpathSync(plugSrcPath));
-			}
 
 			if (callUpdate) {
 				var child = cp.spawn("npm", ["install"].concat(pluginDeps), {
