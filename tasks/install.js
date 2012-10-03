@@ -24,9 +24,7 @@ module.exports = function (grunt) {
 				if (!pkg.installedPlugins[current.name]) {
 					available.push(current);
 				} else {
-					plug = pkg.installedPlugins[current];
-					plug.name = current;
-
+					plug = pkg.installedPlugins[current.name];
 					installed.push(plug);
 				}
 			}
@@ -84,8 +82,11 @@ module.exports = function (grunt) {
 			}
 
 			var cleanPlugin = plugin.split("@")[0];
+			var plugNames = plugins.map(function (plug) {
+				return plug.name;
+			});
 
-			if ((plugins.indexOf(cleanPlugin) === -1) && (pkg && (cleanPlugin !== pkg.name))) {
+			if ((plugNames.indexOf(cleanPlugin) === -1) && (pkg && (cleanPlugin !== pkg.name))) {
 				showPlugins();
 
 				grunt.log.writeln();
