@@ -1,5 +1,7 @@
 /*global module:false*/
 module.exports = function (grunt) {
+	var path = require("path"),
+		cwd = process.cwd();
 
 	// Project configuration.
 	grunt.initConfig({
@@ -13,10 +15,9 @@ module.exports = function (grunt) {
 	// Load your custom tasks *after* these
 	(function () {
 		var fs = require("fs");
-		var path = require("path");
 
 		var robynDir = ".robyn";
-		var taskDir = path.join(robynDir, "tasks");
+		var taskDir = path.join(cwd, robynDir, "tasks");
 		var helperDir = path.join(taskDir, "helpers");
 
 		if (!fs.existsSync(taskDir)) {
@@ -34,6 +35,7 @@ module.exports = function (grunt) {
 	}());
 
 	// Customize path in robyn.json
-	grunt.loadTasks(require("robyn.json").dirs.tasks);
+	var robynPkg = path.join(cwd, "robyn.json");
+	grunt.loadTasks(require(robynPkg).dirs.tasks);
 
 };
