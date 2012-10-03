@@ -140,10 +140,10 @@ module.exports = function (grunt) {
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				if (!installed || !installed[plugin]) {
+				if (!installed || !installed[plugin.name]) {
 					pluginOpts.push({
-						name: plugin,
-						message: "Would you like to include %s?".replace("%s", plugin),
+						name: plugin.name,
+						message: "Would you like to include %n (%d)?".replace("%n", plugin.name).replace("%d", plugin.description),
 						validator: /[y\/n]+/i,
 						"default": "Y/n"
 					});
