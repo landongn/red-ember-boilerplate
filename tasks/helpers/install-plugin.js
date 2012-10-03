@@ -183,39 +183,6 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var savePaths = function (plugPkg) {
-			var i, j;
-
-			var reqPaths = pkg.requiredPaths || [];
-			var plugReqPaths = plugPkg.config.requiredPaths || [];
-
-			for (i = 0, j = plugReqPaths.length; i < j; i++) {
-				if (reqPaths.indexOf(plugReqPaths[i]) === -1) {
-					reqPaths.push(plugReqPaths[i]);
-				}
-			}
-
-			var excPaths = pkg.excludedPaths || [];
-			var plugExcPaths = plugPkg.config.excludedPaths || [];
-
-			for (i = 0, j = plugExcPaths.length; i < j; i++) {
-				if (excPaths.indexOf(plugExcPaths[i]) === -1) {
-					excPaths.push(plugExcPaths[i]);
-				}
-			}
-
-			pkg.requiredPaths = reqPaths;
-			pkg.excludedPaths = excPaths;
-		};
-
-		var findLocalPaths = function (plug, plugPkg, cb) {
-			if (plugPkg.config.requiredPaths || plugPkg.config.excludedPaths) {
-				savePaths(plugPkg);
-			}
-
-			doReplacement(plug, plugPkg, cb);
-		};
-
 		var cloneExternalRepo = function (plug, plugPkg, cb) {
 			var plugRepo = plugPkg.repository;
 
@@ -238,10 +205,10 @@ module.exports = function (grunt) {
 				});
 
 				child.on("exit", function () {
-					findLocalPaths(plug, plugPkg, cb);
+					doReplacement(plug, plugPkg, cb);
 				});
 			} else {
-				findLocalPaths(plug, plugPkg, cb);
+				doReplacement(plug, plugPkg, cb);
 			}
 		};
 
@@ -291,6 +258,41 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var savePaths = function (plugPkg) {
+			var i, j;
+
+			var reqPaths = pkg.requiredPaths || [];
+			var plugReqPaths = plugPkg.config.requiredPaths || [];
+
+			for (i = 0, j = plugReqPaths.length; i < j; i++) {
+				if (reqPaths.indexOf(plugReqPaths[i]) === -1) {
+					reqPaths.push(plugReqPaths[i]);
+				}
+			}
+
+			var excPaths = pkg.excludedPaths || [];
+			var plugExcPaths = plugPkg.config.excludedPaths || [];
+
+			for (i = 0, j = plugExcPaths.length; i < j; i++) {
+				if (excPaths.indexOf(plugExcPaths[i]) === -1) {
+					excPaths.push(plugExcPaths[i]);
+				}
+			}
+
+			pkg.requiredPaths = reqPaths;
+			pkg.excludedPaths = excPaths;
+
+			pkg.save();
+		};
+
+		var findLocalPaths = function (plug, plugPkg, cb) {
+			if (plugPkg.config.requiredPaths || plugPkg.config.excludedPaths) {
+				savePaths(plugPkg);
+			}
+
+			installDependencies(plug, plugPkg, cb);
+		};
+
 		var saveSystemDependencies = function (plug, plugPkg, cb) {
 			var plugSysDeps = plugPkg.systemDependencies,
 				currSysDeps = pkg.systemDependencies || {},
@@ -316,7 +318,7 @@ module.exports = function (grunt) {
 			pkg.systemDependencies = currSysDeps;
 			pkg.save();
 
-			installDependencies(plug, plugPkg, cb);
+			findLocalPaths(plug, plugPkg, cb);
 		};
 
 		var checkSystemDependencies = function (plug, plugPkg, cb) {
@@ -327,7 +329,7 @@ module.exports = function (grunt) {
 					cb(error);
 				});
 			} else {
-				installDependencies(plug, plugPkg, cb);
+				findLocalPaths(plug, plugPkg, cb);
 			}
 		};
 
