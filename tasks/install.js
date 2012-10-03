@@ -69,7 +69,7 @@ module.exports = function (grunt) {
 
 				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
 					cwd: pkg.dirs.robyn,
-					stdio: "inherit"
+					stdio: "pipe"
 				});
 
 				child.on("exit", function () {

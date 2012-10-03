@@ -338,7 +338,7 @@ module.exports = function (grunt) {
 			if (fs.existsSync(plugDir)) {
 				var plugPkg = grunt.file.readJSON(path.join(plugDir, "package.json"));
 				var plugRepo = plugPkg.repository;
-				var source = (plugRepo ? plugRepo.url : plugDir);
+				var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
 
 				grunt.log.writeln();
 				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);

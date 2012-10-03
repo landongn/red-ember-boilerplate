@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
 				cwd: pkg.dirs.robyn,
-				stdio: "inherit"
+				stdio: "pipe"
 			});
 
 			child.on("exit", finalizeInstall);
@@ -83,7 +83,6 @@ module.exports = function (grunt) {
 
 			grunt.helper("store_vars", name, title, function () {
 				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
-				grunt.log.writeln();
 
 				(function install (count) {
 					if (!plugArr[count]) {
