@@ -216,6 +216,35 @@ module.exports = function (grunt) {
 			doReplacement(plug, plugPkg, cb);
 		};
 
+		var cloneExternalRepo = function (plug, plugPkg, cb) {
+			var plugRepo = plugPkg.repository;
+
+			if (plugRepo) {
+				var plugBranch = branch || plugRepo.branch || "master";
+				var plugPath = path.join(cwd, pkg.dirs.robyn, plug);
+
+				grunt.file.mkdir(plugPath);
+
+				var child = cp.spawn("git", [
+					"clone",
+					"--depth", "1",
+					"--branch", plugBranch,
+					plugRepo.url,
+					plugPath
+				], {
+					env: null,
+					setsid: true,
+					stdio: "inherit"
+				});
+
+				child.on("exit", function () {
+					findLocalPaths(plug, plugPkg, cb);
+				});
+			} else {
+				findLocalPaths(plug, plugPkg, cb);
+			}
+		};
+
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
@@ -253,12 +282,12 @@ module.exports = function (grunt) {
 				});
 
 				child.on("exit", function () {
-					findLocalPaths(plug, plugPkg, cb);
+					cloneExternalRepo(plug, plugPkg, cb);
 				});
 
 				return;
 			} else {
-				findLocalPaths(plug, plugPkg, cb);
+				cloneExternalRepo(plug, plugPkg, cb);
 			}
 		};
 
@@ -308,36 +337,12 @@ module.exports = function (grunt) {
 
 			if (fs.existsSync(plugDir)) {
 				var plugPkg = grunt.file.readJSON(path.join(plugDir, "package.json"));
-				var plugRepo = plugPkg.repository;
 				var source = (plugRepo ? plugRepo.url : plugDir);
 
 				grunt.log.writeln();
 				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
 
-				if (plugRepo) {
-					var plugBranch = branch || plugRepo.branch || "master";
-					var plugPath = path.join(pkg.dirs.robyn, plug);
-
-					grunt.file.mkdir(plugPath);
-
-					var child = cp.spawn("git", [
-						"clone",
-						"--depth", "1",
-						"--branch", plugBranch,
-						plugRepo.url,
-						plugPath
-					], {
-						env: null,
-						setsid: true,
-						stdio: "inherit"
-					});
-
-					child.on("exit", function () {
-						checkSystemDependencies(plug, plugPkg, cb);
-					});
-				} else {
-					checkSystemDependencies(plug, plugPkg, cb);
-				}
+				checkSystemDependencies(plug, plugPkg, cb);
 			} else if (cb) {
 				cb(true);
 			}
