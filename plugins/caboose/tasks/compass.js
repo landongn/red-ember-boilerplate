@@ -62,7 +62,7 @@ module.exports = function (grunt) {
 		});
 	});
 
-	grunt.registerTask("build:compass", ["compass:bundle", "compass:prod"]);
+	grunt.config.set("build.compass", ["compass:bundle", "compass:prod"]);
 
 	grunt.loadNpmTasks("grunt-compass");
 
