@@ -5,9 +5,10 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+		var cwd = process.cwd();
 
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(pkg.dirs.robyn + "/package.json");
+		var pristinePkg = require(path.join(cwd, pkg.dirs.robyn, "package.json"));
 		var localPkg = require("../utils/local-pkg");
 
 		var branch;
@@ -27,7 +28,7 @@ module.exports = function (grunt) {
 		var plugSrcPkg;
 
 		var completeInstall = function (plug, plugPkg, cb) {
-			var plugPath = path.join(pkg.dirs.robyn, plug);
+			var plugPath = path.join(cwd, pkg.dirs.robyn, plug);
 
 			if (fs.existsSync(plugPath)) {
 				wrench.rmdirSyncRecursive(plugPath);
@@ -74,7 +75,7 @@ module.exports = function (grunt) {
 			if (!isUpdate && install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins),
+					pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins),
 					file = path.join(pluginDir, plug, args.join(""));
 
 				plugPkg.scripts.install = [cmd, file].join(" ");
@@ -99,7 +100,7 @@ module.exports = function (grunt) {
 
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
-			var plugDir = path.join(pkg.dirs.robyn, plug);
+			var plugDir = path.join(cwd, pkg.dirs.robyn, plug);
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
 
@@ -125,7 +126,7 @@ module.exports = function (grunt) {
 			}
 
 			var localFiles = plugPkg.config.localFiles || "defaults";
-			var pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
 			if (fs.existsSync(localDir)) {
@@ -143,9 +144,9 @@ module.exports = function (grunt) {
 					}
 				}
 
-				var gitIgnore = localDir + "/.gitignore";
+				var gitIgnore = path.join(localDir, ".gitignore");
 				if (fs.existsSync(gitIgnore)) {
-					var currGitIgnore = process.cwd() + "/.gitignore";
+					var currGitIgnore = path.join(cwd, ".gitignore");
 					grunt.log.writeln("Updating .gitignore".grey);
 
 					if (fs.existsSync(currGitIgnore)) {
@@ -167,7 +168,7 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			if (doReplacement) {
-				var plugDir = path.join(pkg.dirs.robyn, plug);
+				var plugDir = path.join(cwd, pkg.dirs.robyn, plug);
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
@@ -218,7 +219,7 @@ module.exports = function (grunt) {
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
-			var projectPkg = require("package.json");
+			var projectPkg = require("./package.json");
 			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {
@@ -236,7 +237,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			grunt.file.write("package.json", JSON.stringify(projectPkg, null, "\t") + "\n");
+			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
 
 			var plugSrcPath = "%r/%p/package.json".replace("%r", pkg.dirs.robyn).replace("%p", plug);
 
@@ -302,11 +303,11 @@ module.exports = function (grunt) {
 		};
 
 		var installPlugin = function (plug, cb) {
-			var pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
-				var plugPkg = grunt.file.readJSON(plugDir + "/package.json");
+				var plugPkg = grunt.file.readJSON(path.join(plugDir, "package.json"));
 				var plugRepo = plugPkg.repository;
 				var source = (plugRepo ? plugRepo.url : plugDir);
 
