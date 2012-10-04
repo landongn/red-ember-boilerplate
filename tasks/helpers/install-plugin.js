@@ -74,17 +74,15 @@ module.exports = function (grunt) {
 			var install = (plugPkg.scripts || {}).install;
 
 			if (!isUpdate && install) {
-				var args = install.split(" "),
-					cmd = args.shift(),
-					pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
-					file = path.join(pluginDir, plug, args.join(""));
+				var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
+					file = path.join(pluginDir, plug, install);
 
-				plugPkg.scripts.install = [cmd, file].join(" ");
+				plugPkg.scripts.install = file.replace(cwd + "/", "");
 
-				if (cmd === "node" && fs.existsSync(file)) {
-					var initializer = require(fs.realpathSync(file));
+				if (fs.existsSync(file)) {
+					var initializer = require(file);
 
-					initializer.run(grunt, function (error) {
+					initializer(grunt, function (error) {
 						if (error) {
 							grunt.fail.warn(error);
 						}
