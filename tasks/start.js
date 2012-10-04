@@ -40,8 +40,8 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			grunt.log.writeln();
-			grunt.log.writeln("[*] ".cyan + "You should edit your package.json and fill in your project details.".magenta);
-			grunt.log.writeln("[*] ".cyan + "All done! Commit you changes and you're on your way.".magenta);
+			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
 			done();
 		};
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln("[*] ".cyan + "Stored and updated your project variables.".magenta);
+				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".magenta);
 
 				(function install(count) {
 					if (!plugArr[count]) {
@@ -120,7 +120,7 @@ module.exports = function (grunt) {
 				for (var key in installed) {
 					if (!plugTitle) {
 						grunt.log.writeln();
-						grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
+						grunt.log.writeln("[*] ".grey + "Installed plugins:".magenta);
 						plugTitle = true;
 					}
 
@@ -183,7 +183,7 @@ module.exports = function (grunt) {
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
 				grunt.log.writeln();
-				grunt.log.writeln("[*] ".cyan + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
+				grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
 
 				done();
 			} else {
@@ -272,7 +272,7 @@ module.exports = function (grunt) {
 
 		var installNPMModules = function () {
 			grunt.log.writeln();
-			grunt.log.writeln(("[+]".magenta + (" Starting the party").grey).bold);
+			grunt.log.writeln("[+]".magenta + (" Starting the party").grey);
 
 			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);

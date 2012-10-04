@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 
 		for (i = 0, j = keys.length; i < j; i++) {
 			if (pkg[keys[i]]) {
-				icon = (i === 0 ? "[*] " : "").cyan;
+				icon = (i === 0 ? "[*] " : "").grey;
 				str = icon + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]);
 
 				if (i === 0) {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 		}
 
 		grunt.log.writeln();
-		grunt.log.writeln("[*] ".cyan + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
+		grunt.log.writeln("[*] ".grey + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
 		grunt.helper("writeln", "via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
 		grunt.log.writeln();
 
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
 
 		for (var key in robynPkg.installedPlugins) {
 			if (!plugTitle) {
-				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
+				grunt.log.writeln("[*] ".grey + "Installed plugins:".magenta);
 				plugTitle = true;
 			}
 
