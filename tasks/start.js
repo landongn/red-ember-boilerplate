@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 			child.on("exit", finalizeInstall);
 		};
 
-		var handleSettings = function(err, props, overrideProps) {
+		var handleSettings = function (err, props, overrideProps) {
 			var key;
 
 			for (key in overrideProps) {
@@ -84,7 +84,7 @@ module.exports = function (grunt) {
 			grunt.helper("store_vars", name, title, function () {
 				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
 
-				(function install (count) {
+				(function install(count) {
 					if (!plugArr[count]) {
 						resetGit();
 						return;
@@ -275,13 +275,7 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
-			var child = cp.spawn("npm", ["install", "--production"], {
-				env: null,
-				setsid: true,
-				stdio: "inherit"
-			});
-
-			child.addListener("exit", function () {
+			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);
 			});
 		};
