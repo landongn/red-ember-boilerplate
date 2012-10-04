@@ -20,23 +20,30 @@ module.exports = function(grunt) {
 		var localPkg = require("./utils/local-pkg");
 
 		var keys = ["name", "version", "author", "description"];
-		var i, j;
+		var i, j, icon, str;
 
 		grunt.log.writeln();
 
 		for (i = 0, j = keys.length; i < j; i++) {
 			if (pkg[keys[i]]) {
-				grunt.log.writeln((i === 0 ? "[*] " : "").cyan + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]));
+				icon = (i === 0 ? "[*] " : "").cyan;
+				str = icon + "Project %k:".replace("%k", keys[i]).grey + " %v".replace("%v", pkg[keys[i]]);
+
+				if (i === 0) {
+					grunt.log.writeln(str);
+				} else {
+					grunt.helper("writeln", str);
+				}
 			}
 		}
 
 		if (pkg.repository) {
-			grunt.log.writeln("Project repository:".grey + " %s".replace("%s", pkg.repository.url));
+			grunt.helper("writeln", "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
 		grunt.log.writeln();
 		grunt.log.writeln("[*] ".cyan + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
-		grunt.log.writeln("via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
+		grunt.helper("writeln", "via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;
