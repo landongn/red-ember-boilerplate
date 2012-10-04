@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 			colors = require("colors");
 
 		// Spacer
-		grunt.log.writeln("[*]".cyan + " Checking for available plugins.".grey);
+		grunt.log.writeln("[*]".grey + " Checking for available plugins.".grey);
 
 		var plugins = [];
 		var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);

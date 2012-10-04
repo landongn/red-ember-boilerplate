@@ -83,7 +83,7 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".magenta);
+				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
 				(function install(count) {
 					if (!plugArr[count]) {
@@ -272,7 +272,7 @@ module.exports = function (grunt) {
 
 		var installNPMModules = function () {
 			grunt.log.writeln();
-			grunt.log.writeln("[+]".magenta + (" Starting the party").grey);
+			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
 			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);
