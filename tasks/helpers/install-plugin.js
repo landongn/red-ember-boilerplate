@@ -335,7 +335,7 @@ module.exports = function (grunt) {
 			if (fs.existsSync(plugDir)) {
 				var plugPath = path.join(plugDir, "plugin.json");
 
-				if (fs.existsSync(plugPkg)) {
+				if (fs.existsSync(plugPath)) {
 					var plugPkg = grunt.file.readJSON(plugPath);
 					var plugRepo = plugPkg.repository;
 					var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
@@ -345,7 +345,7 @@ module.exports = function (grunt) {
 
 					checkSystemDependencies(plug, plugPkg, cb);
 				} else {
-					grunt.fail.warn("%s not found.".replace("%s", plugPath.replace(cwd, "")));
+					grunt.fail.warn("%s not found.".replace("%s", plugPath.replace(cwd + "/", "")));
 
 					if (cb) {
 						cb(true);
