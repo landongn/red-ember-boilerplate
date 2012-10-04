@@ -30,5 +30,13 @@
 			".robyn",
 			"node_modules"
 		],
+		"ignoreTasks": [
+			"concat",
+			"init",
+			"lint",
+			"min",
+			"qunit",
+			"test"
+		]
 	}
 }

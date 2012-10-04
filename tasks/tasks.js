@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 		});
 
 		var taskNames = Object.keys(grunt.task._tasks).filter(function (task) {
-			var ignoreTasks = pkg.ignoreTasks || [];
+			var ignoreTasks = pkg.config.ignoreTasks || [];
 			return ignoreTasks.indexOf(task) == -1;
 		}).sort();
 
