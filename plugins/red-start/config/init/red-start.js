@@ -1,41 +1,39 @@
 /*jslint node: true */
-/*global jake, desc, task, error, pkg, installModule, parseFiles */
 "use strict";
 
-module.exports = {
-	exec : function (exec, args, doneCB) {
-		var cp = require("child_process");
+module.exports = function (grunt, cb) {
 
-		var child = cp.spawn(exec, args || [], {
-			stdio: "inherit"
-		});
+	var runSetup = function () {
+		grunt.helper("spawn", {
+			cmd: "sh",
+			args: ["./scripts/setup.sh"],
+			title: "Running setup.sh. This might take a minute",
+			complete: function (code) {
+				if (code !== 0) {
+					return exit("Something went wrong attempting to run scripts/setup.sh");
+				}
 
-		child.on("exit", function (code) {
-			doneCB(!code);
-		});
-	},
-
-	runSetup : function () {
-		this.exec("sh", ["./scripts/setup.sh"], function (success) {
-			if (!success) {
-				return this.exit("Something went wrong attempting to run scripts/setup.sh");
+				return exit();
 			}
+		});
+	};
 
-			return this.exit();
-		}.bind(this));
-	},
+	var runRedStart = function () {
+		grunt.helper("spawn", {
+			cmd: "red-start",
+			args: ["--no-prompt", "--no-git"],
+			title: "Creating a new red-start project",
+			complete: function (code) {
+				if (code !== 0) {
+					return exit("An error occured attempting to run red-start.");
+				}
 
-	runRedStart : function () {
-		this.exec("red-start", ["--no-prompt", "--no-git"], function (success) {
-			if (!success) {
-				return this.exit("An error occured attempting to run red-start.");
+				runSetup();
 			}
+		});
+	};
 
-			this.runSetup();
-		}.bind(this));
-	},
-
-	checkInstall : function () {
+	var checkInstall = function () {
 		var fs = require("fs");
 
 		var filesToCheck = [
@@ -54,23 +52,21 @@ module.exports = {
 		}
 
 		if (!isInstalled) {
-			this.runRedStart();
+			runRedStart();
 		} else {
-			console.log("Looks like RED Start is already installed. Skipping ahead...");
-			this.runSetup();
+			grunt.helper("writeln", "Looks like RED Start was already run on this project. Skipping ahead...".grey);
+			runSetup();
 		}
-	},
+	};
 
-	exit : function (error) {
-		if (this.cb) {
-			this.cb(error);
+	var exit = function (error) {
+		if (cb) {
+			cb(error);
 		} else {
 			process.exit();
 		}
-	},
+	};
 
-	run : function (cb) {
-		this.cb = cb;
-		this.checkInstall();
-	}
+	checkInstall();
+
 };
