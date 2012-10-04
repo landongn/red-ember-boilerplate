@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 			var plugSrcPath = path.join(plugPath, "plugin.json");
 
 			if (fs.existsSync(plugSrcPath)) {
-				plugSrcPkg = require(plugSrcPath);
+				var plugSrcPkg = require(plugSrcPath);
 
 				plugPkg.version = plugSrcPkg.version || plugPkg.version;
 				plugPkg.description = plugSrcPkg.description || plugPkg.description;
@@ -74,17 +74,15 @@ module.exports = function (grunt) {
 			var install = (plugPkg.scripts || {}).install;
 
 			if (!isUpdate && install) {
-				var args = install.split(" "),
-					cmd = args.shift(),
-					pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
-					file = path.join(pluginDir, plug, args.join(""));
+				var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
+					file = path.join(pluginDir, plug, install);
 
-				plugPkg.scripts.install = [cmd, file].join(" ");
+				plugPkg.scripts.install = file.replace(cwd + "/", "");
 
-				if (cmd === "node" && fs.existsSync(file)) {
-					var initializer = require(fs.realpathSync(file));
+				if (fs.existsSync(file)) {
+					var initializer = require(file);
 
-					initializer.run(function (error) {
+					initializer(grunt, function (error) {
 						if (error) {
 							grunt.fail.warn(error);
 						}
@@ -105,6 +103,8 @@ module.exports = function (grunt) {
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
 
+			grunt.helper("write", "Copying files into project".grey);
+
 			var exclude = [
 				"package.json",
 				".gitignore",
@@ -115,16 +115,14 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			for (i = 0, j = repoPaths.length; i < j; i++) {
-				file = repoPaths[i];
+			repoPaths.filter(function (file) {
+				return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
+			}).forEach(function (file) {
+				newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+				grunt.file.copy(file, newFile);
 
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
-
-					grunt.log.writeln(("Adding " + newFile.replace(path.join(cwd, pkg.config.dirs.robyn) + "/../", "")).grey);
-					grunt.file.copy(file, newFile);
-				}
-			}
+				grunt.log.write(".".grey);
+			});
 
 			var localFiles = plugPkg.config.localFiles || "defaults";
 			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
@@ -135,20 +133,18 @@ module.exports = function (grunt) {
 					dot : true
 				}, localDir + "/**/*");
 
-				for (i = 0, j = localPaths.length; i < j; i++) {
-					file = localPaths[i];
+				localPaths.filter(function (file) {
+					return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
+				}).forEach(function (file) {
+					newFile = file.replace(localDir + "/", "");
+					grunt.file.copy(file, newFile);
 
-					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-						newFile = file.replace(localDir + "/", "");
-						grunt.log.writeln(("Adding " + newFile).grey);
-						grunt.file.copy(file, newFile);
-					}
-				}
+					grunt.log.write(".".grey);
+				});
 
 				var gitIgnore = path.join(localDir, ".gitignore");
 				if (fs.existsSync(gitIgnore)) {
 					var currGitIgnore = path.join(cwd, ".gitignore");
-					grunt.log.writeln("Updating .gitignore".grey);
 
 					if (fs.existsSync(currGitIgnore)) {
 						grunt.file.write(currGitIgnore, [
@@ -158,8 +154,13 @@ module.exports = function (grunt) {
 					} else {
 						grunt.file.copy(gitIgnore, currGitIgnore);
 					}
+
+					grunt.log.write(".".grey);
 				}
 			}
+
+			grunt.log.write("...".grey);
+			grunt.log.ok();
 
 			runInstaller(plug, plugPkg, cb);
 		};
@@ -193,20 +194,13 @@ module.exports = function (grunt) {
 
 				grunt.file.mkdir(plugPath);
 
-				var child = cp.spawn("git", [
-					"clone",
-					"--depth", "1",
-					"--branch", plugBranch,
-					plugRepo.url,
-					plugPath
-				], {
-					env: null,
-					setsid: true,
-					stdio: "inherit"
-				});
-
-				child.on("exit", function () {
-					doReplacement(plug, plugPkg, cb);
+				grunt.helper("spawn", {
+					cmd: "git",
+					args: ["clone", "--depth", "1", "--branch", plugBranch, plugRepo.url, plugPath],
+					title: "Cloning repository",
+					complete: function () {
+						doReplacement(plug, plugPkg, cb);
+					}
 				});
 			} else {
 				doReplacement(plug, plugPkg, cb);
@@ -237,13 +231,7 @@ module.exports = function (grunt) {
 			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
 
 			if (callUpdate) {
-				var child = cp.spawn("npm", ["install"].concat(pluginDeps), {
-					env: null,
-					setsid: true,
-					stdio: "inherit"
-				});
-
-				child.on("exit", function () {
+				grunt.helper("install_modules", pluginDeps, function () {
 					cloneExternalRepo(plug, plugPkg, cb);
 				});
 
@@ -336,12 +324,12 @@ module.exports = function (grunt) {
 				var plugPath = path.join(plugDir, "plugin.json");
 
 				if (fs.existsSync(plugPath)) {
-					var plugPkg = grunt.file.readJSON(plugPath);
+					var plugPkg = require(plugPath);
 					var plugRepo = plugPkg.repository;
 					var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
 
 					grunt.log.writeln();
-					grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " via " + source)).bold);
+					grunt.log.writeln(("[+]".magenta + (" Installing " + plugPkg.name + " via " + source).grey).bold);
 
 					checkSystemDependencies(plug, plugPkg, cb);
 				} else {
