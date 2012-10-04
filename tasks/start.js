@@ -40,8 +40,8 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
-			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+			grunt.log.writeln("[*] ".cyan + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".cyan + "All done! Commit you changes and you're on your way.".magenta);
 
 			done();
 		};
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+				grunt.log.writeln("[*] ".cyan + "Stored and updated your project variables.".magenta);
 
 				(function install(count) {
 					if (!plugArr[count]) {
@@ -183,7 +183,7 @@ module.exports = function (grunt) {
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
 				grunt.log.writeln();
-				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				grunt.log.writeln("[*] ".cyan + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
 
 				done();
 			} else {
