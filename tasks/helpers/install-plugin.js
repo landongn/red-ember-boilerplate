@@ -45,7 +45,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var plugSrcPath = path.join(plugPath, "package.json");
+			var plugSrcPath = path.join(plugPath, "plugin.json");
 
 			if (fs.existsSync(plugSrcPath)) {
 				plugSrcPkg = require(plugSrcPath);
@@ -333,14 +333,24 @@ module.exports = function (grunt) {
 			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
-				var plugPkg = grunt.file.readJSON(path.join(plugDir, "package.json"));
-				var plugRepo = plugPkg.repository;
-				var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
+				var plugPath = path.join(plugDir, "plugin.json");
 
-				grunt.log.writeln();
-				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
+				if (fs.existsSync(plugPkg)) {
+					var plugPkg = grunt.file.readJSON(plugPath);
+					var plugRepo = plugPkg.repository;
+					var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
 
-				checkSystemDependencies(plug, plugPkg, cb);
+					grunt.log.writeln();
+					grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
+
+					checkSystemDependencies(plug, plugPkg, cb);
+				} else {
+					grunt.fail.warn("%s not found.".replace("%s", plugPath.replace(cwd, "")));
+
+					if (cb) {
+						cb(true);
+					}
+				}
 			} else if (cb) {
 				cb(true);
 			}
