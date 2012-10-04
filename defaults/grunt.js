@@ -16,16 +16,14 @@ module.exports = function (grunt) {
 	(function () {
 		var fs = require("fs");
 
-		var robynDir = path.join(cwd, ".robyn"),
-			robynPkg = require(path.join(robynDir, "package.json")),
-			taskDir = path.join(robynDir, robynPkg.config.dirs.tasks),
-			helperDir = path.join(taskDir, "helpers");
+		var dir = path.join(cwd, ".robyn"),
+			files = grunt.file.expand(path.join(dir, "*"));
 
-		if (!fs.existsSync(taskDir)) {
-			robynDir = robynDir.replace(cwd + "/", "");
+		if (!files.length) {
+			dir = dir.replace(cwd + "/", "");
 
 			var warn = [
-				"%s is not yet initialized".replace("%s", robynDir),
+				"%s is not yet initialized".replace("%s", dir),
 				"Run `git submodule update --init` to enable",
 				"Then try this command again."
 			].join("\n       ").trim();
@@ -33,8 +31,12 @@ module.exports = function (grunt) {
 			grunt.fail.warn(warn);
 		}
 
-		grunt.loadTasks(taskDir);
-		grunt.loadTasks(helperDir);
+		var robynPkg = require(path.join(dir, "package.json")),
+			tasks = path.join(dir, robynPkg.config.dirs.tasks),
+			helpers = path.join(tasks, "helpers");
+
+		grunt.loadTasks(tasks);
+		grunt.loadTasks(helpers);
 	}());
 
 	// Customize path in robyn.json
