@@ -329,7 +329,7 @@ module.exports = function (grunt) {
 					var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
 
 					grunt.log.writeln();
-					grunt.log.writeln(("[+]".magenta + (" Installing " + plugPkg.name + " via " + source).grey).bold);
+					grunt.log.writeln("[+]".grey + (" Installing " + plugPkg.name + " via " + source).cyan);
 
 					checkSystemDependencies(plug, plugPkg, cb);
 				} else {
