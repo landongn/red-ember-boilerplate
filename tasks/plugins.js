@@ -7,12 +7,12 @@ module.exports = function (grunt) {
 		cwd = process.cwd(),
 		fs = require("fs");
 
-	var pristinePkg = require(path.join(cwd, pkg.dirs.robyn, "package.json")),
+	var pristinePkg = require(path.join(cwd, pkg.config.dirs.robyn, "package.json")),
 		plugins = pkg.installedPlugins,
 		key, pluginDir, plugDir, helperDir;
 
 	for (key in plugins) {
-		pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+		pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 		plugDir = path.join(pluginDir, key, "tasks");
 		helperDir = path.join(plugDir, "helpers");
 

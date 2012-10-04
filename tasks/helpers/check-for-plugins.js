@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 			path = require("path"),
 			cwd = process.cwd(),
 			pkg = require("../utils/pkg"),
-			pristinePkg = require(path.join(cwd, pkg.dirs.robyn, "package.json")),
+			pristinePkg = require(path.join(cwd, pkg.config.dirs.robyn, "package.json")),
 			colors = require("colors");
 
 		// Spacer
@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
 
 		var plugins = [];
-		var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+		var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 
 		function compare(a, b) {
 			if (a.name < b.name) {

@@ -4,7 +4,7 @@ var fs = require("fs");
 var pkg = require("./pkg");
 var path = require("path");
 
-var configDir = path.join(process.cwd(), pkg.dirs.config);
+var configDir = path.join(process.cwd(), pkg.config.dirs.config);
 
 var localPkg = path.join(configDir, "robyn-local.json");
 var defaultLocalPkg = path.join(__dirname, "../../config/local-default.json");

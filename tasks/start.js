@@ -19,8 +19,8 @@ module.exports = function (grunt) {
 		var prompt;
 		var remote;
 
-		var projectName = pkg.vars.PROJECT_NAME;
-		var projectTitle = pkg.vars.PROJECT_TITLE;
+		var projectName = pkg.config.vars.PROJECT_NAME;
+		var projectTitle = pkg.config.vars.PROJECT_TITLE;
 
 		var options = [{
 			name: "name",
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 
 		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
-				cwd: pkg.dirs.robyn,
+				cwd: pkg.config.dirs.robyn,
 				stdio: "pipe"
 			});
 
@@ -230,7 +230,7 @@ module.exports = function (grunt) {
 
 		var checkIfPartyStarted = function () {
 			// Make sure default paths exist
-			var dirs = pkg.dirs,
+			var dirs = pkg.config.dirs,
 				key, dir;
 
 			for (key in dirs) {
@@ -243,7 +243,7 @@ module.exports = function (grunt) {
 
 			localPkg = require("./utils/local-pkg");
 
-			var requiredPaths = pkg.requiredPaths,
+			var requiredPaths = pkg.config.requiredPaths,
 				i, j, req;
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {
