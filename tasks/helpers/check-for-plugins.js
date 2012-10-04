@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 
 			for (i = 0, j = branches.length; i < j; i++) {
 				branch = branches[i];
-				branchPath = path.join(branch, "package.json");
+				branchPath = path.join(branch, "plugin.json");
 
 				if (!fs.existsSync(branchPath)) {
 					continue;
