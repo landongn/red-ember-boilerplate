@@ -1,4 +1,4 @@
-/*global module:false*/
+/*jshint node:true*/
 
 module.exports = function (grunt) {
 
@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+		var cwd = process.cwd();
 
 		var done = this.async();
 
@@ -206,17 +207,12 @@ module.exports = function (grunt) {
 				return getThisPartyStarted();
 			}
 
-			var initScript = pkg.scripts.install[i];
-			var args = initScript.split(" "),
-				cmd = args.shift(),
-				file = args.join("");
+			var file = path.join(cwd, pkg.scripts.install[i]);
 
-			if (cmd === "node" && fs.existsSync("./" + file)) {
-				grunt.log.subhead(args);
+			if (fs.existsSync(file)) {
+				var initializer = require(file);
 
-				var initializer = require(fs.realpathSync(file));
-
-				initializer.run(function (error) {
+				initializer(grunt, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
@@ -234,7 +230,7 @@ module.exports = function (grunt) {
 				key, dir;
 
 			for (key in dirs) {
-				dir = path.join(process.cwd(), dirs[key]);
+				dir = path.join(cwd, dirs[key]);
 
 				if (!fs.existsSync(dir)) {
 					grunt.file.mkdir(dir);
