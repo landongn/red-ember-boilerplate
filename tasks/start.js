@@ -275,6 +275,9 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
+			grunt.log.writeln();
+			grunt.log.writeln(("[+]".magenta + (" Starting the party").grey).bold);
+
 			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);
 			});
