@@ -11,7 +11,6 @@ module.exports = function (grunt) {
 			colors = require("colors");
 
 		// Spacer
-		grunt.log.writeln();
 		grunt.log.writeln(("[!]".magenta + " Checking for available plugins.".grey).bold);
 
 		var plugins = [];
