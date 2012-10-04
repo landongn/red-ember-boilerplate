@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		path = require("path"),
 		cwd = process.cwd(),
 		pkg = require(path.join(cwd, "robyn.json")),
-		configPath = path.join(cwd, pkg.dirs.config, "statix");
+		configPath = path.join(cwd, pkg.config.dirs.config, "statix");
 
 	var exec = function (exec, args, cwd, doneCB) {
 
