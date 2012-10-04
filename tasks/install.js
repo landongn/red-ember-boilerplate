@@ -45,7 +45,7 @@ module.exports = function (grunt) {
 				}
 
 				grunt.log.writeln();
-				grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
+				grunt.log.writeln("[*] ".grey + "Installed plugins:".magenta);
 
 				if (installed.length) {
 					logPlugins(installed);
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 				}
 
 				grunt.log.writeln();
-				grunt.log.writeln("[*] ".cyan + "Available plugins:".magenta);
+				grunt.log.writeln("[*] ".grey + "Available plugins:".magenta);
 
 				if (available.length) {
 					logPlugins(available);
