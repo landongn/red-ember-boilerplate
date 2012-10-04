@@ -39,6 +39,6 @@ module.exports = function (grunt) {
 
 	// Customize path in robyn.json
 	var pkg = path.join(cwd, "robyn.json");
-	grunt.loadTasks(require(pkg).dirs.tasks);
+	grunt.loadTasks(require(pkg).config.dirs.tasks);
 
 };

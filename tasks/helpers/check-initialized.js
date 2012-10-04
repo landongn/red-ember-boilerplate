@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 
 		if (initialized) {
 			var localPkg = require("../utils/local-pkg"),
-				requiredPaths = pkg.requiredPaths,
+				requiredPaths = pkg.config.requiredPaths,
 				i, j, req;
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {

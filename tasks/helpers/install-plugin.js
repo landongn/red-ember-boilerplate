@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 		var cwd = process.cwd();
 
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(path.join(cwd, pkg.dirs.robyn, "package.json"));
+		var pristinePkg = require(path.join(cwd, pkg.config.dirs.robyn, "package.json"));
 		var localPkg = require("../utils/local-pkg");
 
 		var branch;
@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 		var bpName = pkg.name;
 
 		var completeInstall = function (plug, plugPkg, cb) {
-			var plugPath = path.join(cwd, pkg.dirs.robyn, plug);
+			var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 			var plugInitScript = (plugPkg.scripts || {}).install;
 			var install;
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
 			if (!isUpdate && install) {
 				var args = install.split(" "),
 					cmd = args.shift(),
-					pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins),
+					pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
 					file = path.join(pluginDir, plug, args.join(""));
 
 				plugPkg.scripts.install = [cmd, file].join(" ");
@@ -101,7 +101,7 @@ module.exports = function (grunt) {
 
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
-			var plugDir = path.join(cwd, pkg.dirs.robyn, plug);
+			var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
 
@@ -121,13 +121,13 @@ module.exports = function (grunt) {
 				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
 					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
 
-					grunt.log.writeln(("Adding " + newFile.replace(path.join(cwd, pkg.dirs.robyn) + "/../", "")).grey);
+					grunt.log.writeln(("Adding " + newFile.replace(path.join(cwd, pkg.config.dirs.robyn) + "/../", "")).grey);
 					grunt.file.copy(file, newFile);
 				}
 			}
 
 			var localFiles = plugPkg.config.localFiles || "defaults";
-			var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
 			if (fs.existsSync(localDir)) {
@@ -169,7 +169,7 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			if (doReplacement) {
-				var plugDir = path.join(cwd, pkg.dirs.robyn, plug);
+				var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
@@ -189,7 +189,7 @@ module.exports = function (grunt) {
 
 			if (plugRepo) {
 				var plugBranch = branch || plugRepo.branch || "master";
-				var plugPath = path.join(cwd, pkg.dirs.robyn, plug);
+				var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 				grunt.file.mkdir(plugPath);
 
@@ -256,7 +256,7 @@ module.exports = function (grunt) {
 		var savePaths = function (plugPkg) {
 			var i, j;
 
-			var reqPaths = pkg.requiredPaths || [];
+			var reqPaths = pkg.config.requiredPaths || [];
 			var plugReqPaths = plugPkg.config.requiredPaths || [];
 
 			for (i = 0, j = plugReqPaths.length; i < j; i++) {
@@ -265,7 +265,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var excPaths = pkg.excludedPaths || [];
+			var excPaths = pkg.config.excludedPaths || [];
 			var plugExcPaths = plugPkg.config.excludedPaths || [];
 
 			for (i = 0, j = plugExcPaths.length; i < j; i++) {
@@ -274,8 +274,8 @@ module.exports = function (grunt) {
 				}
 			}
 
-			pkg.requiredPaths = reqPaths;
-			pkg.excludedPaths = excPaths;
+			pkg.config.requiredPaths = reqPaths;
+			pkg.config.excludedPaths = excPaths;
 
 			pkg.save();
 		};
@@ -329,7 +329,7 @@ module.exports = function (grunt) {
 		};
 
 		var installPlugin = function (plug, cb) {
-			var pluginDir = path.join(cwd, pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
