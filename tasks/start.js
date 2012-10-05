@@ -145,8 +145,7 @@ module.exports = function (grunt) {
 				if (!installed || !installed[plugin.name]) {
 					pluginOpts.push({
 						name: plugin.name,
-						description: plugin.description,
-						message: "Would you like to add %n?".replace("%n", plugin.name),
+						message: "Would you like to add %n (%d)?".replace("%n", plugin.name).replace("%d", plugin.description),
 						validator: /[y\/n]+/i,
 						"default": "Y/n"
 					});
