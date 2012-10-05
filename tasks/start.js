@@ -11,6 +11,18 @@ module.exports = function (grunt) {
 
 		var done = this.async();
 
+		var name = grunt.option("name");
+		var title = grunt.option("title");
+
+		branch = branch || grunt.option("branch");
+		override = override || grunt.option("include-plugins") || (function () {
+			if (grunt.option("all")) {
+				return "all";
+			} else if (grunt.option("bare")) {
+				return "bare";
+			}
+		}());
+
 		var pkg = require("./utils/pkg");
 
 		// Don't require until we know we need it
@@ -24,17 +36,25 @@ module.exports = function (grunt) {
 		var projectName = pkg.config.vars.PROJECT_NAME;
 		var projectTitle = pkg.config.vars.PROJECT_TITLE;
 
-		var options = [{
-			name: "name",
-			message: "Project name?",
-			validator: /^([a-z]+)(\w+)$/,
-			warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
-			"default": projectName || "sampleProjectName"
-		}, {
-			name: "title",
-			message: "Project title?",
-			"default": projectTitle || "Sample Project Title"
-		}];
+		var options = [];
+
+		if (!name) {
+			options.push({
+				name: "name",
+				message: "Project name?",
+				validator: /^([a-z]+)(\w+)$/,
+				warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
+				"default": projectName || "sampleProjectName"
+			});
+		}
+
+		if (!title) {
+			options.push({
+				name: "title",
+				message: "Project title?",
+				"default": projectTitle || "Sample Project Title"
+			});
+		}
 
 		var finalizeInstall = function () {
 			pkg.initialized = true;
@@ -63,8 +83,8 @@ module.exports = function (grunt) {
 				props[key] = overrideProps[key];
 			}
 
-			var name = props.name;
-			var title = props.title;
+			name = name || props.name;
+			title = title || props.title;
 
 			delete props.name;
 			delete props.title;
@@ -84,6 +104,7 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
+				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
 				(function install(count) {
@@ -172,13 +193,49 @@ module.exports = function (grunt) {
 				pluginOpts = [];
 			}
 
-			grunt.helper("prompt", {}, options.concat(pluginOpts), function (err, props) {
-				handleSettings(err, props, overrideProps);
-			});
+			options = options.concat(pluginOpts);
+
+			if (options.length) {
+				grunt.helper("prompt", {}, options, function (err, props) {
+					handleSettings(err, props, overrideProps);
+				});
+			} else {
+				handleSettings(null, {}, overrideProps);
+			}
+		};
+
+		var gatherArgs = function (plugins) {
+			var opts = [];
+
+			if (name) {
+				opts.push("project name: %s".replace("%s", name));
+			}
+
+			if (title) {
+				opts.push("project title: %s".replace("%s", title));
+			}
+
+			if (branch) {
+				opts.push("on branch: %s".replace("%s", branch));
+
+			}
+
+			if (override) {
+				opts.push("with plugins: %s".replace("%s", override));
+			}
+
+			if (opts.length) {
+				grunt.log.writeln();
+				grunt.log.writeln("[*]".grey + " Checking param overrides.".grey);
+
+				grunt.helper("writeln", opts.join(", ").grey);
+			}
+
+			promptForSettings(plugins);
 		};
 
 		var gatherPlugins = function () {
-			grunt.helper("check_for_available_plugins", promptForSettings);
+			grunt.helper("check_for_available_plugins", gatherArgs);
 		};
 
 		var getThisPartyStarted = function () {
