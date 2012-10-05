@@ -28,7 +28,7 @@ module.exports = function (grunt, cb) {
 		grunt.helper("spawn", {
 			cmd: "bundle",
 			args: ["install", "--path", "resources/compass/gems"],
-			title: "Installing bundle",
+			title: "Installing bundle. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("No executable named bundle found.");

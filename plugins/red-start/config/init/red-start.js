@@ -7,7 +7,7 @@ module.exports = function (grunt, cb) {
 		grunt.helper("spawn", {
 			cmd: "sh",
 			args: ["./scripts/setup.sh"],
-			title: "Running setup.sh. This might take a minute",
+			title: "Creating a virtualenv. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("Something went wrong attempting to run scripts/setup.sh");
