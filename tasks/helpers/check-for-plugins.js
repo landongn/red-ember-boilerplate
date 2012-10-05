@@ -54,6 +54,7 @@ module.exports = function (grunt) {
 				cb(plugins.sort(compare));
 			}
 		} else if (cb) {
+			grunt.helper("writeln", "No plugins found".grey);
 			cb([]);
 		}
 	});
