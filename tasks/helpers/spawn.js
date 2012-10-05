@@ -1,4 +1,4 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
 
 	grunt.registerHelper("spawn", function (opts) {
@@ -20,9 +20,13 @@ module.exports = function (grunt) {
 				grunt.log.write(".".grey);
 			});
 
-			child.stderr.on("data", function () {
-				grunt.log.write(".".grey);
-			});
+			if (opts.cmd !== "npm") {
+				child.stderr.pipe(process.stderr);
+			} else {
+				child.stderr.on("data", function () {
+					grunt.log.write(".".grey);
+				});
+			}
 		}
 
 		child.on("exit", function (code) {
