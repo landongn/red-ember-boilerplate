@@ -37,10 +37,14 @@ module.exports = function (grunt) {
 
 		grunt.loadTasks(tasks);
 		grunt.loadTasks(helpers);
-	}());
 
-	// Customize path in robyn.json
-	var pkg = path.join(cwd, "robyn.json");
-	grunt.loadTasks(require(pkg).config.dirs.tasks);
+		// Customize path in robyn.json
+		var pkg = require(path.join(cwd, "robyn.json")),
+			local = path.join(cwd, pkg.config.dirs.tasks);
+
+		if (fs.existsSync(local)) {
+			grunt.loadTasks(local);
+		}
+	}());
 
 };
