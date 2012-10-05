@@ -1,4 +1,4 @@
-/*global module:false*/
+/*jshint node:true*/
 
 module.exports = function (grunt) {
 
@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+		var cwd = process.cwd();
 
 		var done = this.async();
 
@@ -39,8 +40,8 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
-			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
 			done();
 		};
@@ -54,7 +55,7 @@ module.exports = function (grunt) {
 			child.on("exit", finalizeInstall);
 		};
 
-		var handleSettings = function(err, props, overrideProps) {
+		var handleSettings = function (err, props, overrideProps) {
 			var key;
 
 			for (key in overrideProps) {
@@ -82,9 +83,9 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
+				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
-				(function install (count) {
+				(function install(count) {
 					if (!plugArr[count]) {
 						resetGit();
 						return;
@@ -119,7 +120,7 @@ module.exports = function (grunt) {
 				for (var key in installed) {
 					if (!plugTitle) {
 						grunt.log.writeln();
-						grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
+						grunt.log.writeln("[*] ".grey + "Installed plugins:".magenta);
 						plugTitle = true;
 					}
 
@@ -182,7 +183,7 @@ module.exports = function (grunt) {
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
 				grunt.log.writeln();
-				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
 
 				done();
 			} else {
@@ -206,17 +207,12 @@ module.exports = function (grunt) {
 				return getThisPartyStarted();
 			}
 
-			var initScript = pkg.scripts.install[i];
-			var args = initScript.split(" "),
-				cmd = args.shift(),
-				file = args.join("");
+			var file = path.join(cwd, pkg.scripts.install[i]);
 
-			if (cmd === "node" && fs.existsSync("./" + file)) {
-				grunt.log.subhead(args);
+			if (fs.existsSync(file)) {
+				var initializer = require(file);
 
-				var initializer = require(fs.realpathSync(file));
-
-				initializer.run(function (error) {
+				initializer(grunt, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
@@ -234,7 +230,7 @@ module.exports = function (grunt) {
 				key, dir;
 
 			for (key in dirs) {
-				dir = path.join(process.cwd(), dirs[key]);
+				dir = path.join(cwd, dirs[key]);
 
 				if (!fs.existsSync(dir)) {
 					grunt.file.mkdir(dir);
@@ -275,13 +271,10 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
-			var child = cp.spawn("npm", ["install", "--production"], {
-				env: null,
-				setsid: true,
-				stdio: "inherit"
-			});
+			grunt.log.writeln();
+			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
-			child.addListener("exit", function () {
+			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);
 			});
 		};
