@@ -1,18 +1,22 @@
-/*global module:false*/
 module.exports = function (grunt) {
+	"use strict";
+
+	/*jshint node:true*/
 
 	grunt.registerTask("oxblood", "Run Rosy + Mocha unit tests", function (mode) {
 		var done = this.async();
 
 		var fs = require("fs");
 		var cp = require("child_process");
-		var pkg = require("./utils/pkg");
+		var path = require("path");
+		var cwd = process.cwd();
+		var pkg = require(path.join(cwd, "package.json"));
 
-		var jsDir = "./project/static/js/";
-		var runner = jsDir + "test/runner.js";
+		var jsDir = path.join("project/static/js");
+		var runner = path.join(jsDir, "test/runner.js");
 
-		if (!fs.existsSync(runner)) {
-			console.error("OxBlood not found.");
+		if (!fs.existsSync(path.join(cwd, runner))) {
+			grunt.fail.warn("OxBlood not found.");
 			process.exit();
 		}
 
@@ -29,7 +33,11 @@ module.exports = function (grunt) {
 				stdio: "inherit"
 			});
 
-			child.addListener("exit", function () {
+			child.addListener("exit", function (code) {
+				if (code !== 0) {
+					grunt.fail.warn("");
+				}
+
 				done();
 			});
 		};
