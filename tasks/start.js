@@ -1,6 +1,7 @@
-/*jshint node:true*/
-
 module.exports = function (grunt) {
+	"use strict";
+
+	/*jshint node:true*/
 
 	grunt.registerTask("start", "Get your party started", function (branch, override) {
 		var fs = require("fs");
@@ -144,7 +145,8 @@ module.exports = function (grunt) {
 				if (!installed || !installed[plugin.name]) {
 					pluginOpts.push({
 						name: plugin.name,
-						message: "Would you like to include %n (%d)?".replace("%n", plugin.name).replace("%d", plugin.description),
+						description: plugin.description,
+						message: "Would you like to add %n?".replace("%n", plugin.name),
 						validator: /[y\/n]+/i,
 						"default": "Y/n"
 					});
