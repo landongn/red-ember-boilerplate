@@ -25,18 +25,15 @@ module.exports = function (grunt) {
 		branch = branch || pkg.repository.branch || "master";
 
 		if (plugin === pkg.name) {
-			var cp = require("child_process"),
-				args = "git submodule foreach git pull origin".split(" ");
+			grunt.helper("spawn", {
+				cmd: "git",
+				args: ["submodule", "foreach", "git", "pull", "origin", branch],
+				title: "Updating %s".replace("%s", pkg.config.dirs.robyn),
+				complete: function (code) {
+					if (code !== 0) {
+						done(false);
+					}
 
-			args.push(branch);
-			var child = cp.spawn(args.shift(), args, {
-				stdio: "inherit"
-			});
-
-			child.on("exit", function (code) {
-				if (code !== 0) {
-					done(false);
-				} else {
 					done();
 				}
 			});
