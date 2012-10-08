@@ -20,7 +20,7 @@ module.exports = function (grunt) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found.").red;
 					warning = dep;
 				} else {
-					grunt.fail.warn(err.toString());
+					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
 				var installedVersion = data.match(/[\d\.]+/).join("");
