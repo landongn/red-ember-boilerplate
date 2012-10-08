@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
-				var installedVersion = data.match(/[\d\.]+/).join("");
+				var installedVersion = data.replace(/x/g, "0").match(/[\d\.]+/).join("");
 
 				while (installedVersion.split(".").length < 3) {
 					installedVersion += ".0";
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
 
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
-							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
+							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow +
 							". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
 						}
 
