@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 
 	grunt.registerHelper("spawn", function (opts) {
 		var cp = require("child_process");
+		var colors = require("colors");
 		var isVerbose = grunt.option("verbose");
 
 		var child = cp.spawn(opts.cmd, opts.args, {
@@ -34,7 +35,12 @@ module.exports = function (grunt) {
 		child.on("exit", function (code) {
 			if (!isVerbose) {
 				grunt.log.write("..".grey);
-				grunt.log.ok();
+
+				if (code === 0) {
+					grunt.log.ok();
+				} else {
+					grunt.log.write("ERR".red);
+				}
 			}
 
 			if (opts.complete) {
