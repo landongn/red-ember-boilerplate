@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
-				var installedVersion = data.match(/[\d\.]+/).join("");
+				var installedVersion = data.replace(/x/g, "0").match(/[\d\.]+/).join("");
 
 				while (installedVersion.split(".").length < 3) {
 					installedVersion += ".0";
