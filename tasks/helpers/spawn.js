@@ -34,7 +34,12 @@ module.exports = function (grunt) {
 		child.on("exit", function (code) {
 			if (!isVerbose) {
 				grunt.log.write("..".grey);
-				grunt.log.ok();
+
+				if (code === 0) {
+					grunt.log.ok();
+				} else {
+					grunt.log.write("ERR".red);
+				}
 			}
 
 			if (opts.complete) {
