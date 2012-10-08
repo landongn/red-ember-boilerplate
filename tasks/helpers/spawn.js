@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 	grunt.registerHelper("spawn", function (opts) {
 		var cp = require("child_process");
 		var isVerbose = grunt.option("verbose");
+		var err = [];
 
 		var child = cp.spawn(opts.cmd, opts.args, {
 			stdio: isVerbose ? "inherit" : "pipe"
@@ -23,7 +24,9 @@ module.exports = function (grunt) {
 			});
 
 			if (opts.cmd !== "npm") {
-				child.stderr.pipe(process.stderr);
+				child.stderr.on("data", function (data) {
+					err.push(data.toString());
+				});
 			} else {
 				child.stderr.on("data", function () {
 					grunt.log.write(".".grey);
@@ -38,7 +41,12 @@ module.exports = function (grunt) {
 				if (code === 0) {
 					grunt.log.ok();
 				} else {
-					grunt.log.write("ERR".red);
+					process.stdout.write("ERR".red);
+
+					if (err.length) {
+						process.stdout.write("\n\n");
+						process.stdout.write(err.join("\n").yellow);
+					}
 				}
 			}
 
