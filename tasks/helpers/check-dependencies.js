@@ -111,7 +111,7 @@ module.exports = function (grunt) {
 
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
-							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
+							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow +
 							". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
 						}
 
