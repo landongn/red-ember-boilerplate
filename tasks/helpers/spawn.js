@@ -41,11 +41,11 @@ module.exports = function (grunt) {
 				if (code === 0) {
 					grunt.log.ok();
 				} else {
-					process.stdout.write("ERR".red);
+					grunt.log.write("ERR".red);
 
 					if (err.length) {
-						process.stdout.write("\n\n");
-						process.stdout.write(err.join("\n").yellow);
+						grunt.log.write("\n\n");
+						grunt.log.write(err.join("\n").yellow);
 					}
 				}
 			}
