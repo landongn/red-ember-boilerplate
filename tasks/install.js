@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 			var logPlugins = function (filtered) {
 				for (i = 0, j = filtered.length; i < j; i++) {
 					plug = filtered[i];
-					grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version).cyan + " (%d)".replace("%d", plug.description).grey);
+					grunt.log.writeln("[+] ".grey + "%n %v".replace("%n", plug.name).replace("%v", plug.version || "").cyan + " (%d)".replace("%d", plug.description).grey);
 				}
 			};
 
