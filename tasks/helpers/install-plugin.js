@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			var plugSrcPath = path.join(plugPath, "plugin.json");
+			var plugSrcPath = path.join(plugPath, "package.json");
 
 			if (fs.existsSync(plugSrcPath)) {
 				var plugSrcPkg = require(plugSrcPath);
