@@ -2,6 +2,19 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerTask("default", "info");
+	// Default task.
+	grunt.registerTask("default", function () {
+		var done = this.async();
+		var tasks = ["info"];
+
+		grunt.helper("check_initialized", function (initialized) {
+			if (!initialized) {
+				tasks.unshift("start");
+			}
+
+			grunt.task.run(tasks);
+			done();
+		}.bind(this));
+	});
 
 };
