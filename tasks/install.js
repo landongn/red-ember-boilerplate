@@ -26,6 +26,8 @@ module.exports = function (grunt) {
 					available.push(current);
 				} else {
 					plug = pkg.installedPlugins[current.name];
+					plug.name = current.name;
+
 					installed.push(plug);
 				}
 			}
