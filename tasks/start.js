@@ -13,14 +13,16 @@ module.exports = function (grunt) {
 		var name = grunt.option("name");
 		var title = grunt.option("title");
 
-		branch = branch || grunt.option("branch");
-		override = override || grunt.option("include-plugins") || (function () {
+		branch = grunt.option("branch") || branch;
+		override = grunt.option("include-plugins") || (function () {
 			if (grunt.option("all")) {
 				return "all";
 			} else if (grunt.option("bare")) {
 				return "bare";
 			}
-		}());
+
+			return undefined;
+		}()) || override;
 
 		var pkg = require("./utils/pkg");
 
@@ -250,7 +252,7 @@ module.exports = function (grunt) {
 
 				grunt.log.writeln();
 
-				grunt.utils.spawn({
+				grunt.util.spawn({
 					cmd: "git",
 					args: ["status"]
 				}, gatherPlugins);
