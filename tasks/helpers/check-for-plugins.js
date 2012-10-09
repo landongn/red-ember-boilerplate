@@ -1,6 +1,6 @@
-/*global module:false*/
-
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("check_for_available_plugins", function (cb) {
 		var fs = require("fs"),

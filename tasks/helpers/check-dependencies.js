@@ -1,5 +1,6 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("check_dependency", function (dep, cb) {
 		var match = dep.version.match(/(?:([<>=]+)?(?:\s+)?)([\d\.]+)/);

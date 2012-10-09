@@ -1,7 +1,6 @@
+/*jshint node:true*/
 module.exports = function (grunt) {
 	"use strict";
-
-	/*jshint node:true*/
 
 	grunt.registerTask("start", "Get your party started", function (branch, override) {
 		var fs = require("fs");

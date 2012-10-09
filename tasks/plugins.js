@@ -1,6 +1,6 @@
-/*global module:false*/
-
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	var pkg = require("./utils/pkg"),
 		path = require("path"),

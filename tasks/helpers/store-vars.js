@@ -1,5 +1,6 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("store_vars", function (name, title, cb) {
 		var pkg = require("../utils/pkg");

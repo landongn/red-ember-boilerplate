@@ -1,5 +1,6 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("install", "Install a plugin", function (plugin, isUpdate) {
 		var pkg = require("./utils/pkg");

@@ -1,7 +1,6 @@
+/*jshint node:true*/
 module.exports = function (grunt) {
 	"use strict";
-
-	/*jshint node:true*/
 
 	grunt.registerHelper("spawn", function (opts) {
 		var cp = require("child_process");
