@@ -1,12 +1,18 @@
-/*global module:false*/
+/*
+ * grunt-contrib-requirejs
+ * http://gruntjs.com/
+ *
+ * Copyright (c) 2012 Tyler Kellen, contributors
+ * Licensed under the MIT license.
+ */
+
+/*jshint node:true*/
 module.exports = function (grunt) {
-	// From https://github.com/gruntjs/grunt-contrib
+	"use strict";
 
 	// TODO: ditch this when grunt v0.4 is released
 	grunt.util = grunt.util || grunt.utils;
 
-	var _ = grunt.util._;
-	var kindOf = grunt.util.kindOf;
 	var absPath;
 
 	var fs = require("fs");
@@ -16,19 +22,25 @@ module.exports = function (grunt) {
 
 	// Helper for consistent options key access across contrib tasks.
 	grunt.registerHelper("options", function (data, defaults) {
-		var _ = grunt.util._;
-		var namespace = data.nameArgs.split(":");
-		var task = grunt.config(_.flatten([namespace, "options"]));
-		var global_subtask = namespace.length > 1 ? grunt.config(_.flatten(["options", namespace])) : {};
-		var global = grunt.config(["options", namespace[0]]);
+		var global_target = data.target ? grunt.config(["options", data.name, data.target]) : null;
+		var global_task = grunt.config(["options", data.name]);
 
-		return _.defaults({}, task, global_subtask, global, defaults || {});
+		var target = data.target ? grunt.config([data.name, data.target, "options"]) : null;
+		var task = grunt.config([data.name, "options"]);
+
+		var options = grunt.util._.defaults({}, target, task, global_target, global_task, defaults);
+
+		return grunt.util.recurse(options, function (value) {
+			if (typeof value !== "string") { return value; }
+
+			return grunt.template.process(value);
+		});
 	});
 
 	// TODO: extend this to send build log to grunt.log.ok / grunt.log.error
 	// by overriding the r.js logger (or submit issue to r.js to expand logging support)
 	requirejs.define("node/print", [], function () {
-		return function print (msg) {
+		return function print(msg) {
 			if (msg.substring(0, 5) === "Error") {
 				grunt.log.errorlns(msg);
 				grunt.fail.warn("RequireJS failed.");
@@ -56,11 +68,14 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerMultiTask("requirejs", "Build a RequireJS project.", function () {
+		var _ = grunt.util._;
+		var kindOf = grunt.util.kindOf;
 		var options = grunt.helper("options", this, {
-			logLevel : 0
+			logLevel: 0
 		});
 
 		absPath = fs.realpathSync() + "/";
+		var done = this.async();
 
 		_.each(options, function (value, key) {
 			if (kindOf(value) === "string") {
@@ -70,6 +85,8 @@ module.exports = function (grunt) {
 
 		grunt.verbose.writeflags(options, "Options");
 
-		requirejs.optimize(options);
+		requirejs.optimize(options, function (response) {
+			done();
+		});
 	});
 };
