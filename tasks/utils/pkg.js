@@ -1,5 +1,4 @@
 /*jslint node: true */
-/*global jake, desc, task */
 var fs = require("fs"),
 	path = require("path");
 

@@ -1,4 +1,7 @@
+/*jshint node:true*/
 module.exports = (function () {
+	"use strict";
+
 	var pkg = require("./pkg");
 	var localPkg = require("./local-pkg");
 

@@ -1,5 +1,5 @@
 /*jslint node: true */
-/*global jake, desc, task */
+
 var fs = require("fs");
 var pkg = require("./pkg");
 var path = require("path");

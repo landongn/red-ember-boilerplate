@@ -1,5 +1,6 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("install_modules", function (args, cb) {
 		grunt.helper("spawn", {
