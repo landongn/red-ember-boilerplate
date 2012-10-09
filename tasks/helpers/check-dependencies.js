@@ -31,33 +31,43 @@ module.exports = function (grunt) {
 
 				dep.installedVersion = installedVersion;
 
+				var iBits = installedVersion.split("."),
+					iMajor = iBits[0],
+					iMinor = iBits[1],
+					iPatch = iBits[2];
+
+				var rBits = requiredVersion.split("."),
+					rMajor = rBits[0],
+					rMinor = rBits[1],
+					rPatch = rBits[2];
+
 				switch (range) {
 				case ">":
-					if (installedVersion <= requiredVersion) {
+					if (iMajor <= rMajor && iMinor <= rMinor && iPatch <= rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case ">=":
-					if (installedVersion < requiredVersion) {
+					if (iMajor < rMajor && iMinor < rMinor && iPatch < rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case "<":
-					if (installedVersion >= requiredVersion) {
+					if (iMajor >= rMajor && iMinor >= rMinor && iPatch >= rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case "<=":
-					if (installedVersion > requiredVersion) {
+					if (iMajor > rMajor && iMinor > rMinor && iPatch > rPatch) {
 						warning = dep;
 					}
 					break;
 
 				default:
-					if (installedVersion !== requiredVersion) {
+					if (iMajor !== rMajor && iMinor !== rMinor && iPatch !== rPatch) {
 						warning = dep;
 					}
 					break;
