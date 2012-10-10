@@ -3,6 +3,9 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("start", "Get your party started", function (branch, override) {
+		// TODO: ditch this when grunt v0.4 is released
+		grunt.util = grunt.util || grunt.utils;
+
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");

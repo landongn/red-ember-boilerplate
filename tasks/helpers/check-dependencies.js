@@ -3,6 +3,9 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerHelper("check_dependency", function (dep, cb) {
+		// TODO: ditch this when grunt v0.4 is released
+		grunt.util = grunt.util || grunt.utils;
+
 		var match = dep.version.match(/(?:([<>=]+)?(?:\s+)?)([\d\.]+)/);
 
 		var range = match[1];
@@ -10,7 +13,7 @@ module.exports = function (grunt) {
 
 		var warning;
 
-		grunt.utils.spawn({
+		grunt.util.spawn({
 			cmd: dep.bin,
 			args: ["--version"]
 		}, function (err, result, code) {
