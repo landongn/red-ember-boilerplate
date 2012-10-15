@@ -6,6 +6,12 @@ module.exports = function (grunt) {
 		// TODO: ditch this when grunt v0.4 is released
 		grunt.util = grunt.util || grunt.utils;
 
+		if (!dep.version || dep.version === "*") {
+			if (cb) {
+				return cb();
+			}
+		}
+
 		var match = dep.version.match(/(?:([<>=]+)?(?:\s+)?)([\d\.]+)/);
 
 		var range = match[1];
