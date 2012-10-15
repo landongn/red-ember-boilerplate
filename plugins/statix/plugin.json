@@ -8,7 +8,6 @@
 		"statix": ">=1.2.2"
 	},
 	"config": {
-		"localFiles": "defaults",
 		"replaceVars": false
 	}
 }

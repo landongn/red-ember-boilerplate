@@ -10,7 +10,6 @@
 		"npm": ">= 1.1.59"
 	},
 	"config": {
-		"replaceVars": false,
-		"localFiles": "defaults"
+		"replaceVars": false
 	}
 }

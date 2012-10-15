@@ -25,7 +25,6 @@
 	},
 	"config": {
 		"scope": "project/static/js",
-		"localFiles": "defaults",
 		"replaceVars": true
 	}
 }
