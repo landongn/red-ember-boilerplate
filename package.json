@@ -16,7 +16,8 @@
 		"dirs": {
 			"robyn": ".",
 			"plugins": "plugins",
-			"tasks": "tasks"
+			"tasks": "tasks",
+			"plugTmpl": "config/__PLUGIN__"
 		}
 	},
 	"license": "MIT",
