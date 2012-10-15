@@ -45,7 +45,7 @@ module.exports = function (grunt) {
 		if (!name) {
 			options.push({
 				name: "name",
-				message: "Project name?",
+				message: "Project namespace?",
 				validator: /^([a-z]+)(\w+)$/,
 				warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
 				"default": projectName || "sampleProjectName"
