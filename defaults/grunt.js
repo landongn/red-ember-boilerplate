@@ -1,5 +1,7 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
+
 	var path = require("path"),
 		cwd = process.cwd();
 
@@ -20,10 +22,10 @@ module.exports = function (grunt) {
 			files = grunt.file.expand(path.join(dir, "*"));
 
 		if (!files.length) {
-			dir = dir.replace(cwd + "/", "");
+			var d = dir.replace(cwd + "/", "");
 
 			var warn = [
-				"%s is not yet initialized".replace("%s", dir),
+				"%s is not yet initialized".replace("%s", d),
 				"Run `git submodule update --init` to enable",
 				"Then try this command again."
 			].join("\n       ").trim();
