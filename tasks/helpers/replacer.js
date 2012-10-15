@@ -28,7 +28,7 @@ module.exports = function (grunt) {
 	grunt.registerHelper("replace_vars", function (str) {
 		var hasMatch;
 
-		for (var p in pkg.vars) {
+		for (var p in pkg.config.vars) {
 			var re = new RegExp("([\\t,\\s]*)({?#?__" + p + "__#?}?)", "g");
 			var re2 = new RegExp("([\\t,\\s]*)({#__" + p + "__#})([\\s\\S]*)({#\\/__" + p + "__#})", "g");
 
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
 				var prefix = prefixMatch ? prefixMatch[0] : "";
 
-				var repl = pkg.vars[p].split("\n").join("\n" + prefix);
+				var repl = pkg.config.vars[p].split("\n").join("\n" + prefix);
 
 				if (!re2.test(str)) {
 					str = str.replace(re, "$1" + repl, "g");
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
 
 		opts = opts || {};
-		var root = opts.root || process.cwd();
+		var root = opts.root;
 		var config = opts.config || {};
 
 		delete require.cache[updatePath + ".js"];
@@ -72,8 +72,8 @@ module.exports = function (grunt) {
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = (pkg.excludedPaths || []).filter(function (path) {
-			return path.indexOf(root) !== -1;
+		var excludeDirs = (pkg.config.excludedPaths || []).filter(function (path) {
+			return !opts.root || path.indexOf(root) !== -1;
 		});
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
@@ -84,33 +84,30 @@ module.exports = function (grunt) {
 			"**/*.min.{js,css}"
 		]);
 
-		for (i = 0, j = files.length; i < j; i++) {
-			current = files[i];
+		files.filter(function (file) {
+			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isFile();
+		}).forEach(function (file) {
+			var contents = fs.readFileSync(file, "utf8");
+			contents = grunt.helper("replace_vars", contents.toString());
 
-			if (!grunt.file.isMatch(excludeFiles, current) && fs.statSync(current).isFile()) {
-
-				var contents = grunt.file.read(current, "utf-8");
-				contents = grunt.helper("replace_vars", contents.toString());
-
-				if (contents) {
-					grunt.file.write(current, contents);
-				}
+			if (contents) {
+				grunt.file.write(file, contents);
 			}
-		}
+		});
 
-		for (i = 0, j = files.length; i < j; i++) {
-			current = files[i];
+		files.filter(function (file) {
+			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isDirectory();
+		}).forEach(function (file) {
+			if (fs.existsSync(file)) {
+				newFile = grunt.helper("replace_vars", file.toString());
 
-			if (!grunt.file.isMatch(excludeFiles, current)) {
-				newFile = grunt.helper("replace_vars", current.toString());
-
-				if (newFile && current !== newFile && fs.existsSync(current) && fs.statSync(current).isDirectory()) {
+				if (newFile && file !== newFile) {
 					var wrench = require("wrench");
-					wrench.copyDirSyncRecursive(current, newFile);
-					wrench.rmdirSyncRecursive(current, true);
+					wrench.copyDirSyncRecursive(file, newFile);
+					wrench.rmdirSyncRecursive(file, true);
 				}
 			}
-		}
+		});
 
 		if (cb) {
 			cb();

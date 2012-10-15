@@ -1,25 +1,25 @@
 Robyn
-==========================================================================================
+=====
 
-A highly customizable boilerplate to initialize common projects.
+A highly customizable bootstrapper to initialize common projects. Robyn allows you to create a project boilerplate tailored to your specific requirements.
 
-
-Features
-========
-
-- Modular hierarchy.
-- Auto-renaming of project variables.
+Robyn is highly extendable. It provides the bare essentials for you, but it is meant to be forked and extended based on your organization's needs.
 
 
-Requirements
-============
+Installing Robyn
+================
 
-- node 0.8.4+
-	- `brew update && brew upgrade node`
-- npm 1.1.45+
-	- `npm update npm -g`
-- grunt 0.3.11+
-	- `npm install grunt -g`
+### Requirements
+
+- [`node`](http://nodejs.org) `>= 0.8.4`
+- [`npm`](http://nodejs.org) `>= 1.1.45`
+- [`grunt`](http://gruntjs.com) `~ 0.3.x`
+
+### Install the Robyn CLI
+
+```bash
+npm install robyn -g
+```
 
 
 How to use
@@ -28,34 +28,42 @@ How to use
 Creating a project
 ------------------
 
-### Install the Robyn CLI
-
-    npm install robyn -g
-
 ### Add your first boilerplate
 
-    robyn add red-boilerplate https://github.com/ff0000/red-boilerplate.git
-    robyn init path/to/folder
+Use the Robyn CLI to name your boilerplate and add a path to its git repository:
+
+```bash
+robyn add <name> <url>
+robyn init <name> path/to/folder
+```
+
+Here's an example using RED Interactive's customized boilerplate:
+
+```bash
+robyn add rbp https://github.com/ff0000/red-boilerplate.git
+robyn init rbp my-first-project
+```
+
 
 Cloning a project
 ------------------
 
-If the project you are working on is using robyn, you will need to run `grunt start` to download all necessary dependencies (the reference to your boilerplate is kept in a submodule).
+For each of your robyn projects, you will need to run `grunt start` to download all necessary dependencies. The reference to your boilerplate is kept in a git submodule. Use the `--recursive` flag to clone the project and the robyn submodule at the same time.
+
+Note that `grunt start` is automatically invoked when `robyn init` is run, so this step is not needed when creating a project. See below for the proper post-creation initializing method.
 
 ### Cloning your project and submodules
 
-    git clone https://github.com/ff0000/project-name.git --recursive
-    grunt start
+```bash
+git clone https://github.com/ff0000/red-boilerplate.git --recursive
+grunt start
+```
 
-### Cloning your project without submodules
 
-    git clone https://github.com/ff0000/project-name.git
-    git submodule update --init
-    grunt start
+Inside Robyn Projects
+=====================
 
-### Usage
-
-Run `grunt tasks` for a list of available tasks.
+Run `grunt tasks` for a list of available tasks. The following are the built-in Robyn tasks. You should feel free to add more tasks per your needs.
 
 ### grunt start
 
@@ -84,6 +92,150 @@ Watch your project for file changes. Functionality varies based on installed plu
 ### grunt update
 
 Update Robyn to your latest bootstrap.
+
+
+Customizing Robyn
+=================
+
+Robyn comes with a plugin architecture that allows you to extend your bootstrap with optional additions. For example, you could use plugins to add Modernizr support, or to add JSHint support.
+
+Starting your Bootstrap
+-----------------------
+
+```bash
+robyn bootstrap path/to/folder
+```
+
+You'll be prompted to fill in some details for your bootstrap. It is recommended that you have a git url for your repository-to-be ahead of time, but you can always add that later.
+
+Now you have a base robyn bootstrap. Here's how it looks:
+
+```bash
+README.md
+package.json
+config/
+    local-default.json
+defaults/
+    .editorconfig
+    .gitignore
+    README.md
+    grunt.js
+    package.json
+    robyn.json
+plugins/
+    .gitkeep
+tasks/
+    build.js
+    default.js
+    info.js
+    install.js
+    plugins.js
+    start.js
+    update.js
+    helpers/
+        check-dependencies.js
+        check-for-plugins.js
+        check-initialized.js
+        get-assertion.js
+        install-plugin.js
+        replacer.js
+        store-vars.js
+    utils/
+        local-pkg.js
+        on-update.js
+        pkg.js
+```
+
+An explanation of each directory is below:
+
+### root
+All root files are specific to the master robyn repo. It is not recommended that you modify these files.
+
+### config
+Pristine configuration files utilized by robyn. It is not recommended that you modify these files.
+
+### defaults
+The `defaults` directory contains your bootstrap's root-level files. All files contained in this directory will be copied to your bootstrap's parent directory.
+
+This is where you should add your organization's skeleton files, global project files, tailored configuration options, etc. Anything that should be included by default. Treat this folder as your eventual project's root.
+
+### plugins
+Plugins are optional, installable modules that you can bundle along with your bootstrap. They're meant to extend the functionality of your bootstrap with additional tasks and project-specific methods.
+
+Use `robyn plugin` to create your own plugins.
+
+### tasks
+A set of pre-defined tasks for your project management. You should feel free to add your own tasks. These can be seen in your project via the `grunt tasks` command.
+
+See above for a list of built-in tasks.
+
+
+Adding Custom Plugins
+=====================
+
+Use the Robyn CLI to add a plugin to your boilerplate:
+
+```bash
+robyn add-plugin <path/to/boilerplate>
+```
+
+Parameters
+------------------
+
+Most of these parameters follow [NPM package.json](http://package.json.jit.su) conventions:
+
+- name
+- description
+- version
+- repository
+- dependencies
+- devDependencies
+- scripts
+
+The following are custom parameters specific to Robyn:
+
+### systemDependencies
+
+A hash containing key/pair mappings of system-wide dependencies and versions. Example below:
+
+```json
+"systemDependencies": {
+    "grunt": ">=0.3.0",
+    "ruby": ">=1.8.x",
+    "python": "*"
+}
+```
+
+### config
+A hash containing key/pair parameters specific to your plugin. Accepted values are:
+
+###### scope
+The main entry point of your plugin. For example, RED Interactive's [`rosy`](https://github.com/ff0000/red-boilerplate/blob/master/plugins/rosy/plugin.json#L27) plugin is scoped to `project/static/js`, and its associated files are copied to that location.
+
+###### replaceVars
+A boolean. When `true`, Robyn will traverse through the plugin's files and replace instances of the placeholder values `__PROJECT_NAME__` and `__PROJECT_TITLE__`
+
+###### requiredPaths
+An array of required plugin paths. Robyn collects these paths and checks for their existence. If any path listed is not found, it is assumed the plugin is not installed, and Robyn attempts to run any action found in `scripts.install`. Example below:
+
+```json
+"requiredPaths": [
+    ".bundle",
+    ".git",
+    ".requiredfolder"
+]
+```
+
+###### excludedPaths
+An array of paths to exclude during file traversal. Example below:
+
+```json
+"excludedPaths": [
+    "env",
+    ".sass-cache,
+    ".hiddenfolder"
+]
+```
 
 
 Changelog

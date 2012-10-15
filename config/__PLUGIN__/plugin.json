@@ -1,0 +1,21 @@
+{
+	"name": "__PLUGIN__",
+	"description": "__PLUGIN_DESCRIPTION__",
+	"version": "0.1.0",
+	"repository": {
+		"type": null,
+		"url": null
+	},
+	"dependencies": {},
+	"devDependencies": {},
+	"systemDependencies": {},
+	"scripts" : {
+		"install": null
+	},
+	"config": {
+		"scope": null,
+		"replaceVars": false,
+		"requiredPaths": [],
+		"excludedPaths": []
+	}
+}

@@ -1,5 +1,6 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerMultiTask("build", "Build your project.", function () {
 		var done = this.async();
@@ -12,7 +13,12 @@ module.exports = function (grunt) {
 				tasks.push("start");
 			}
 
-			tasks.push(this.data);
+			if (typeof this.data === typeof []) {
+				tasks = tasks.concat(this.data);
+			} else {
+				tasks.push(this.data);
+			}
+
 			grunt.task.run(tasks);
 
 			done();

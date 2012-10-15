@@ -7,34 +7,28 @@
 		"type": "git",
 		"url": "__PROJECT_REPOSITORY__"
 	},
-	"vars": {},
-	"dirs": {
-		"robyn": ".robyn",
-		"tasks": "robyn/tasks",
-		"config": "robyn/config"
-	},
-	"ignoreTasks": [
-		"concat",
-		"init",
-		"lint",
-		"min",
-		"qunit",
-		"test"
-	],
-	"requiredPaths": [
-		".robyn",
-		"node_modules"
-	],
-	"excludedPaths": [
-		".git",
-		".robyn",
-		"node_modules"
-	],
-	"installedPlugins": {},
 	"systemDependencies": {
 		"grunt": ">=0.3.0"
 	},
 	"engines": {
 		"node": "*"
+	},
+	"installedPlugins": {},
+	"config": {
+		"vars": {},
+		"dirs": {
+			"robyn": ".robyn",
+			"tasks": "robyn/tasks",
+			"config": "robyn/config"
+		},
+		"requiredPaths": [
+			".robyn",
+			"node_modules"
+		],
+		"excludedPaths": [
+			".git",
+			".robyn",
+			"node_modules"
+		],
 	}
 }

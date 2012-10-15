@@ -1,11 +1,11 @@
 {
 	"name": "robyn",
-	"version": "3.0.0",
+	"version": "1.0.0-alpha",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "A highly customizable boilerplate to initialize common projects.",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/ff0000/red-boilerplate.git"
+		"url": "git://github.com/ff0000/robyn.git"
 	},
 	"dependencies": {
 		"prompt": "0.1.x",
@@ -13,11 +13,11 @@
 		"colors": "0.6.x"
 	},
 	"config": {
-		"vars": {},
 		"dirs": {
 			"robyn": ".",
 			"plugins": "plugins",
-			"tasks": "tasks"
+			"tasks": "tasks",
+			"plugTmpl": "config/__PLUGIN__"
 		}
 	},
 	"license": "MIT",

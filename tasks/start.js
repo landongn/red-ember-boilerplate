@@ -1,13 +1,31 @@
-/*global module:false*/
-
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("start", "Get your party started", function (branch, override) {
+		// TODO: ditch this when grunt v0.4 is released
+		grunt.util = grunt.util || grunt.utils;
+
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+		var cwd = process.cwd();
 
 		var done = this.async();
+
+		var name = grunt.option("name");
+		var title = grunt.option("title");
+
+		branch = grunt.option("branch") || branch;
+		override = grunt.option("include-plugins") || (function () {
+			if (grunt.option("all")) {
+				return "all";
+			} else if (grunt.option("bare")) {
+				return "bare";
+			}
+
+			return undefined;
+		}()) || override;
 
 		var pkg = require("./utils/pkg");
 
@@ -19,50 +37,58 @@ module.exports = function (grunt) {
 		var prompt;
 		var remote;
 
-		var projectName = pkg.vars.PROJECT_NAME;
-		var projectTitle = pkg.vars.PROJECT_TITLE;
+		var projectName = pkg.config.vars.PROJECT_NAME;
+		var projectTitle = pkg.config.vars.PROJECT_TITLE;
 
-		var options = [{
-			name: "name",
-			message: "Project name?",
-			validator: /^([a-z]+)(\w+)$/,
-			warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
-			"default": projectName || "sampleProjectName"
-		}, {
-			name: "title",
-			message: "Project title?",
-			"default": projectTitle || "Sample Project Title"
-		}];
+		var options = [];
+
+		if (!name) {
+			options.push({
+				name: "name",
+				message: "Project namespace?",
+				validator: /^([a-z]+)(\w+)$/,
+				warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
+				"default": projectName || "sampleProjectName"
+			});
+		}
+
+		if (!title) {
+			options.push({
+				name: "title",
+				message: "Project title?",
+				"default": projectTitle || "Sample Project Title"
+			});
+		}
 
 		var finalizeInstall = function () {
 			pkg.initialized = true;
 			pkg.save();
 
 			grunt.log.writeln();
-			grunt.log.writeln("[*] " + "You should edit your package.json and fill in your project details.".cyan);
-			grunt.log.writeln("[*] " + "All done! Commit you changes and you're on your way.".cyan);
+			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
 			done();
 		};
 
 		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
-				cwd: pkg.dirs.robyn,
-				stdio: "inherit"
+				cwd: pkg.config.dirs.robyn,
+				stdio: "pipe"
 			});
 
 			child.on("exit", finalizeInstall);
 		};
 
-		var handleSettings = function(err, props, overrideProps) {
+		var handleSettings = function (err, props, overrideProps) {
 			var key;
 
 			for (key in overrideProps) {
 				props[key] = overrideProps[key];
 			}
 
-			var name = props.name;
-			var title = props.title;
+			name = name || props.name;
+			title = title || props.title;
 
 			delete props.name;
 			delete props.title;
@@ -82,10 +108,10 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln("[*] " + "Stored and updated your project variables.".cyan);
 				grunt.log.writeln();
+				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
-				(function install (count) {
+				(function install(count) {
 					if (!plugArr[count]) {
 						resetGit();
 						return;
@@ -120,7 +146,7 @@ module.exports = function (grunt) {
 				for (var key in installed) {
 					if (!plugTitle) {
 						grunt.log.writeln();
-						grunt.log.writeln("[*] ".cyan + "Installed plugins:".magenta);
+						grunt.log.writeln("[*] ".grey + "Installed plugins:".magenta);
 						plugTitle = true;
 					}
 
@@ -141,10 +167,10 @@ module.exports = function (grunt) {
 			for (i = 0, j = plugins.length; i < j; i++) {
 				plugin = plugins[i];
 
-				if (!installed || !installed[plugin]) {
+				if (!installed || !installed[plugin.name]) {
 					pluginOpts.push({
-						name: plugin,
-						message: "Would you like to include %s?".replace("%s", plugin),
+						name: plugin.name,
+						message: "Would you like to add %n (%d)?".replace("%n", plugin.name).replace("%d", plugin.description),
 						validator: /[y\/n]+/i,
 						"default": "Y/n"
 					});
@@ -171,19 +197,55 @@ module.exports = function (grunt) {
 				pluginOpts = [];
 			}
 
-			grunt.helper("prompt", {}, options.concat(pluginOpts), function (err, props) {
-				handleSettings(err, props, overrideProps);
-			});
+			options = options.concat(pluginOpts);
+
+			if (options.length) {
+				grunt.helper("prompt", {}, options, function (err, props) {
+					handleSettings(err, props, overrideProps);
+				});
+			} else {
+				handleSettings(null, {}, overrideProps);
+			}
+		};
+
+		var gatherArgs = function (plugins) {
+			var opts = [];
+
+			if (name) {
+				opts.push("project name: %s".replace("%s", name));
+			}
+
+			if (title) {
+				opts.push("project title: %s".replace("%s", title));
+			}
+
+			if (branch) {
+				opts.push("on branch: %s".replace("%s", branch));
+
+			}
+
+			if (override) {
+				opts.push("with plugins: %s".replace("%s", override));
+			}
+
+			if (opts.length) {
+				grunt.log.writeln();
+				grunt.log.writeln("[*]".grey + " Checking param overrides.".grey);
+
+				grunt.helper("writeln", opts.join(", ").grey);
+			}
+
+			promptForSettings(plugins);
 		};
 
 		var gatherPlugins = function () {
-			grunt.helper("check_for_available_plugins", promptForSettings);
+			grunt.helper("check_for_available_plugins", gatherArgs);
 		};
 
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
 				grunt.log.writeln();
-				grunt.log.writeln("[*] " + "This party's already been started. You can install individual plugins with `grunt install`".cyan);
+				grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
 
 				done();
 			} else {
@@ -193,7 +255,7 @@ module.exports = function (grunt) {
 
 				grunt.log.writeln();
 
-				grunt.utils.spawn({
+				grunt.util.spawn({
 					cmd: "git",
 					args: ["status"]
 				}, gatherPlugins);
@@ -207,17 +269,12 @@ module.exports = function (grunt) {
 				return getThisPartyStarted();
 			}
 
-			var initScript = pkg.scripts.install[i];
-			var args = initScript.split(" "),
-				cmd = args.shift(),
-				file = args.join("");
+			var file = path.join(cwd, pkg.scripts.install[i]);
 
-			if (cmd === "node" && fs.existsSync("./" + file)) {
-				grunt.log.subhead(args);
+			if (fs.existsSync(file)) {
+				var initializer = require(file);
 
-				var initializer = require(fs.realpathSync(file));
-
-				initializer.run(function (error) {
+				initializer(grunt, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
@@ -231,11 +288,11 @@ module.exports = function (grunt) {
 
 		var checkIfPartyStarted = function () {
 			// Make sure default paths exist
-			var dirs = pkg.dirs,
+			var dirs = pkg.config.dirs,
 				key, dir;
 
 			for (key in dirs) {
-				dir = path.join(process.cwd(), dirs[key]);
+				dir = path.join(cwd, dirs[key]);
 
 				if (!fs.existsSync(dir)) {
 					grunt.file.mkdir(dir);
@@ -244,7 +301,7 @@ module.exports = function (grunt) {
 
 			localPkg = require("./utils/local-pkg");
 
-			var requiredPaths = pkg.requiredPaths,
+			var requiredPaths = pkg.config.requiredPaths,
 				i, j, req;
 
 			for (i = 0, j = requiredPaths.length; i < j; i++) {
@@ -276,13 +333,10 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
-			var child = cp.spawn("npm", ["install", "--production"], {
-				env: null,
-				setsid: true,
-				stdio: "inherit"
-			});
+			grunt.log.writeln();
+			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
-			child.addListener("exit", function () {
+			grunt.helper("install_modules", ["--production"], function () {
 				checkSystemDependencies(pkg.systemDependencies);
 			});
 		};

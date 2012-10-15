@@ -1,7 +1,17 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("check_dependency", function (dep, cb) {
+		// TODO: ditch this when grunt v0.4 is released
+		grunt.util = grunt.util || grunt.utils;
+
+		if (!dep.version || dep.version === "*") {
+			if (cb) {
+				return cb();
+			}
+		}
+
 		var match = dep.version.match(/(?:([<>=]+)?(?:\s+)?)([\d\.]+)/);
 
 		var range = match[1];
@@ -9,7 +19,7 @@ module.exports = function (grunt) {
 
 		var warning;
 
-		grunt.utils.spawn({
+		grunt.util.spawn({
 			cmd: dep.bin,
 			args: ["--version"]
 		}, function (err, result, code) {
@@ -20,10 +30,10 @@ module.exports = function (grunt) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found.").red;
 					warning = dep;
 				} else {
-					grunt.fail.warn(err.stdout.toString());
+					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
-				var installedVersion = data.match(/[\d\.]+/).join("");
+				var installedVersion = data.replace(/x/g, "0").match(/[\d\.]+/).join("");
 
 				while (installedVersion.split(".").length < 3) {
 					installedVersion += ".0";
@@ -31,33 +41,43 @@ module.exports = function (grunt) {
 
 				dep.installedVersion = installedVersion;
 
+				var iBits = installedVersion.split("."),
+					iMajor = iBits[0],
+					iMinor = iBits[1],
+					iPatch = iBits[2];
+
+				var rBits = requiredVersion.split("."),
+					rMajor = rBits[0],
+					rMinor = rBits[1],
+					rPatch = rBits[2];
+
 				switch (range) {
 				case ">":
-					if (installedVersion <= requiredVersion) {
+					if (iMajor <= rMajor && iMinor <= rMinor && iPatch <= rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case ">=":
-					if (installedVersion < requiredVersion) {
+					if (iMajor < rMajor && iMinor < rMinor && iPatch < rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case "<":
-					if (installedVersion >= requiredVersion) {
+					if (iMajor >= rMajor && iMinor >= rMinor && iPatch >= rPatch) {
 						warning = dep;
 					}
 					break;
 
 				case "<=":
-					if (installedVersion > requiredVersion) {
+					if (iMajor > rMajor && iMinor > rMinor && iPatch > rPatch) {
 						warning = dep;
 					}
 					break;
 
 				default:
-					if (installedVersion !== requiredVersion) {
+					if (iMajor !== rMajor && iMinor !== rMinor && iPatch !== rPatch) {
 						warning = dep;
 					}
 					break;
@@ -111,7 +131,7 @@ module.exports = function (grunt) {
 
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
-							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).magenta +
+							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow +
 							". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
 						}
 

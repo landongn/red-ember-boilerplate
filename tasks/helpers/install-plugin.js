@@ -1,13 +1,15 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerHelper("install_plugin", function (plug, isUpdate, cb) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
+		var cwd = process.cwd();
 
 		var pkg = require("../utils/pkg");
-		var pristinePkg = require(pkg.dirs.robyn + "/package.json");
+		var pristinePkg = require(path.join(cwd, pkg.config.dirs.robyn, "package.json"));
 		var localPkg = require("../utils/local-pkg");
 
 		var branch;
@@ -21,17 +23,10 @@ module.exports = function (grunt) {
 		}
 
 		var wrench = require("wrench");
-
 		var bpName = pkg.name;
 
-		var plugSrcPkg;
-
 		var completeInstall = function (plug, plugPkg, cb) {
-			var plugPath = path.join(pkg.dirs.robyn, plug);
-
-			if (fs.existsSync(plugPath)) {
-				wrench.rmdirSyncRecursive(plugPath);
-			}
+			var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 			var plugInitScript = (plugPkg.scripts || {}).install;
 			var install;
@@ -51,7 +46,11 @@ module.exports = function (grunt) {
 				}
 			}
 
-			if (plugSrcPkg) {
+			var plugSrcPath = path.join(plugPath, "package.json");
+
+			if (fs.existsSync(plugSrcPath)) {
+				var plugSrcPkg = require(plugSrcPath);
+
 				plugPkg.version = plugSrcPkg.version || plugPkg.version;
 				plugPkg.description = plugSrcPkg.description || plugPkg.description;
 			}
@@ -63,6 +62,10 @@ module.exports = function (grunt) {
 
 			pkg.save();
 
+			if (fs.existsSync(plugPath)) {
+				wrench.rmdirSyncRecursive(plugPath);
+			}
+
 			if (cb) {
 				cb();
 			}
@@ -72,17 +75,15 @@ module.exports = function (grunt) {
 			var install = (plugPkg.scripts || {}).install;
 
 			if (!isUpdate && install) {
-				var args = install.split(" "),
-					cmd = args.shift(),
-					pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins),
-					file = path.join(pluginDir, plug, args.join(""));
+				var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
+					file = path.join(pluginDir, plug, install);
 
-				plugPkg.scripts.install = [cmd, file].join(" ");
+				plugPkg.scripts.install = file.replace(cwd + "/", "");
 
-				if (cmd === "node" && fs.existsSync(file)) {
-					var initializer = require(fs.realpathSync(file));
+				if (fs.existsSync(file)) {
+					var initializer = require(file);
 
-					initializer.run(function (error) {
+					initializer(grunt, function (error) {
 						if (error) {
 							grunt.fail.warn(error);
 						}
@@ -99,9 +100,11 @@ module.exports = function (grunt) {
 
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
-			var plugDir = path.join(pkg.dirs.robyn, plug);
+			var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
+
+			grunt.helper("write", "Copying files into project".grey);
 
 			var exclude = [
 				"package.json",
@@ -113,19 +116,17 @@ module.exports = function (grunt) {
 				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
 			}
 
-			for (i = 0, j = repoPaths.length; i < j; i++) {
-				file = repoPaths[i];
+			repoPaths.filter(function (file) {
+				return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
+			}).forEach(function (file) {
+				newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+				grunt.file.copy(file, newFile);
 
-				if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+				grunt.log.write(".".grey);
+			});
 
-					grunt.log.writeln(("Adding " + newFile.replace(pkg.dirs.robyn + "/../", "")).grey);
-					grunt.file.copy(file, newFile);
-				}
-			}
-
-			var localFiles = plugPkg.config.localFiles || "defaults";
-			var pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var localFiles = "defaults";
+			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
 			if (fs.existsSync(localDir)) {
@@ -133,20 +134,18 @@ module.exports = function (grunt) {
 					dot : true
 				}, localDir + "/**/*");
 
-				for (i = 0, j = localPaths.length; i < j; i++) {
-					file = localPaths[i];
+				localPaths.filter(function (file) {
+					return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
+				}).forEach(function (file) {
+					newFile = file.replace(localDir + "/", "");
+					grunt.file.copy(file, newFile);
 
-					if (!grunt.file.isMatch(exclude, file) && fs.existsSync(file)) {
-						newFile = file.replace(localDir + "/", "");
-						grunt.log.writeln(("Adding " + newFile).grey);
-						grunt.file.copy(file, newFile);
-					}
-				}
+					grunt.log.write(".".grey);
+				});
 
-				var gitIgnore = localDir + "/.gitignore";
+				var gitIgnore = path.join(localDir, ".gitignore");
 				if (fs.existsSync(gitIgnore)) {
-					var currGitIgnore = process.cwd() + "/.gitignore";
-					grunt.log.writeln("Updating .gitignore".grey);
+					var currGitIgnore = path.join(cwd, ".gitignore");
 
 					if (fs.existsSync(currGitIgnore)) {
 						grunt.file.write(currGitIgnore, [
@@ -156,8 +155,13 @@ module.exports = function (grunt) {
 					} else {
 						grunt.file.copy(gitIgnore, currGitIgnore);
 					}
+
+					grunt.log.write(".".grey);
 				}
 			}
+
+			grunt.log.write("...".grey);
+			grunt.log.ok();
 
 			runInstaller(plug, plugPkg, cb);
 		};
@@ -167,7 +171,7 @@ module.exports = function (grunt) {
 
 			// Replace variables
 			if (doReplacement) {
-				var plugDir = path.join(pkg.dirs.robyn, plug);
+				var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 				grunt.helper("replace_in_files", function () {
 					copyFiles(plug, plugPkg, cb);
@@ -182,43 +186,32 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var savePaths = function (plugPkg) {
-			var i, j;
+		var cloneExternalRepo = function (plug, plugPkg, cb) {
+			var plugRepo = plugPkg.repository;
 
-			var reqPaths = pkg.requiredPaths || [];
-			var plugReqPaths = plugPkg.config.requiredPaths || [];
+			if (plugRepo) {
+				var plugBranch = branch || plugRepo.branch || "master";
+				var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
-			for (i = 0, j = plugReqPaths.length; i < j; i++) {
-				if (reqPaths.indexOf(plugReqPaths[i]) === -1) {
-					reqPaths.push(plugReqPaths[i]);
-				}
+				grunt.file.mkdir(plugPath);
+
+				grunt.helper("spawn", {
+					cmd: "git",
+					args: ["clone", "--depth", "1", "--branch", plugBranch, plugRepo.url, plugPath],
+					title: "Cloning repository",
+					complete: function () {
+						doReplacement(plug, plugPkg, cb);
+					}
+				});
+			} else {
+				doReplacement(plug, plugPkg, cb);
 			}
-
-			var excPaths = pkg.excludedPaths || [];
-			var plugExcPaths = plugPkg.config.excludedPaths || [];
-
-			for (i = 0, j = plugExcPaths.length; i < j; i++) {
-				if (excPaths.indexOf(plugExcPaths[i]) === -1) {
-					excPaths.push(plugExcPaths[i]);
-				}
-			}
-
-			pkg.requiredPaths = reqPaths;
-			pkg.excludedPaths = excPaths;
-		};
-
-		var findLocalPaths = function (plug, plugPkg, cb) {
-			if (plugPkg.config.requiredPaths || plugPkg.config.excludedPaths) {
-				savePaths(plugPkg);
-			}
-
-			doReplacement(plug, plugPkg, cb);
 		};
 
 		var installDependencies = function (plug, plugPkg, cb) {
 			var callUpdate;
 			var dep;
-			var projectPkg = require("package.json");
+			var projectPkg = require(path.join(cwd, "package.json"));
 			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {
@@ -236,29 +229,52 @@ module.exports = function (grunt) {
 				}
 			}
 
-			grunt.file.write("package.json", JSON.stringify(projectPkg, null, "\t") + "\n");
-
-			var plugSrcPath = "%r/%p/package.json".replace("%r", pkg.dirs.robyn).replace("%p", plug);
-
-			if (fs.existsSync("./" + plugSrcPath)) {
-				plugSrcPkg = require(fs.realpathSync(plugSrcPath));
-			}
+			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
 
 			if (callUpdate) {
-				var child = cp.spawn("npm", ["install"].concat(pluginDeps), {
-					env: null,
-					setsid: true,
-					stdio: "inherit"
-				});
-
-				child.on("exit", function () {
-					findLocalPaths(plug, plugPkg, cb);
+				grunt.helper("install_modules", pluginDeps, function () {
+					cloneExternalRepo(plug, plugPkg, cb);
 				});
 
 				return;
 			} else {
-				findLocalPaths(plug, plugPkg, cb);
+				cloneExternalRepo(plug, plugPkg, cb);
 			}
+		};
+
+		var savePaths = function (plugPkg) {
+			var i, j;
+
+			var reqPaths = pkg.config.requiredPaths || [];
+			var plugReqPaths = plugPkg.config.requiredPaths || [];
+
+			for (i = 0, j = plugReqPaths.length; i < j; i++) {
+				if (reqPaths.indexOf(plugReqPaths[i]) === -1) {
+					reqPaths.push(plugReqPaths[i]);
+				}
+			}
+
+			var excPaths = pkg.config.excludedPaths || [];
+			var plugExcPaths = plugPkg.config.excludedPaths || [];
+
+			for (i = 0, j = plugExcPaths.length; i < j; i++) {
+				if (excPaths.indexOf(plugExcPaths[i]) === -1) {
+					excPaths.push(plugExcPaths[i]);
+				}
+			}
+
+			pkg.config.requiredPaths = reqPaths;
+			pkg.config.excludedPaths = excPaths;
+
+			pkg.save();
+		};
+
+		var findLocalPaths = function (plug, plugPkg, cb) {
+			if (plugPkg.config.requiredPaths || plugPkg.config.excludedPaths) {
+				savePaths(plugPkg);
+			}
+
+			installDependencies(plug, plugPkg, cb);
 		};
 
 		var saveSystemDependencies = function (plug, plugPkg, cb) {
@@ -286,7 +302,7 @@ module.exports = function (grunt) {
 			pkg.systemDependencies = currSysDeps;
 			pkg.save();
 
-			installDependencies(plug, plugPkg, cb);
+			findLocalPaths(plug, plugPkg, cb);
 		};
 
 		var checkSystemDependencies = function (plug, plugPkg, cb) {
@@ -297,45 +313,32 @@ module.exports = function (grunt) {
 					cb(error);
 				});
 			} else {
-				installDependencies(plug, plugPkg, cb);
+				findLocalPaths(plug, plugPkg, cb);
 			}
 		};
 
 		var installPlugin = function (plug, cb) {
-			var pluginDir = path.join(pkg.dirs.robyn, pristinePkg.config.dirs.plugins);
+			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var plugDir = path.join(pluginDir, plug);
 
 			if (fs.existsSync(plugDir)) {
-				var plugPkg = grunt.file.readJSON(plugDir + "/package.json");
-				var plugRepo = plugPkg.repository;
-				var source = (plugRepo ? plugRepo.url : plugDir);
+				var plugPath = path.join(plugDir, "plugin.json");
 
-				grunt.log.writeln();
-				grunt.log.writeln(("[!]".magenta + (" Installing " + plugPkg.name + " from " + source).grey).bold);
+				if (fs.existsSync(plugPath)) {
+					var plugPkg = require(plugPath);
+					var plugRepo = plugPkg.repository;
+					var source = (plugRepo ? plugRepo.url : plugDir.replace(cwd + "/", ""));
 
-				if (plugRepo) {
-					var plugBranch = branch || plugRepo.branch || "master";
-					var plugPath = path.join(pkg.dirs.robyn, plug);
+					grunt.log.writeln();
+					grunt.log.writeln("[+]".grey + (" Installing " + plugPkg.name + " via " + source).cyan);
 
-					grunt.file.mkdir(plugPath);
-
-					var child = cp.spawn("git", [
-						"clone",
-						"--depth", "1",
-						"--branch", plugBranch,
-						plugRepo.url,
-						plugPath
-					], {
-						env: null,
-						setsid: true,
-						stdio: "inherit"
-					});
-
-					child.on("exit", function () {
-						checkSystemDependencies(plug, plugPkg, cb);
-					});
-				} else {
 					checkSystemDependencies(plug, plugPkg, cb);
+				} else {
+					grunt.fail.warn("%s not found.".replace("%s", plugPath.replace(cwd + "/", "")));
+
+					if (cb) {
+						cb(true);
+					}
 				}
 			} else if (cb) {
 				cb(true);
