@@ -170,6 +170,74 @@ A set of pre-defined tasks for your project management. You should feel free to 
 See above for a list of built-in tasks.
 
 
+Adding Custom Plugins
+=====================
+
+Use the Robyn CLI to add a plugin to your boilerplate:
+
+```bash
+robyn add-plugin <path/to/boilerplate>
+```
+
+Parameters
+------------------
+
+Most of these parameters follow [NPM package.json](http://package.json.jit.su) conventions:
+
+- name
+- description
+- version
+- repository
+- dependencies
+- devDependencies
+- scripts
+
+The following are custom parameters specific to Robyn:
+
+### systemDependencies
+
+A hash containing key/pair mappings of system-wide dependencies and versions. Example below:
+
+```json
+"systemDependencies": {
+    "grunt": ">=0.3.0",
+    "ruby": ">=1.8.x",
+    "python": "*"
+}
+```
+
+### config
+A hash containing key/pair parameters specific to your plugin. Accepted values are:
+
+###### scope
+The main entry point of your plugin. For example, RED Interactive's [`rosy`](https://github.com/ff0000/red-boilerplate/blob/master/plugins/rosy/plugin.json#L27) plugin is scoped to `project/static/js`, and its associated files are copied to that location.
+
+###### replaceVars
+A boolean. When `true`, Robyn will traverse through the plugin's files and replace instances of the placeholder values `__PROJECT_NAME__` and `__PROJECT_TITLE__`
+
+###### requiredPaths
+An array of required plugin paths. Robyn collects these paths and checks for their existence. If any path listed is not found, it is assumed the plugin is not installed, and Robyn attempts to run any action found in `scripts.install`. Example below:
+
+```json
+"requiredPaths": [
+    ".bundle",
+    ".git",
+    ".requiredfolder"
+]
+```
+
+###### excludedPaths
+An array of paths to exclude during file traversal. Example below:
+
+```json
+"excludedPaths": [
+    "env",
+    ".sass-cache,
+    ".hiddenfolder"
+]
+```
+
+
 Changelog
 ==========
 

@@ -14,7 +14,6 @@
 	},
 	"config": {
 		"scope": null,
-		"localFiles": "defaults",
 		"replaceVars": false,
 		"requiredPaths": [],
 		"excludedPaths": []
