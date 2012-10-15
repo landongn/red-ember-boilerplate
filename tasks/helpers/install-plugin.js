@@ -125,7 +125,7 @@ module.exports = function (grunt) {
 				grunt.log.write(".".grey);
 			});
 
-			var localFiles = plugPkg.config.localFiles || "defaults";
+			var localFiles = "defaults";
 			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
