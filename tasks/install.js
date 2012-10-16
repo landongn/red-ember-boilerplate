@@ -93,7 +93,7 @@ module.exports = function (grunt) {
 				showPlugins();
 
 				grunt.log.writeln();
-				grunt.fail.warn(plugin.red.bold + " is not an available plugin".yellow);
+				grunt.fail.warn(cleanPlugin.red.bold + " is not an available plugin".yellow);
 			}
 
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
