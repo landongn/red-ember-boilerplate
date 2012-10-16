@@ -346,12 +346,26 @@ module.exports = function (grunt) {
 		};
 
 		if (!isUpdate && pkg.installedPlugins[plug]) {
-			grunt.log.writeln("You've already installed %s!".yellow.replace("%s", plug));
+			var prompt = require("prompt");
+			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+			prompt.delimiter = prompt.delimter || " ";
 
-			if (cb) {
-				cb();
-			}
-			return;
+			prompt.start();
+
+			prompt.get([{
+				name: "force",
+				message: "You are upgrading %s. Type Y to confirm.".replace("%s", plug).yellow,
+				validator: /[y\/n]+/i,
+				"default": "Y/n"
+			}], function (err, props) {
+				var assert = grunt.helper("get_assertion", props.force);
+
+				if (assert) {
+					installPlugin(plug, cb);
+				} else if (cb) {
+					cb();
+				}
+			});
 		} else {
 			installPlugin(plug, cb);
 		}
