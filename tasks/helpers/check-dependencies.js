@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 
 			if (err) {
 				if (~ err.toString().indexOf("No such file or directory")) {
-					dep.error = ("No executable named " + dep.bin.bold.underline + " was found.").red;
+					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
 					warning = dep;
 				} else {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
@@ -100,11 +100,17 @@ module.exports = function (grunt) {
 		var i = 0;
 
 		for (var bin in sysDeps) {
-			iterator.push({
+			var meta = {
 				plugin : plugPkg.name || pkg.name,
 				bin : bin,
-				version : sysDeps[bin]
-			});
+				version : sysDeps[bin].version || sysDeps[bin]
+			};
+
+			if (typeof sysDeps[bin] === typeof {}) {
+				meta.data = sysDeps[bin];
+			}
+
+			iterator.push(meta);
 		}
 
 		(function check(i) {
@@ -131,8 +137,12 @@ module.exports = function (grunt) {
 
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
-							console.warn("[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow +
-							". " + (warn.error || "You are on version " + warn.installedVersion.red.bold + "."));
+
+							console.warn([
+								"[!] ".yellow + warn.plugin.cyan + (" requires " + warn.bin + " " + warn.version).yellow,
+								(warn.error || "You are on version " + warn.installedVersion.red.bold),
+								warn.data ? ("\n    Install: " + warn.data.install + "\n    Upgrade: " + warn.data.upgrade).grey : ""
+							].join(". "));
 						}
 
 						grunt.log.writeln();
