@@ -29,6 +29,6 @@
 			".git",
 			".robyn",
 			"node_modules"
-		],
+		]
 	}
 }
