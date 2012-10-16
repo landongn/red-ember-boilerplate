@@ -25,26 +25,34 @@ module.exports = function (grunt) {
 		var wrench = require("wrench");
 		var bpName = pkg.name;
 
+		var storePkgScripts = function (plug, plugPkg) {
+			var plugScripts = plugPkg.scripts || {};
+
+			for (var key in plugScripts) {
+				var script;
+				var plugScript = plugScripts[key];
+
+				if (plugScript) {
+					pkg.scripts = pkg.scripts || {};
+					pkg.scripts.install = pkg.scripts[key] || {};
+
+					script = pkg.scripts[key];
+
+					if (script && script.length) {
+						if (script.indexOf(plugScript) === -1) {
+							pkg.scripts[key].push(plugScript);
+						}
+					} else {
+						pkg.scripts[key] = [plugScript];
+					}
+				}
+			}
+		};
+
 		var completeInstall = function (plug, plugPkg, cb) {
 			var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
-			var plugInitScript = (plugPkg.scripts || {}).install;
-			var install;
-
-			if (plugInitScript) {
-				pkg.scripts = pkg.scripts || {};
-				pkg.scripts.install = pkg.scripts.install || {};
-
-				install = pkg.scripts.install;
-
-				if (install && install.length) {
-					if (install.indexOf(plugInitScript) === -1) {
-						pkg.scripts.install.push(plugInitScript);
-					}
-				} else {
-					pkg.scripts.install = [plugInitScript];
-				}
-			}
+			storePkgScripts(plug, plugPkg);
 
 			var plugSrcPath = path.join(plugPath, "package.json");
 
@@ -71,28 +79,38 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var handleProcess = function (file, plug, plugPkg, cb) {
+			if (fs.existsSync(file)) {
+				var handler = require(file);
+
+				handler(grunt, function (error) {
+					if (error) {
+						grunt.fail.warn(error);
+					}
+
+					completeInstall(plug, plugPkg, cb);
+				});
+			} else {
+				completeInstall(plug, plugPkg, cb);
+			}
+		};
+
 		var runInstaller = function (plug, plugPkg, cb) {
-			var install = (plugPkg.scripts || {}).install;
+			var scripts = plugPkg.scripts || {},
+				install = scripts.install,
+				update = scripts.update;
+
+			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
+				file;
 
 			if (!isUpdate && install) {
-				var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
-					file = path.join(pluginDir, plug, install);
-
+				file = path.join(pluginDir, plug, install);
 				plugPkg.scripts.install = file.replace(cwd + "/", "");
-
-				if (fs.existsSync(file)) {
-					var initializer = require(file);
-
-					initializer(grunt, function (error) {
-						if (error) {
-							grunt.fail.warn(error);
-						}
-
-						completeInstall(plug, plugPkg, cb);
-					});
-				} else {
-					completeInstall(plug, plugPkg, cb);
-				}
+				handleProcess(file, plug, plugPkg, cb);
+			} else if (isUpdate && update) {
+				file = path.join(pluginDir, plug, update);
+				plugPkg.scripts.update = file.replace(cwd + "/", "");
+				handleProcess(file, plug, plugPkg, cb);
 			} else {
 				completeInstall(plug, plugPkg, cb);
 			}
