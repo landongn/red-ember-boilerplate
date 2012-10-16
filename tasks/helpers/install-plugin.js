@@ -371,7 +371,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		if (!isUpdate && pkg.installedPlugins[plug]) {
+		if (pkg.installedPlugins[plug]) {
 			var prompt = require("prompt");
 			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 			prompt.delimiter = prompt.delimter || " ";
@@ -380,7 +380,7 @@ module.exports = function (grunt) {
 
 			prompt.get([{
 				name: "force",
-				message: "You are upgrading %s. Type Y to confirm.".replace("%s", plug).yellow,
+				message: "You are upgrading %s. Doing so will overwrite any unstaged files. Continue?".replace("%s", plug).yellow,
 				validator: /[y\/n]+/i,
 				"default": "Y/n"
 			}], function (err, props) {
