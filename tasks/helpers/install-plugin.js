@@ -306,8 +306,8 @@ module.exports = function (grunt) {
 				currDep = currSysDeps[dep];
 
 				if (currDep) {
-					plugMatch = plugDep.match(regexp);
-					currMatch = currDep.match(regexp);
+					plugMatch = (plugDep.version || plugDep).match(regexp);
+					currMatch = (currDep.version || currDep).match(regexp);
 
 					if (plugMatch[2] > currMatch[2]) {
 						currSysDeps[dep] = plugDep;
