@@ -7,9 +7,21 @@
 	},
 	"systemDependencies": {
 		"python": ">= 2.7.2",
-		"pip": ">= 1.1.0",
-		"virtualenv": ">= 1.7.2",
-		"red-start": ">= 0.1.7"
+		"pip": {
+			"version": ">= 1.1.0",
+			"install": "sudo easy_install pip",
+			"upgrade": "sudo easy_install -U pip"
+		},
+		"virtualenv": {
+			"version": ">= 1.7.2",
+			"install": "sudo pip install virtualenv",
+			"upgrade": "sudo pip install virtualenv --upgrade"
+		},
+		"red-start": {
+			"version": ">= 0.1.7",
+			"install": "sudo pip install red-start",
+			"upgrade": "sudo pip install red-start --upgrade"
+		}
 	},
 	"config": {
 		"replaceVars": false,

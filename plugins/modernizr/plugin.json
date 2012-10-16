@@ -6,8 +6,16 @@
 		"grunt-modernizr": ">=0.1.x"
 	},
 	"systemDependencies": {
-		"node": ">= 0.8.7",
-		"npm": ">= 1.1.59"
+		"node": {
+			"version": ">= 0.8.7",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		},
+		"npm": {
+			"version": ">= 1.1.59",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		}
 	},
 	"config": {
 		"replaceVars": false

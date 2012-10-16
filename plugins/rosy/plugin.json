@@ -17,8 +17,16 @@
 		"optimist": ">=0.3.4"
 	},
 	"systemDependencies": {
-		"node": ">= 0.8.7",
-		"npm": ">= 1.1.59"
+		"node": {
+			"version": ">= 0.8.7",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		},
+		"npm": {
+			"version": ">= 1.1.59",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		}
 	},
 	"scripts" : {
 		"install" : "config/init/rosy.js",
