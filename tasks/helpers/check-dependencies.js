@@ -141,7 +141,7 @@ module.exports = function (grunt) {
 							console.warn([
 								"[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow,
 								(warn.error || "You are on version " + warn.installedVersion.red.bold),
-								warn.data ? "(Install via " + warn.data.install + ". Upgrade via " + warn.data.upgrade + ")".gray : ""
+								warn.data ? ("(Install: " + warn.data.install.white + ". Upgrade: " + warn.data.upgrade.white + ")").grey : ""
 							].join(". "));
 						}
 
