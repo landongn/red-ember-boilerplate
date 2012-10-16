@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 
 				if (plugScript) {
 					pkg.scripts = pkg.scripts || {};
-					pkg.scripts.install = pkg.scripts[key] || {};
+					pkg.scripts[key] = pkg.scripts[key] || {};
 
 					script = pkg.scripts[key];
 
