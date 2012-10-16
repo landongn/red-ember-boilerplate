@@ -5,15 +5,6 @@ module.exports = function(grunt) {
 		var done = this.async();
 		var pkg = require("./utils/pkg");
 		var path = require('path');
-		var hasInitialized;
-
-		grunt.helper("check_initialized", function (initialized) {
-			hasInitialized = initialized;
-
-			if (!initialized) {
-				grunt.task.run("start");
-			}
-		});
 
 		// Initialize task system so that the tasks can be listed.
 		grunt.task.init([], {help: true});
@@ -69,7 +60,7 @@ module.exports = function(grunt) {
 
 			b = b.join(":");
 
-			if (hasInitialized && b !== "tasks" && (!opts || opts !== "none")) {
+			if (b !== "tasks" && (!opts || opts !== "none")) {
 				grunt.log.writetableln(widths, ['', b.white, '', c.cyan]);
 
 				if (opts) {
