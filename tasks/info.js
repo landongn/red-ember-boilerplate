@@ -7,15 +7,6 @@ module.exports = function(grunt) {
 		var done = this.async();
 		var path = require("path");
 		var colors = require("colors");
-		var hasInitialized;
-
-		grunt.helper("check_initialized", function (initialized) {
-			hasInitialized = initialized;
-
-			if (!initialized) {
-				grunt.task.run("start");
-			}
-		});
 
 		var pkg = require(path.join(process.cwd(), "package.json"));
 		var robynPkg = require("./utils/pkg");
