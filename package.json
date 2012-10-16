@@ -24,6 +24,7 @@
 	"devDependencies": {},
 	"optionalDependencies": {},
 	"systemDependencies": {
+		"git": "*",
 		"grunt": ">=0.3.0"
 	},
 	"engines": {
