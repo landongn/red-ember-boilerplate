@@ -9,7 +9,7 @@ module.exports = function (grunt, cb) {
 		var installpath = path.join(process.cwd(), "project/static/js/libs/_install");
 
 		if (!fs.existsSync(path.join(installpath, "installer.js"))) {
-			return cleanupFiles(installpath);
+			return exit();
 		}
 
 		grunt.helper("spawn", {
