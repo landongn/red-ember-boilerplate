@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 
 				if (plugScript) {
 					pkg.scripts = pkg.scripts || {};
-					pkg.scripts.install = pkg.scripts[key] || {};
+					pkg.scripts[key] = pkg.scripts[key] || {};
 
 					script = pkg.scripts[key];
 
@@ -96,21 +96,21 @@ module.exports = function (grunt) {
 		};
 
 		var runInstaller = function (plug, plugPkg, cb) {
-			var scripts = plugPkg.scripts || {},
-				install = scripts.install,
-				update = scripts.update;
+			var scripts = plugPkg.scripts || {};
+			var pluginDir = path.join(pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 
-			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
-				file;
+			for (var key in scripts) {
+				var script = scripts[key];
 
-			if (!isUpdate && install) {
-				file = path.join(pluginDir, plug, install);
-				plugPkg.scripts.install = file.replace(cwd + "/", "");
-				handleProcess(file, plug, plugPkg, cb);
-			} else if (isUpdate && update) {
-				file = path.join(pluginDir, plug, update);
-				plugPkg.scripts.update = file.replace(cwd + "/", "");
-				handleProcess(file, plug, plugPkg, cb);
+				if ((/^\.\//).test(script)) {
+					scripts[key] = path.join(pluginDir, plug, script);
+				}
+			}
+
+			if (!isUpdate && scripts.install) {
+				handleProcess(scripts.install, plug, plugPkg, cb);
+			} else if (isUpdate && scripts.update) {
+				handleProcess(scripts.update, plug, plugPkg, cb);
 			} else {
 				completeInstall(plug, plugPkg, cb);
 			}
