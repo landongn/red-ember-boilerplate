@@ -166,10 +166,18 @@ module.exports = function (grunt) {
 					var currGitIgnore = path.join(cwd, ".gitignore");
 
 					if (fs.existsSync(currGitIgnore)) {
-						grunt.file.write(currGitIgnore, [
-							grunt.file.read(currGitIgnore),
-							grunt.file.read(gitIgnore)
-						].join("\n"));
+						var newLines = grunt.file.read(gitIgnore).split("\n");
+						var currLines = grunt.file.read(currGitIgnore).split("\n");
+
+						for (i = 0, j = newLines.length; i < j; i++) {
+							var line = newLines[i];
+
+							if (currLines.indexOf(line) === -1) {
+								currLines.push(line);
+							}
+						}
+
+						grunt.file.write(currGitIgnore, currLines.join("\n"));
 					} else {
 						grunt.file.copy(gitIgnore, currGitIgnore);
 					}
