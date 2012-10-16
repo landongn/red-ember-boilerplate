@@ -2,9 +2,6 @@
 	"name": "red-start",
 	"description": "Easy creation of Django projects and applications based the layout used at RED Interactive Agency.",
 	"version": "0.0.4",
-	"scripts" : {
-		"install": "config/init/red-start.js"
-	},
 	"systemDependencies": {
 		"python": ">= 2.7.2",
 		"pip": {
@@ -22,6 +19,9 @@
 			"install": "sudo pip install red-start",
 			"upgrade": "sudo pip install red-start --upgrade"
 		}
+	},
+	"scripts" : {
+		"install": "./config/init/red-start.js"
 	},
 	"config": {
 		"replaceVars": false,

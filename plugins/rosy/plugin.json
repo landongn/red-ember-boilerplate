@@ -29,8 +29,8 @@
 		}
 	},
 	"scripts" : {
-		"install" : "config/init/rosy.js",
-		"update" : "config/init/rosy.js"
+		"install" : "./config/init/rosy.js",
+		"update" : "./config/init/rosy.js"
 	},
 	"config": {
 		"scope": "project/static/js",
