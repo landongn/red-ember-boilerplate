@@ -7,12 +7,6 @@ module.exports = function (grunt) {
 		var colors = require("colors");
 		var done = this.async();
 
-		grunt.helper("check_initialized", function (initialized) {
-			if (!initialized) {
-				done(false);
-			}
-		});
-
 		grunt.helper("check_for_available_plugins", function (plugins) {
 			var i, j, current;
 			var available = [];
