@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 
 			if (err) {
 				if (~ err.toString().indexOf("No such file or directory")) {
-					dep.error = ("No executable named " + dep.bin.bold.underline + " was found.").red;
+					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
 					warning = dep;
 				} else {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
@@ -139,9 +139,9 @@ module.exports = function (grunt) {
 							warn = warnings[j];
 
 							console.warn([
-								"[!] ".yellow + warn.plugin.cyan + " requires " + (warn.bin + " " + warn.version).yellow,
+								"[!] ".yellow + warn.plugin.cyan + (" requires " + warn.bin + " " + warn.version).yellow,
 								(warn.error || "You are on version " + warn.installedVersion.red.bold),
-								warn.data ? "\n    Install: ".grey + warn.data.install + "\n    Upgrade: ".grey + warn.data.upgrade : ""
+								warn.data ? ("\n    Install: " + warn.data.install + "\n    Upgrade: " + warn.data.upgrade).grey : ""
 							].join(". "));
 						}
 
