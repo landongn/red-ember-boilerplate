@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		branch = branch || pkg.repository.branch || "master";
+		branch = branch || "master";
 
 		if (plugin === pkg.name) {
 			grunt.helper("spawn", {
