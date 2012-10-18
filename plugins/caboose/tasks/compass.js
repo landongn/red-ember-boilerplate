@@ -1,35 +1,41 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
 
-	// Project configuration.
+	// Config options
 	grunt.config.set("compass", {
 		dev: {
-			src: "resources/compass/scss",
-			dest: "project/static/css",
-			outputstyle: "expanded",
-			linecomments: true,
-			forcecompile: true,
-			images: "project/static/img",
-			fonts: "project/static/fonts",
-			relativeassets: true,
-			bundleExec: true
+			http_path: "/",
+			sass_dir: "resources/compass/scss",
+			css_dir: "project/static/css",
+			images_dir: "project/static/img",
+			fonts_dir: "project/static/fonts",
+			javascripts_dir: "project/static/js",
+			output_style: ":expanded",
+			line_comments: true,
+			relative_assets: true,
+			bundle_exec: true,
+			force_compile: true
 		},
 		prod: {
-			src: "<config:compass.dev.src>",
-			dest: "<config:compass.dev.dest>",
-			outputstyle: "compressed",
-			linecomments: false,
-			forcecompile: "<config:compass.dev.forcecompile>",
-			images: "<config:compass.dev.images>",
-			fonts: "<config:compass.dev.fonts>",
-			relativeassets: "<config:compass.dev.relativeassets>",
-			bundleExec: "<config:compass.dev.bundleExec>"
+			http_path: "/",
+			sass_dir: "resources/compass/scss",
+			css_dir: "project/static/css",
+			images_dir: "project/static/img",
+			fonts_dir: "project/static/fonts",
+			javascripts_dir: "project/static/js",
+			output_style: ":compressed",
+			line_comments: false,
+			relative_assets: true,
+			bundle_exec: true,
+			force_compile: true
 		}
 	});
 
-	grunt.config.set("watch.compass", {
-		files: "resources/compass/s{a,c}ss/**/*.scss",
-		tasks: ["compass:dev"]
+	// Trick grunt by creating a task named "watch:compass"
+	// Instead of running the grunt watcher, it invokes the compass watcher
+	grunt.registerTask("watch:compass", function () {
+		grunt.task.run(["compass:dev:watch"]);
 	});
 
 	grunt.registerTask("compass:bundle", function () {
@@ -63,7 +69,4 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("build.compass", ["compass:bundle", "compass:prod"]);
-
-	grunt.loadNpmTasks("grunt-compass");
-
 };
