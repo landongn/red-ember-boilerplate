@@ -23,9 +23,8 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		branch = branch || "master";
-
 		if (plugin === pkg.name) {
+			branch = branch || pkg.repository.branch || "master";
 			grunt.helper("spawn", {
 				cmd: "git",
 				args: ["submodule", "foreach", "git", "pull", "origin", branch],
@@ -39,6 +38,7 @@ module.exports = function (grunt) {
 				}
 			});
 		} else {
+			branch = branch || "master";
 			grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
 			done();
 		}
