@@ -90,6 +90,9 @@ module.exports = function (grunt) {
 				grunt.fail.warn(cleanPlugin.red.bold + " is not an available plugin".yellow);
 			}
 
+			// Make sure we're in a pristine environment
+			resetGit();
+
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
 				if (stop === true) {
 					resetGit(false);

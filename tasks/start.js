@@ -333,6 +333,9 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
+			// Make sure we're in a pristine environment
+			resetGit();
+
 			grunt.log.writeln();
 			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
