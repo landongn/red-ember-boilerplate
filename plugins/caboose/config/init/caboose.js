@@ -24,6 +24,27 @@ module.exports = function (grunt, cb) {
 		return fs.closeSync(fdw);
 	};
 
+	var removeConfig = function () {
+		var fs = require("fs"),
+			path = require("path"),
+			pkgPath = path.join(__dirname, "..", "..", "plugin.json");
+
+		if (fs.existsSync(pkgPath)) {
+			var pkg = require(pkgPath),
+				cwd = process.cwd(),
+				rbPath = path.join(cwd, pkg.config.scope, "config.rb");
+
+			if (fs.existsSync(rbPath)) {
+				fs.unlinkSync(rbPath);
+				return exit();
+			} else {
+				return exit();
+			}
+		} else {
+			return exit();
+		}
+	};
+
 	var installGems = function () {
 		grunt.helper("spawn", {
 			cmd: "bundle",
@@ -34,7 +55,7 @@ module.exports = function (grunt, cb) {
 					return exit("No executable named bundle found.");
 				}
 
-				return exit();
+				removeConfig();
 			}
 		});
 	};
