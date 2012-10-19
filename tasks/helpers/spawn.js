@@ -44,7 +44,7 @@ module.exports = function (grunt) {
 
 					if (err.length) {
 						grunt.log.write("\n\n");
-						grunt.log.write(err.join("\n").yellow);
+						grunt.fail.fatal(err.join("\n"));
 					}
 				}
 			}
