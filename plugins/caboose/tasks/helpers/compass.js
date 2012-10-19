@@ -3,7 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 
 	// Create a new multi task.
-	grunt.registerMultiTask("compass", "This triggers the `compass compile` command.", function (watch) {
+	grunt.registerMultiTask("compass", "Watch or compile your Compass files.", function (watch) {
 		// require sass_dir
 		if (typeof this.data.sass_dir === "undefined") {
 			grunt.fail.warn("sass_dir must be defined");
