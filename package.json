@@ -2,7 +2,7 @@
 	"name": "robyn",
 	"version": "1.0.0-alpha",
 	"author": "RED Interactive <geeks@ff0000.com>",
-	"description": "A highly customizable boilerplate to initialize common projects.",
+	"description": "RED Interactive's custom Robyn boilerplate",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/ff0000/robyn.git"
