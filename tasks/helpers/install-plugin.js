@@ -291,8 +291,6 @@ module.exports = function (grunt) {
 
 			pkg.config.requiredPaths = reqPaths;
 			pkg.config.excludedPaths = excPaths;
-
-			pkg.save();
 		};
 
 		var findLocalPaths = function (plug, plugPkg, cb) {
@@ -326,7 +324,6 @@ module.exports = function (grunt) {
 			}
 
 			pkg.systemDependencies = currSysDeps;
-			pkg.save();
 
 			findLocalPaths(plug, plugPkg, cb);
 		};
