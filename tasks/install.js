@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 				}
 			};
 
-			var resetGit = function (err) {
+			var resetGit = function (callback) {
 				var cp = require("child_process");
 
 				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
@@ -69,7 +69,9 @@ module.exports = function (grunt) {
 				});
 
 				child.on("exit", function () {
-					done(err);
+					if (callback) {
+						callback();
+					}
 				});
 			};
 
@@ -95,7 +97,9 @@ module.exports = function (grunt) {
 
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
 				if (stop === true) {
-					resetGit(false);
+					resetGit(function () {
+						done(false);
+					});
 				} else {
 					if (isUpdate) {
 						var path = require("path");
@@ -105,10 +109,10 @@ module.exports = function (grunt) {
 
 						var update = require(updatePath);
 						update.run(function () {
-							resetGit();
+							resetGit(done);
 						});
 					} else {
-						resetGit();
+						resetGit(done);
 					}
 				}
 			});

@@ -71,13 +71,17 @@ module.exports = function (grunt) {
 			done();
 		};
 
-		var resetGit = function () {
+		var resetGit = function (callback) {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
 				cwd: pkg.config.dirs.robyn,
 				stdio: "pipe"
 			});
 
-			child.on("exit", finalizeInstall);
+			child.on("exit", function () {
+				if (callback) {
+					callback();
+				}
+			});
 		};
 
 		var handleSettings = function (err, props, overrideProps) {
@@ -113,7 +117,7 @@ module.exports = function (grunt) {
 
 				(function install(count) {
 					if (!plugArr[count]) {
-						resetGit();
+						resetGit(finalizeInstall);
 						return;
 					}
 
@@ -128,7 +132,7 @@ module.exports = function (grunt) {
 						if (plugArr[count]) {
 							install(count);
 						} else {
-							resetGit();
+							resetGit(finalizeInstall);
 						}
 					});
 				}(i));
