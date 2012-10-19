@@ -219,6 +219,10 @@ module.exports = function (grunt) {
 				var plugBranch = branch || plugRepo.branch || "master";
 				var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
+				if (fs.existsSync(plugPath)) {
+					wrench.rmdirSyncRecursive(plugPath);
+				}
+
 				grunt.file.mkdir(plugPath);
 
 				grunt.helper("spawn", {

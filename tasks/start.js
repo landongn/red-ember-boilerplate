@@ -71,17 +71,13 @@ module.exports = function (grunt) {
 			done();
 		};
 
-		var resetGit = function (callback) {
+		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
 				cwd: pkg.config.dirs.robyn,
 				stdio: "pipe"
 			});
 
-			child.on("exit", function () {
-				if (callback) {
-					callback();
-				}
-			});
+			child.on("exit", finalizeInstall);
 		};
 
 		var handleSettings = function (err, props, overrideProps) {
@@ -117,7 +113,7 @@ module.exports = function (grunt) {
 
 				(function install(count) {
 					if (!plugArr[count]) {
-						resetGit(finalizeInstall);
+						resetGit();
 						return;
 					}
 
@@ -132,7 +128,7 @@ module.exports = function (grunt) {
 						if (plugArr[count]) {
 							install(count);
 						} else {
-							resetGit(finalizeInstall);
+							resetGit();
 						}
 					});
 				}(i));
@@ -337,9 +333,6 @@ module.exports = function (grunt) {
 		};
 
 		var installNPMModules = function () {
-			// Make sure we're in a pristine environment
-			resetGit();
-
 			grunt.log.writeln();
 			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 

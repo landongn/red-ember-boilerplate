@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 				}
 			};
 
-			var resetGit = function (callback) {
+			var resetGit = function (err) {
 				var cp = require("child_process");
 
 				var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
@@ -69,9 +69,7 @@ module.exports = function (grunt) {
 				});
 
 				child.on("exit", function () {
-					if (callback) {
-						callback();
-					}
+					done(err);
 				});
 			};
 
@@ -92,14 +90,9 @@ module.exports = function (grunt) {
 				grunt.fail.warn(cleanPlugin.red.bold + " is not an available plugin".yellow);
 			}
 
-			// Make sure we're in a pristine environment
-			resetGit();
-
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
 				if (stop === true) {
-					resetGit(function () {
-						done(false);
-					});
+					resetGit(false);
 				} else {
 					if (isUpdate) {
 						var path = require("path");
@@ -109,10 +102,10 @@ module.exports = function (grunt) {
 
 						var update = require(updatePath);
 						update.run(function () {
-							resetGit(done);
+							resetGit();
 						});
 					} else {
-						resetGit(done);
+						resetGit();
 					}
 				}
 			});
