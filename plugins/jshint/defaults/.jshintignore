@@ -1,8 +1,0 @@
-node_modules
-.git
-*.min.js
-project/static/js/libs
-project/static/js/test
-ssla-analytics
-zynga/src
-plugins
