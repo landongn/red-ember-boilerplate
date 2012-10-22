@@ -114,6 +114,7 @@ Now you have a base robyn bootstrap. Here's how it looks:
 README.md
 package.json
 config/
+    __PLUGIN__
     local-default.json
 defaults/
     .editorconfig
@@ -179,9 +180,31 @@ Use the Robyn CLI to add a plugin to your boilerplate:
 robyn add-plugin <path/to/boilerplate>
 ```
 
-Parameters
-------------------
+Here's an overview of the default plugin hierarchy:
 
+```bash
+plugin.json
+README.md
+config/
+    init
+        __PLUGIN__.js
+defaults/
+    .gitignore
+tasks/
+    __PLUGIN__.js
+```
+
+### config
+A folder for your plugin-specific scripts. For use if you need to run functionality on plugin install or update. The location is entirely optional, and you can define it in the `scripts.install` / `scripts.update` parameter of your `plugin.json`.
+
+### defaults
+Like its parent, anything placed here will be copied to your project relative to the project's root directory.
+
+### tasks
+A folder for your plugin-specific Grunt tasks.
+
+### plugin.json
+A plugin-specific definition of your plugin's internals.
 Most of these parameters follow [NPM package.json](http://package.json.jit.su) conventions:
 
 - name

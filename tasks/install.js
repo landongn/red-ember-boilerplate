@@ -7,12 +7,6 @@ module.exports = function (grunt) {
 		var colors = require("colors");
 		var done = this.async();
 
-		grunt.helper("check_initialized", function (initialized) {
-			if (!initialized) {
-				done(false);
-			}
-		});
-
 		grunt.helper("check_for_available_plugins", function (plugins) {
 			var i, j, current;
 			var available = [];
@@ -93,7 +87,7 @@ module.exports = function (grunt) {
 				showPlugins();
 
 				grunt.log.writeln();
-				grunt.fail.warn(plugin.red.bold + " is not an available plugin".yellow);
+				grunt.fail.warn(cleanPlugin.red.bold + " is not an available plugin".yellow);
 			}
 
 			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {

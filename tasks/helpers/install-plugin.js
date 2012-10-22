@@ -25,26 +25,34 @@ module.exports = function (grunt) {
 		var wrench = require("wrench");
 		var bpName = pkg.name;
 
+		var storePkgScripts = function (plug, plugPkg) {
+			var plugScripts = plugPkg.scripts || {};
+
+			for (var key in plugScripts) {
+				var script;
+				var plugScript = plugScripts[key];
+
+				if (plugScript) {
+					pkg.scripts = pkg.scripts || {};
+					pkg.scripts[key] = pkg.scripts[key] || {};
+
+					script = pkg.scripts[key];
+
+					if (script && script.length) {
+						if (script.indexOf(plugScript) === -1) {
+							pkg.scripts[key].push(plugScript);
+						}
+					} else {
+						pkg.scripts[key] = [plugScript];
+					}
+				}
+			}
+		};
+
 		var completeInstall = function (plug, plugPkg, cb) {
 			var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
-			var plugInitScript = (plugPkg.scripts || {}).install;
-			var install;
-
-			if (plugInitScript) {
-				pkg.scripts = pkg.scripts || {};
-				pkg.scripts.install = pkg.scripts.install || {};
-
-				install = pkg.scripts.install;
-
-				if (install && install.length) {
-					if (install.indexOf(plugInitScript) === -1) {
-						pkg.scripts.install.push(plugInitScript);
-					}
-				} else {
-					pkg.scripts.install = [plugInitScript];
-				}
-			}
+			storePkgScripts(plug, plugPkg);
 
 			var plugSrcPath = path.join(plugPath, "package.json");
 
@@ -71,28 +79,38 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var runInstaller = function (plug, plugPkg, cb) {
-			var install = (plugPkg.scripts || {}).install;
+		var handleProcess = function (file, plug, plugPkg, cb) {
+			if (fs.existsSync(file)) {
+				var handler = require(file);
 
-			if (!isUpdate && install) {
-				var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins),
-					file = path.join(pluginDir, plug, install);
+				handler(grunt, function (error) {
+					if (error) {
+						grunt.fail.warn(error);
+					}
 
-				plugPkg.scripts.install = file.replace(cwd + "/", "");
-
-				if (fs.existsSync(file)) {
-					var initializer = require(file);
-
-					initializer(grunt, function (error) {
-						if (error) {
-							grunt.fail.warn(error);
-						}
-
-						completeInstall(plug, plugPkg, cb);
-					});
-				} else {
 					completeInstall(plug, plugPkg, cb);
+				});
+			} else {
+				completeInstall(plug, plugPkg, cb);
+			}
+		};
+
+		var runInstaller = function (plug, plugPkg, cb) {
+			var scripts = plugPkg.scripts || {};
+			var pluginDir = path.join(pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
+
+			for (var key in scripts) {
+				var script = scripts[key];
+
+				if ((/^\.\//).test(script)) {
+					scripts[key] = path.join(pluginDir, plug, script);
 				}
+			}
+
+			if (!isUpdate && scripts.install) {
+				handleProcess(scripts.install, plug, plugPkg, cb);
+			} else if (isUpdate && scripts.update) {
+				handleProcess(scripts.update, plug, plugPkg, cb);
 			} else {
 				completeInstall(plug, plugPkg, cb);
 			}
@@ -148,10 +166,18 @@ module.exports = function (grunt) {
 					var currGitIgnore = path.join(cwd, ".gitignore");
 
 					if (fs.existsSync(currGitIgnore)) {
-						grunt.file.write(currGitIgnore, [
-							grunt.file.read(currGitIgnore),
-							grunt.file.read(gitIgnore)
-						].join("\n"));
+						var newLines = grunt.file.read(gitIgnore).split("\n");
+						var currLines = grunt.file.read(currGitIgnore).split("\n");
+
+						for (i = 0, j = newLines.length; i < j; i++) {
+							var line = newLines[i];
+
+							if (currLines.indexOf(line) === -1) {
+								currLines.push(line);
+							}
+						}
+
+						grunt.file.write(currGitIgnore, currLines.join("\n"));
 					} else {
 						grunt.file.copy(gitIgnore, currGitIgnore);
 					}
@@ -192,6 +218,10 @@ module.exports = function (grunt) {
 			if (plugRepo) {
 				var plugBranch = branch || plugRepo.branch || "master";
 				var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
+
+				if (fs.existsSync(plugPath)) {
+					wrench.rmdirSyncRecursive(plugPath);
+				}
 
 				grunt.file.mkdir(plugPath);
 
@@ -265,8 +295,6 @@ module.exports = function (grunt) {
 
 			pkg.config.requiredPaths = reqPaths;
 			pkg.config.excludedPaths = excPaths;
-
-			pkg.save();
 		};
 
 		var findLocalPaths = function (plug, plugPkg, cb) {
@@ -288,8 +316,8 @@ module.exports = function (grunt) {
 				currDep = currSysDeps[dep];
 
 				if (currDep) {
-					plugMatch = plugDep.match(regexp);
-					currMatch = currDep.match(regexp);
+					plugMatch = (plugDep.version || plugDep).match(regexp);
+					currMatch = (currDep.version || currDep).match(regexp);
 
 					if (plugMatch[2] > currMatch[2]) {
 						currSysDeps[dep] = plugDep;
@@ -300,7 +328,6 @@ module.exports = function (grunt) {
 			}
 
 			pkg.systemDependencies = currSysDeps;
-			pkg.save();
 
 			findLocalPaths(plug, plugPkg, cb);
 		};
@@ -345,13 +372,27 @@ module.exports = function (grunt) {
 			}
 		};
 
-		if (!isUpdate && pkg.installedPlugins[plug]) {
-			grunt.log.writeln("You've already installed %s!".yellow.replace("%s", plug));
+		if (pkg.installedPlugins[plug]) {
+			var prompt = require("prompt");
+			prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+			prompt.delimiter = prompt.delimter || " ";
 
-			if (cb) {
-				cb();
-			}
-			return;
+			prompt.start();
+
+			prompt.get([{
+				name: "force",
+				message: "You are upgrading %s. Doing so will overwrite any unstaged files. Continue?".replace("%s", plug).yellow,
+				validator: /[y\/n]+/i,
+				"default": "Y/n"
+			}], function (err, props) {
+				var assert = grunt.helper("get_assertion", props.force);
+
+				if (assert) {
+					installPlugin(plug, cb);
+				} else if (cb) {
+					cb();
+				}
+			});
 		} else {
 			installPlugin(plug, cb);
 		}
