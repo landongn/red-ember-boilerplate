@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
-		var jshintOptions = grunt.file.readJSON(".jshintrc");
+		var jshintOptions = grunt.file.readJSON(path.join(scope, ".jshintrc"));
 
 		if (mode === "browser") {
 			jshintOptions.node = false;
