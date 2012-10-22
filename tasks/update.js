@@ -23,25 +23,24 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		if (plugin === pkg.name) {
-			branch = branch || pkg.repository.branch || "master";
-			grunt.helper("spawn", {
-				cmd: "git",
-				args: ["submodule", "foreach", "git", "pull", "origin", branch],
-				title: "Updating %s".replace("%s", pkg.config.dirs.robyn),
-				complete: function (code) {
-					if (code !== 0) {
-						done(false);
-					}
-
-					done();
+		var robynBranch = pkg.repository.branch || "master";
+		grunt.helper("spawn", {
+			cmd: "git",
+			args: ["submodule", "foreach", "git", "pull", "origin", robynBranch],
+			title: "Updating %s".replace("%s", pkg.config.dirs.robyn),
+			complete: function (code) {
+				if (code !== 0) {
+					done(false);
 				}
-			});
-		} else {
-			branch = branch || "master";
-			grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
-			done();
-		}
+
+				if (plugin !== pkg.name) {
+					branch = branch || "master";
+					grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
+				}
+
+				done();
+			}
+		});
 	});
 
 };
