@@ -2,9 +2,10 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
+		scope = path.join("project", "static", "js"),
 		jshint = require("jshint").JSHINT;
 
-	var FILES = path.join("project", "static", "js", "**/*[^.min].js");
+	var FILES = path.join(scope, "**/*[^.min].js");
 
 	function pad(str, len, padChar) {
 
@@ -44,7 +45,7 @@ module.exports = function (grunt) {
 
 		var hasErrors = false;
 
-		var exclude = grunt.file.read(".jshintignore").trim().split("\n");
+		var exclude = grunt.file.read(path.join(scope, ".jshintignore")).trim().split("\n");
 		var files = grunt.file.expandFiles(FILES).filter(function (file) {
 			return exclude.every(function (x) {
 				x = x.replace(/\./g, "\\.");
