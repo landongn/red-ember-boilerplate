@@ -6,12 +6,11 @@ module.exports = function (grunt) {
 	grunt.config.set("compass", {
 		dev: {
 			http_path: "/",
-			sass_dir: "resources/compass/scss/project",
+			sass_dir: "resources/compass/scss",
 			css_dir: "project/static/css",
 			images_dir: "project/static/img",
 			fonts_dir: "project/static/fonts",
 			javascripts_dir: "project/static/js",
-			additional_import_paths: ["resources/compass/scss/caboose"],
 			output_style: ":expanded",
 			line_comments: true,
 			relative_assets: true,
@@ -19,18 +18,17 @@ module.exports = function (grunt) {
 			force_compile: true
 		},
 		prod: {
-			http_path: "<config:compass.dev.http_path>",
-			sass_dir: "<config:compass.dev.sass_dir>",
-			css_dir: "<config:compass.dev.css_dir>",
-			images_dir: "<config:compass.dev.images_dir>",
-			fonts_dir: "<config:compass.dev.fonts_dir>",
-			javascripts_dir: "<config:compass.dev.javascripts_dir>",
-			additional_import_paths: "<config:compass.dev.additional_import_paths>",
+			http_path: "/",
+			sass_dir: "resources/compass/scss",
+			css_dir: "project/static/css",
+			images_dir: "project/static/img",
+			fonts_dir: "project/static/fonts",
+			javascripts_dir: "project/static/js",
 			output_style: ":compressed",
 			line_comments: false,
-			relative_assets: "<config:compass.dev.relative_assets>",
-			bundle_exec: "<config:compass.dev.bundle_exec>",
-			force_compile: "<config:compass.dev.force_compile>"
+			relative_assets: true,
+			bundle_exec: true,
+			force_compile: true
 		}
 	});
 
