@@ -3,6 +3,14 @@ RED Boilerplate
 
 RED Interactive's custom Robyn boilerplate.
 
+Robyn is highly extendable. It provides the bare essentials for you, but it is meant to be forked and extended based on your organization's needs.
+
+[![Build Status](https://secure.travis-ci.org/ff0000/robyn.png)](http://travis-ci.org/ff0000/robyn)
+
+
+Installing Robyn
+================
+
 ### Requirements
 
 - [`robyn`](http://github.com/ff0000/robyn) `>= 1.0.0`

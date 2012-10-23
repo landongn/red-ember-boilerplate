@@ -37,6 +37,6 @@
 		"test": "node test/runner.js"
 	},
 	"engines": {
-		"node": "*"
+		"node": ">=0.8"
 	}
 }
