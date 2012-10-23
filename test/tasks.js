@@ -28,7 +28,8 @@ describe("Default Tasks", function () {
 				nexpect.spawn("robyn", [
 					"init", "robyn-test", test,
 					"--name", "robynTest",
-					"--title", "Robyn Test"
+					"--title", "Robyn Test",
+					"--all"
 				], {
 					stripColors: true,
 					verbose: true
