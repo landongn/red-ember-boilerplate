@@ -147,8 +147,8 @@ describe("Default Tasks", function () {
 	describe("default", function () {
 		it("grunt", function (done) {
 			grunt.spawn()
-			.wait("[*] robyn version: 3.0.0")
-			.expect("via " + repositoryUrl)
+			.wait("Running \"default\" task")
+			.expect("Running \"tasks\" task")
 			.run(done);
 		});
 	});
