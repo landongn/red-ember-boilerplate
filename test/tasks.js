@@ -12,7 +12,7 @@ var test = path.join(cwd, "build");
 describe("Default Tasks", function () {
 
 	// Start a pristine Robyn project
-	// Expects a Robyn nest called 'robyn-test'
+	// This test expects a Robyn nest called 'robyn-test'
 	// Add: `robyn add robyn-test git://github.com/ff0000/robyn.git`
 	before(function (done) {
 		var afterBefore = function () {
