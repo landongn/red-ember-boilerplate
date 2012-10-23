@@ -14,7 +14,7 @@ var nexpect = require("nexpect");
 var grunt = require("./lib/grunt");
 
 var test = path.join(cwd, "build");
-var pkg = require("./package.json");
+var pkg = require(path.join(cwd, "package.json"));
 var repositoryUrl = pkg.repository.url;
 
 describe("Default Tasks", function () {
