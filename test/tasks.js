@@ -34,7 +34,7 @@ describe("Default Tasks", function () {
 					verbose: true
 				})
 				.wait("[*] Bootstrapping robyn")
-				.expect("Using: robyn-test at git://github.com/ff0000/robyn.git")
+				.expect("Using: robyn-test at")
 				.wait("OK")
 				.expect("Adding robyn")
 				.wait("OK")
@@ -57,7 +57,7 @@ describe("Default Tasks", function () {
 				process.stdout.write("\n".green);
 				process.stdout.write("    Adding robyn-test...".grey);
 
-				var url = "git://github.com/ff0000/robyn.git";
+				var url = require("./package.json").repository.url;
 				nexpect.spawn("robyn", ["add", "robyn-test", url], {
 					stripColors: true
 				})
