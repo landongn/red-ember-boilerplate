@@ -14,6 +14,8 @@ var nexpect = require("nexpect");
 var grunt = require("./lib/grunt");
 
 var test = path.join(cwd, "build");
+var pkg = require("./package.json");
+var repositoryUrl = pkg.repository.url;
 
 describe("Default Tasks", function () {
 
@@ -58,7 +60,7 @@ describe("Default Tasks", function () {
 				process.stdout.write("\n".green);
 				process.stdout.write("    Adding robyn-test...".grey);
 
-				var url = require("./package.json").repository.url;
+				var url = repositoryUrl;
 				nexpect.spawn("robyn", ["add", "robyn-test", url], {
 					stripColors: true
 				})
@@ -146,7 +148,7 @@ describe("Default Tasks", function () {
 		it("grunt", function (done) {
 			grunt.spawn()
 			.wait("[*] robyn version: 3.0.0")
-			.expect("via git://github.com/ff0000/robyn.git")
+			.expect("via " + repositoryUrl)
 			.run(done);
 		});
 	});
@@ -155,7 +157,7 @@ describe("Default Tasks", function () {
 		it("grunt info", function (done) {
 			grunt.spawn("info")
 			.wait("[*] robyn version: 3.0.0")
-			.expect("via git://github.com/ff0000/robyn.git")
+			.expect("via " + repositoryUrl)
 			.run(done);
 		});
 	});
