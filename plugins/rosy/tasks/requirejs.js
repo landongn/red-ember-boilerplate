@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 				},
 				optimize : "uglify",
 				out : "project/static/js/site.min.js",
-				name : grunt.task.directive("<config:meta.projectName>") + "/site",
+				name : grunt.task.directive("<config:meta.projectName>") + "/Site",
 				skipModuleInsertion : true
 			}
 		}
