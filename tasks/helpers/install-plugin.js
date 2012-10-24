@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 
 		var handleProcess = function (file, plug, plugPkg, cb) {
 			if (fs.existsSync(file)) {
-				var handler = require(file);
+				var handler = require(fs.realpathSync(file));
 
 				handler(grunt, function (error) {
 					if (error) {
