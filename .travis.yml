@@ -9,3 +9,5 @@ before_install:
 # Python
 - sudo easy_install virtualenv
 - sudo pip install red-start
+# Node
+- npm install statix -g
