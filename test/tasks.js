@@ -19,68 +19,6 @@ var repositoryUrl = pkg.repository.url;
 
 describe("Default Tasks", function () {
 
-	// Start a pristine Robyn project
-	// This test expects a Robyn nest called 'robyn-test'
-	// Add: `robyn add robyn-test git://github.com/ff0000/robyn.git`
-	before(function (done) {
-		var afterBefore = function () {
-			if (fs.existsSync(test)) {
-				done();
-			} else {
-				nexpect.spawn("robyn", [
-					"init", "robyn-test", test,
-					"--name", "robynTest",
-					"--title", "Robyn Test",
-					"--all"
-				], {
-					stripColors: true,
-					verbose: true
-				})
-				.wait("[*] Bootstrapping robyn")
-				.expect("Using: robyn-test at")
-				.wait("OK")
-				.expect("Adding robyn")
-				.wait("OK")
-				.expect("[*] Project shell complete.")
-				.wait("[*] You should edit your package.json and fill in your project details.")
-				.expect("[*] All done! Commit you changes and you're on your way.")
-				.run(done);
-			}
-		};
-
-		process.stdout.write("    Checking for Robyn...".grey);
-
-		nexpect.spawn("robyn", ["list", "robyn-test"], {
-			stripColors: true
-		})
-		.expect("robyn-test at")
-		.expect("On branch")
-		.run(function (err) {
-			if (err) {
-				process.stdout.write("\n".green);
-				process.stdout.write("    Adding robyn-test...".grey);
-
-				var url = repositoryUrl;
-				nexpect.spawn("robyn", ["add", "robyn-test", url], {
-					stripColors: true
-				})
-				.expect("Added nest robyn-test at %u".replace("%u", url))
-				.expect("On branch:")
-				.run(function (err) {
-					if (err) {
-						done(err);
-					} else {
-						process.stdout.write("OK\n".green);
-						afterBefore();
-					}
-				});
-			} else {
-				process.stdout.write("OK\n".green);
-				afterBefore();
-			}
-		});
-	});
-
 	describe("Setup Check", function () {
 		it("should be a git repository", function (done) {
 			nexpect.spawn("git", ["status"], {
