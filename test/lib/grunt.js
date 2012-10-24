@@ -10,7 +10,8 @@ module.exports = (function () {
 			var args = task ? [task] : null;
 			return nexpect.spawn.call(nexpect, "grunt", args, {
 				cwd: test,
-				stripColors: true
+				stripColors: true,
+				verbose: true
 			});
 		},
 
