@@ -56,7 +56,8 @@ module.exports = function (grunt) {
 		"excludeFiles" : [
 			"env/**/*",
 			"node_modules/**/*",
-			".{git,sass-cache}/**/*"
+			".{git,sass-cache}/**/*",
+			"deploy/**/*"
 		]
 	});
 
