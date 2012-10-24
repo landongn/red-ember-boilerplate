@@ -25,9 +25,7 @@ describe("Build Task", function () {
 		.expect('>> cssclasses')
 		.expect('Looking for Modernizr references')
 		.expect('Downloading source files')
-		.expect('modernizr-latest.js')
-		.expect('modernizr.load.1.5.4.js')
-		.expect('>> Generating a custom Modernizr build')
+		.wait('>> Generating a custom Modernizr build')
 		.expect('>> Uglifying')
 		.expect('>> Wrote file to project/static/js/libs/modernizr.min.js')
 
