@@ -5,7 +5,7 @@
 	"description": "RED Interactive's custom Robyn boilerplate",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/ff0000/robyn.git"
+		"url": "git://github.com/ff0000/red-boilerplate.git"
 	},
 	"dependencies": {
 		"prompt": "0.1.x",
