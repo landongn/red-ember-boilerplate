@@ -91,7 +91,7 @@ describe("Rosy Tasks", function () {
 
 			.expect('Running "requirejs:desktop" (requirejs) task')
 
-			.expect('Tracing dependencies for: robynTest/site')
+			.expect('Tracing dependencies for: robynTest/Site')
 			.expect('Cannot optimize network URL, skipping: //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
 			.expect('Uglifying file: project/static/js/site.min.js')
 
@@ -110,7 +110,7 @@ describe("Rosy Tasks", function () {
 			.expect('project/static/js/rosy/views/TransitionManager.js')
 			.expect('project/static/js/rosy/views/ViewManager.js')
 			.expect('project/static/js/robynTest/config/routes.js')
-			.expect('project/static/js/robynTest/site.js')
+			.expect('project/static/js/robynTest/Site.js')
 			.expect('project/static/js/config.js')
 
 			.expect('Done, without errors.')
