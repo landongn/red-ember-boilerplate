@@ -21,7 +21,7 @@ var exec = function (exec, args, cwd, suppress, doneCB) {
 };
 
 module.exports = {
-	
+
 	source_dir : "../../../project", // `source_dir` is the directory where all your source files are.
 	output_dir: "../../../deploy", // `output_dir` is the directory you want to compile your static site to.
 
@@ -29,7 +29,7 @@ module.exports = {
 	template_dir : "../../../project/templates", // Only relevant if using swig : The directory where all your templates are.
 
 	/*
-		Literal regexes here. Statix won't include anything, unless it matches an `include_pattern` and also does 
+		Literal regexes here. Statix won't include anything, unless it matches an `include_pattern` and also does
 		not match an `exclude_pattern`. Checks against the full path, i.e. /Users/your.name/some/dir/site/blah.html
 	*/
 
@@ -44,11 +44,11 @@ module.exports = {
 
 	/*
 		An array of the pages to be rendered with the template engine.
-	
+
 		`output` is where your page will eventually live, in the static version of the site. I.e. "{output_dir}/{page.output}"
-		
+
 		`source` is where your template lives. I.e. "{source_dir}{page.source}"
-		
+
 		`data` is an object of variables you want to pass through to the template when it gets rendered.
 	*/
 
@@ -76,7 +76,7 @@ module.exports = {
 	*/
 
 	ready : function (callback) {
-		callback();	
+		callback();
 	},
 
 	/*
@@ -108,7 +108,7 @@ module.exports = {
 
 			from = (from[0] == "/") ? from : process.cwd() + "/" + from;
 			to = (to[0] == "/") ? to : process.cwd() + "/" + to;
-			
+
 			var fromStats = fs.statSync(from);
 			var fromName = from.substr(from.lastIndexOf("/"));
 
@@ -127,6 +127,10 @@ module.exports = {
 			}
 
 			else {
+				if (fs.existsSync(to)) {
+					fs.unlinkSync(to);
+				}
+
 				fs.linkSync(from, to);
 			}
 		}
