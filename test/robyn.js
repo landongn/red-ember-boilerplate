@@ -4,7 +4,10 @@ module.exports = {
 		var cwd = process.cwd();
 		var path = require("path");
 		var nexpect = require("nexpect");
+
 		var test = path.join(cwd, "build");
+		var pkg = require(path.join(cwd, "package.json"));
+		var repositoryUrl = pkg.repository.url;
 
 		var afterBefore = function () {
 			if (fs.existsSync(test)) {
