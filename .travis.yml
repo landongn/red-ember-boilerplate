@@ -3,9 +3,9 @@ node_js:
   - 0.8
   - 0.9
 before_install:
+- sudo apt-get update
 # Ruby
 - sudo gem install bundler
 # Python
-# - sudo add-apt-repository ppa:fkrull/deadsnakes
-# - sudo apt-get update
-# - sudo apt-get install python2.7
+- sudo easy_install virtualenv
+- sudo pip install red-start
