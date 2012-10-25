@@ -6,11 +6,14 @@ module.exports = (function () {
 	var test = path.join(process.cwd(), "build");
 
 	return {
-		spawn : function (task, cwd) {
+		spawn : function (task, opts) {
 			var args = task ? [task] : null;
+			opts = opts || {};
+
 			return nexpect.spawn.call(nexpect, "grunt", args, {
-				cwd: cwd || test,
-				stripColors: true
+				cwd: opts.cwd || test,
+				stripColors: opts.stripColors || true,
+				verbose: opts.verbose || false
 			});
 		},
 
