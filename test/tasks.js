@@ -141,8 +141,7 @@ describe("Setup Check", function () {
 				nexpect.spawn("git", ["commit", "-am", "."], {
 					stripColors: true
 				})
-				.wait("7 files changed, 127 insertions(+)")
-				.expect(".editorconfig")
+				.wait(".editorconfig")
 				.expect(".gitignore")
 				.expect(".gitmodules")
 				.expect(".robyn")
