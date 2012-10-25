@@ -10,7 +10,7 @@
 		var mocha = new Mocha({
 			setup : "bdd",
 			reporter : "spec",
-			timeout : 30000
+			timeout : 180000
 		});
 
 		mocha.addFile("test/tasks.js");
