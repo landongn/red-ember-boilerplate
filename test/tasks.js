@@ -174,7 +174,7 @@ describe("Clone Check", function () {
 	it("Should run the default grunt task", function (done) {
 		grunt.spawn("", clone)
 
-		.expect('Running "default" task')
+		.wait('Running "default" task')
 		.expect('Running "start" task')
 
 		.expect('[*] Starting the party')
