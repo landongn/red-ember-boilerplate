@@ -38,42 +38,97 @@ describe("Plugin Integrity", function () {
 			}
 
 			describe(path.basename(filepath, "/"), function () {
-				it("package information", function () {
-					expect(plugPkg).to.be.an("object");
-					expect(plugPkg.name).to.be.ok();
-					expect(plugPkg.description).to.be.ok();
+				describe("plugin information", function () {
+					it("should be a valid object", function () {
+						expect(plugPkg).to.be.an("object");
+					});
+
+					it("plugin name", function () {
+						expect(plugPkg.name).to.be.ok();
+						expect(plugPkg.name).to.match(/^[a-z0-9]+/);
+					});
+
+					it("plugin description", function () {
+						expect(plugPkg.description).to.be.ok();
+					});
+
+					if (plugPkg.version) {
+						it("semver versioning", function () {
+							expect(plugPkg.version).to.match(/[\d]+\.[\d]+\.[\d]+/);
+						});
+					}
 				});
 
-				it("plugin dependencies", function (done) {
+				describe("plugin dependencies", function () {
 					var plugDeps = plugPkg.dependencies || {};
 
 					var keys = Object.keys(plugDeps);
 
 					if (!keys.length) {
-						return done();
+						return;
 					}
 
 					var nodeDir = path.join(cwd, "node_modules");
-					expect(fs.existsSync(nodeDir)).to.be.ok();
 
-					for (var i = 0, j = keys.length; i < j; i++) {
-						var npmModuleDir = path.join(nodeDir, keys[i]);
-						expect(fs.existsSync(npmModuleDir)).to.be.ok();
-					}
+					it("npm modules directory", function (done) {
+						expect(fs.existsSync(nodeDir)).to.be.ok();
+						done();
+					});
 
-					done();
+					keys.forEach(function (key) {
+						it(key, function (done) {
+							var npmModuleDir = path.join(nodeDir, key);
+							expect(fs.existsSync(npmModuleDir)).to.be.ok();
+
+							done();
+						});
+					});
 				});
 
-				it("system dependencies", function () {
-					var pkgDeps = pkg.systemDependencies;
-					expect(pkgDeps).to.be.an("object");
+				describe("system dependencies", function () {
+					var cp = require("child_process");
 
+					var pkgDeps = pkg.systemDependencies;
 					var plugDeps = plugPkg.systemDependencies;
-					expect(plugDeps).to.be.an("object");
+
+					it("valid dependencies objects", function () {
+						expect(pkgDeps).to.be.an("object");
+						expect(plugDeps).to.be.an("object");
+					});
+
+					var doTest = function (key) {
+						it(key, function (done) {
+							expect(pkgDeps[key]).to.be.ok();
+							expect(plugDeps[key]).to.eql(pkgDeps[key]);
+
+							var child = cp.spawn(key, ["--version"], {
+								stdio: "pipe"
+							});
+
+							var stdout = [];
+							var stderr = [];
+
+							child.stdout.on("data", function (data) {
+								stdout.push(data.toString());
+							});
+
+							child.stderr.on("data", function (data) {
+								stderr.push(data.toString());
+							});
+
+							child.on("exit", function () {
+								var out = stdout.join("");
+								var err = stderr.join("");
+
+								expect(err).to.not.contain("No such file or directory");
+
+								done();
+							});
+						});
+					};
 
 					for (var key in plugDeps) {
-						expect(pkgDeps[key]).to.be.ok();
-						expect(plugDeps[key]).to.eql(pkgDeps[key]);
+						doTest(key);
 					}
 				});
 
@@ -81,12 +136,15 @@ describe("Plugin Integrity", function () {
 				var plugReqPaths = (plugPkg.config || {}).requiredPaths;
 
 				if (plugReqPaths) {
-					it("required paths", function () {
-						for (var i = 0, j = plugReqPaths.length; i < j; i++) {
-							var req = plugReqPaths[i];
-							expect(pkgReqPaths.indexOf(req)).to.not.equal(-1);
-							expect(fs.existsSync(path.join(cwd, req))).to.be.ok();
-						}
+					describe("required paths", function () {
+						plugReqPaths.forEach(function (req) {
+							it(req, function (done) {
+								expect(pkgReqPaths).to.contain(req);
+								expect(fs.existsSync(path.join(cwd, req))).to.be.ok();
+
+								done();
+							});
+						});
 					});
 				}
 
@@ -94,14 +152,40 @@ describe("Plugin Integrity", function () {
 				var plugExcPaths = (plugPkg.config || {}).excludedPaths;
 
 				if (plugExcPaths) {
-					it("excluded paths", function () {
-						for (var i = 0, j = plugExcPaths.length; i < j; i++) {
-							var req = plugExcPaths[i];
-							expect(pkgExcPaths.indexOf(req)).to.not.equal(-1);
-							expect(fs.existsSync(path.join(cwd, req))).to.be.ok();
-						}
+					describe("excluded paths", function () {
+						plugExcPaths.forEach(function (req) {
+							it(req, function (done) {
+								expect(pkgExcPaths).to.contain(req);
+								expect(fs.existsSync(path.join(cwd, req))).to.be.ok();
+
+								done();
+							});
+						});
 					});
 				}
+
+				describe("file structure", function () {
+					globber.glob(path.join(filepath, "defaults", "**", "*"), {
+						dot: true
+					}).forEach(function (file) {
+						var defaultsPath = path.join(plugPath, plugPkg.name, "defaults", "/");
+						var cleanFile = file.replace(defaultsPath, "");
+						var expectedFile = path.join(cwd, cleanFile);
+
+						var exclude = [
+							"package.json",
+							".gitignore",
+							"README.md"
+						];
+
+						if (exclude.indexOf(path.basename(cleanFile)) === -1) {
+							it(cleanFile, function (done) {
+								expect(fs.existsSync(expectedFile)).to.be.ok();
+								done();
+							});
+						}
+					});
+				});
 
 				describe("scripts", function () {
 					it("install", function (done) {
