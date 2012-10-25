@@ -29,6 +29,12 @@
 		mocha.addFile("test/plugins/rosy.js");
 		mocha.addFile("test/plugins/statix.js");
 
-		mocha.run();
+		var runner = mocha.run();
+
+		runner.on("fail", function (test, err) {
+			process.stderr.write("         " + err.toString() + "\n\n");
+			process.exit(1);
+		});
+
 	});
 }());
