@@ -136,6 +136,7 @@ describe("Clone Check", function () {
 			verbose: true
 		})
 		.run(function () {
+			console.log("bar");
 			nexpect.spawn("git", ["commit", "-am", "."], {
 				stripColors: true
 			})
