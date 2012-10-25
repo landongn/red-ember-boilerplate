@@ -15,6 +15,13 @@
 
 		mocha.addFile("test/tasks.js");
 		mocha.addFile("test/plugins.js");
-		mocha.run();
+
+		var runner = mocha.run();
+
+		runner.on("fail", function (test, err) {
+			process.stderr.write("         " + err.toString() + "\n\n");
+			process.exit(1);
+		});
+
 	});
 }());
