@@ -97,7 +97,7 @@ describe("Build Task", function () {
 		.expect('Ok  project/static/js/test/oxblood/routing/views/UpdateTest.js')
 		.expect('Ok  project/static/js/test/runner.js')
 
-		.expect('Running "build:requirejs" (build) task')
+		.wait('Running "build:requirejs" (build) task')
 		.expect('Running "requirejs:desktop" (requirejs) task')
 		.expect('Tracing dependencies for: robynTest/Site')
 		.expect('Cannot optimize network URL, skipping: //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
