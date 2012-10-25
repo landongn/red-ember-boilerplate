@@ -129,17 +129,19 @@ describe("Clone Check", function () {
 	var clone = path.join(cwd, "clone");
 
 	before(function (done) {
-		console.log("foo");
+		if (fs.existsSync(clone)) {
+			var wrench = require("wrench");
+			wrench.rmdirSyncRecursive(clone);
+		}
+
 		nexpect.spawn("git", ["add", "--all"], {
 			cwd: test,
-			stripColors: true,
-			verbose: true
+			stripColors: true
 		})
 		.run(function () {
-			console.log("bar");
 			nexpect.spawn("git", ["commit", "-am", "."], {
-				stripColors: true,
-				verbose: true
+				cwd: test,
+				stripColors: true
 			})
 			.wait(".editorconfig")
 			.expect(".gitignore")
@@ -155,51 +157,30 @@ describe("Clone Check", function () {
 
 	it("Should clone the repository", function (done) {
 		nexpect.spawn("git", ["clone", "--local", test, clone], {
-			stripColors: true,
-			verbose: true
-		})
-
-		.expect("Cloning into 'clone'")
-		.wait("done.")
-
-		.run(done);
-	});
-
-	it("Should warn about initialization", function (done) {
-		nexpect.spawn("grunt", [], {
 			stripColors: true
 		})
 
-		.expect("<WARN> .robyn is not yet initialized")
-		.expect("Run `git submodule update --init` to enable")
-		.expect("Then try this command again. Use --force to continue. </WARN>")
-
-		.expect("Aborted due to warnings.")
+		.expect("Cloning into")
+		.wait("done.")
 
 		.run(done);
 	});
 
 	it("Should initialize the robyn submodule", function (done) {
 		nexpect.spawn("git", ["submodule", "update", "--init"], {
+			cwd: clone,
 			stripColors: true
 		})
 
-		.expect("Submodule '.robyn' (git://github.com/ff0000/robyn.git) registered for path '.robyn'")
+		.expect("Submodule '.robyn' (" + repositoryUrl + ") registered for path '.robyn'")
 		.expect("Cloning into '.robyn'")
-		.expect("remote: Counting objects:").wait("done.")
-		.expect("remote: Compressing objects:").wait("done.")
-		.expect("remote: Total")
-		.expect("Receiving objects:").wait("done.")
-		.expect("Resolving deltas:").wait("done.")
 		.expect("Submodule path '.robyn': checked out")
 
 		.run(done);
 	});
 
 	it("Should run the default grunt task", function (done) {
-		grunt.spawn("", [], {
-			stripColor: true
-		})
+		grunt.spawn("", clone)
 
 		.expect('Running "default" task')
 		.expect('Running "start" task')
@@ -217,7 +198,7 @@ describe("Clone Check", function () {
 		.expect('    Project repository: _PROJECT_REPOSITORY_')
 
 		.expect('[*] robyn version: 3.0.0')
-		.expect('    via git://github.com/ff0000/robyn.git @ branch')
+		.expect('    via ' + repositoryUrl + ' @ branch')
 
 		.expect('Done, without errors.')
 		.run(function (err) {

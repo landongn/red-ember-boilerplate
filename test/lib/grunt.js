@@ -6,10 +6,10 @@ module.exports = (function () {
 	var test = path.join(process.cwd(), "build");
 
 	return {
-		spawn : function (task) {
+		spawn : function (task, cwd) {
 			var args = task ? [task] : null;
 			return nexpect.spawn.call(nexpect, "grunt", args, {
-				cwd: test,
+				cwd: cwd || test,
 				stripColors: true
 			});
 		},
