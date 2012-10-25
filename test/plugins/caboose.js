@@ -10,6 +10,17 @@ describe("Caboose Tasks", function () {
 	describe("Compass", function () {
 		var asyncFileDetect = /overwrite project\/static\/css\/(style|ie)\.css/;
 
+		it("grunt compass:bundle", function (done) {
+			grunt.spawn("compass:bundle")
+
+			.expect('Running "compass:bundle" task')
+			.expect("The Gemfile's dependencies are satisfied")
+
+			.expect('Done, without errors.')
+
+			.run(done);
+		});
+
 		it("grunt compass:dev", function (done) {
 			grunt.spawn("compass:dev")
 
