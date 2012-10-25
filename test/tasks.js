@@ -1,7 +1,6 @@
 /*jshint node:true*/
 /*global describe, before, it*/
 
-// Travis test #1
 "use strict";
 
 var fs = require("fs");
@@ -68,6 +67,63 @@ describe("Default Tasks", function () {
 			for (var i = 0, j = files.length; i < j; i++) {
 				checkExists(files[i]);
 			}
+		});
+
+		describe("robyn.json integrity", function () {
+			var robynPath = path.join(test, "robyn.json");
+			var robynPkg = require(robynPath);
+
+			it("should exist in file path", function (done) {
+				expect(fs.existsSync(robynPath)).to.be.ok();
+				done();
+			});
+
+			it("should be a valid object", function (done) {
+				expect(robynPkg).to.be.an("object");
+				done();
+			});
+
+			it("should be called robyn", function () {
+				expect(robynPkg.name).to.equal("robyn");
+			});
+
+			it("should have a description", function () {
+				expect(robynPkg.description).to.be.ok();
+			});
+
+			it("should follow semver versioning", function () {
+				expect(robynPkg.version).to.match(/[\d]+\.[\d]+\.[\d]+/);
+			});
+
+			it("should point to a valid repository", function () {
+				expect(robynPkg.repository).to.be.an("object");
+				expect(robynPkg.repository.type).to.equal("git");
+				expect(robynPkg.repository.url).to.match(/(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/);
+			});
+
+			it("should have a config object", function () {
+				expect(robynPkg.config).to.be.an("object");
+			});
+
+			describe("should point to valid directories", function () {
+				var dirs = robynPkg.config.dirs;
+				expect(robynPkg.config.dirs).to.be.an("object");
+
+				var doTest = function (key) {
+					it(key, function (done) {
+						expect(fs.existsSync(path.join(test, dirs[key]))).to.be.ok();
+						done();
+					});
+				};
+
+				for (var key in dirs) {
+					doTest(key);
+				}
+			});
+
+			it("should be initialized", function () {
+				expect(robynPkg.initialized).to.be.ok();
+			});
 		});
 	});
 
