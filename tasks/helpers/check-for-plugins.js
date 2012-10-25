@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
 			grunt.helper("writeln", ("Found the following: " + plugins.map(function (plug) {
 				return plug.name;
-			}).join(", ")).grey);
+			}).sort().join(", ")).grey);
 
 			if (cb) {
 				cb(plugins.sort(compare));

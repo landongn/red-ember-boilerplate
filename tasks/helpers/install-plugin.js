@@ -119,7 +119,9 @@ module.exports = function (grunt) {
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
 			var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
-			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
+			var repoPaths = grunt.file.expandFiles({
+				dot : true
+			}, plugDir + "/**/*");
 			var i, j, file, newFile;
 
 			grunt.helper("write", "Copying files into project".grey);
@@ -137,10 +139,12 @@ module.exports = function (grunt) {
 			repoPaths.filter(function (file) {
 				return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
 			}).forEach(function (file) {
-				newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
-				grunt.file.copy(file, newFile);
+				if (file.split(path.sep).indexOf(".git") === -1) {
+					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+					grunt.file.copy(file, newFile);
 
-				grunt.log.write(".".grey);
+					grunt.log.write(".".grey);
+				}
 			});
 
 			var localFiles = "defaults";
@@ -155,10 +159,12 @@ module.exports = function (grunt) {
 				localPaths.filter(function (file) {
 					return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
 				}).forEach(function (file) {
-					newFile = file.replace(localDir + "/", "");
-					grunt.file.copy(file, newFile);
+					if (file.split(path.sep).indexOf(".git") === -1) {
+						newFile = file.replace(localDir + "/", "");
+						grunt.file.copy(file, newFile);
 
-					grunt.log.write(".".grey);
+						grunt.log.write(".".grey);
+					}
 				});
 
 				var gitIgnore = path.join(localDir, ".gitignore");
