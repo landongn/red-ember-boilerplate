@@ -13,7 +13,7 @@ describe("Tasks Task", function () {
 		.expect('Running "tasks" task')
 		.wait('build')
 		.wait('watch')
-		.expect('Done, without errors.')
+		.wait('Done, without errors.')
 
 		.run(done);
 	});
