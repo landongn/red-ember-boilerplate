@@ -123,109 +123,110 @@ describe("Setup Check", function () {
 			expect(robynPkg.initialized).to.be.ok();
 		});
 	});
+});
 
-	describe("Clone Check", function () {
-		var clone = path.join(cwd, "clone");
+describe("Clone Check", function () {
+	var clone = path.join(cwd, "clone");
 
-		before(function (done) {
-			nexpect.spawn("git", ["add", "--all"], {
-				cwd: test,
-				stripColors: true,
-				verbose: true
-			})
-			.run(function (err) {
-				if (err) {
-					done(err);
-				}
-
-				nexpect.spawn("git", ["commit", "-am", "."], {
-					stripColors: true
-				})
-				.wait(".editorconfig")
-				.expect(".gitignore")
-				.expect(".gitmodules")
-				.expect(".robyn")
-				.expect("README.md")
-				.expect("grunt.js")
-				.expect("package.json")
-				.expect("robyn.json")
-				.run(done);
-			});
-		});
-
-		it("Should clone the repository", function (done) {
-			nexpect.spawn("git", ["clone", "--local", test, clone], {
-				stripColors: true,
-				verbose: true
-			})
-
-			.expect("Cloning into 'clone'")
-			.wait("done.")
-
-			.run(done);
-		});
-
-		it("Should warn about initialization", function (done) {
-			nexpect.spawn("grunt", [], {
-				stripColors: true
-			})
-
-			.expect("<WARN> .robyn is not yet initialized")
-			.expect("Run `git submodule update --init` to enable")
-			.expect("Then try this command again. Use --force to continue. </WARN>")
-
-			.expect("Aborted due to warnings.")
-
-			.run(done);
-		});
-
-		it("Should initialize the robyn submodule", function (done) {
-			nexpect.spawn("git", ["submodule", "update", "--init"], {
-				stripColors: true
-			})
-
-			.expect("Submodule '.robyn' (git://github.com/ff0000/robyn.git) registered for path '.robyn'")
-			.expect("Cloning into '.robyn'")
-			.expect("remote: Counting objects:").wait("done.")
-			.expect("remote: Compressing objects:").wait("done.")
-			.expect("remote: Total")
-			.expect("Receiving objects:").wait("done.")
-			.expect("Resolving deltas:").wait("done.")
-			.expect("Submodule path '.robyn': checked out")
-
-			.run(done);
-		});
-
-		it("Should run the default grunt task", function (done) {
-			grunt.spawn("", [], {
-				stripColor: true
-			})
-
-			.expect('Running "default" task')
-			.expect('Running "start" task')
-
-			.expect('[*] Starting the party')
-			.expect('    Installing npm modules').wait('OK')
-
-			.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
-
-			.expect('Running "info" task')
-
-			.expect('[*] Project name: robynTest')
-			.expect('    Project version: 0.1.0')
-			.expect('    Project author: RED Interactive <geeks@ff0000.com>')
-			.expect('    Project repository: _PROJECT_REPOSITORY_')
-
-			.expect('[*] robyn version: 3.0.0')
-			.expect('    via git://github.com/ff0000/robyn.git @ branch')
-
-			.expect('Done, without errors.')
-			.run(function (err) {
-				var wrench = require("wrench");
-				wrench.rmdirSyncRecursive(clone);
-
+	before(function (done) {
+		console.log("foo");
+		nexpect.spawn("git", ["add", "--all"], {
+			cwd: test,
+			stripColors: true,
+			verbose: true
+		})
+		.run(function (err) {
+			if (err) {
 				done(err);
-			});
+			}
+
+			nexpect.spawn("git", ["commit", "-am", "."], {
+				stripColors: true
+			})
+			.wait(".editorconfig")
+			.expect(".gitignore")
+			.expect(".gitmodules")
+			.expect(".robyn")
+			.expect("README.md")
+			.expect("grunt.js")
+			.expect("package.json")
+			.expect("robyn.json")
+			.run(done);
+		});
+	});
+
+	it("Should clone the repository", function (done) {
+		nexpect.spawn("git", ["clone", "--local", test, clone], {
+			stripColors: true,
+			verbose: true
+		})
+
+		.expect("Cloning into 'clone'")
+		.wait("done.")
+
+		.run(done);
+	});
+
+	it("Should warn about initialization", function (done) {
+		nexpect.spawn("grunt", [], {
+			stripColors: true
+		})
+
+		.expect("<WARN> .robyn is not yet initialized")
+		.expect("Run `git submodule update --init` to enable")
+		.expect("Then try this command again. Use --force to continue. </WARN>")
+
+		.expect("Aborted due to warnings.")
+
+		.run(done);
+	});
+
+	it("Should initialize the robyn submodule", function (done) {
+		nexpect.spawn("git", ["submodule", "update", "--init"], {
+			stripColors: true
+		})
+
+		.expect("Submodule '.robyn' (git://github.com/ff0000/robyn.git) registered for path '.robyn'")
+		.expect("Cloning into '.robyn'")
+		.expect("remote: Counting objects:").wait("done.")
+		.expect("remote: Compressing objects:").wait("done.")
+		.expect("remote: Total")
+		.expect("Receiving objects:").wait("done.")
+		.expect("Resolving deltas:").wait("done.")
+		.expect("Submodule path '.robyn': checked out")
+
+		.run(done);
+	});
+
+	it("Should run the default grunt task", function (done) {
+		grunt.spawn("", [], {
+			stripColor: true
+		})
+
+		.expect('Running "default" task')
+		.expect('Running "start" task')
+
+		.expect('[*] Starting the party')
+		.expect('    Installing npm modules').wait('OK')
+
+		.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
+
+		.expect('Running "info" task')
+
+		.expect('[*] Project name: robynTest')
+		.expect('    Project version: 0.1.0')
+		.expect('    Project author: RED Interactive <geeks@ff0000.com>')
+		.expect('    Project repository: _PROJECT_REPOSITORY_')
+
+		.expect('[*] robyn version: 3.0.0')
+		.expect('    via git://github.com/ff0000/robyn.git @ branch')
+
+		.expect('Done, without errors.')
+		.run(function (err) {
+			var wrench = require("wrench");
+			wrench.rmdirSyncRecursive(clone);
+
+			done(err);
 		});
 	});
 });
