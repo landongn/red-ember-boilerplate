@@ -1,0 +1,25 @@
+# Python
+*.py[co]
+env
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Django
+*.log
+*.pot
+*.pyc
+local_settings.py

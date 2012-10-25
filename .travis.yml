@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - 0.8
+  - 0.9
+before_install:
+- sudo apt-get update
+# Ruby
+- sudo gem install bundler
+# Python
+- sudo easy_install virtualenv
+- sudo pip install red-start
+# Node
+- npm install statix -g

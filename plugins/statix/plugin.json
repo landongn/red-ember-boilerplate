@@ -1,0 +1,25 @@
+{
+	"name": "statix",
+	"description": "Statix is a static website generator.",
+	"version": "0.0.4",
+	"systemDependencies": {
+		"node": {
+			"version": ">= 0.8.7",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		},
+		"npm": {
+			"version": ">= 1.1.59",
+			"install": "brew update && brew install node",
+			"upgrade": "brew update && brew upgrade node"
+		},
+		"statix": {
+			"version": ">=1.2.2",
+			"install": "npm install statix -g",
+			"upgrade": "npm update statix -g"
+		}
+	},
+	"config": {
+		"replaceVars": false
+	}
+}
