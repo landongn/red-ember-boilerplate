@@ -14,7 +14,7 @@ module.exports = {
 				callback();
 			} else {
 				nexpect.spawn("robyn", [
-					"init", "robyn-test", test,
+					"init", "rbp-test", test,
 					"--name", "robynTest",
 					"--title", "Robyn Test"
 				], {
@@ -22,7 +22,7 @@ module.exports = {
 					verbose: true
 				})
 				.wait("[*] Bootstrapping robyn")
-				.expect("Using: robyn-test at")
+				.expect("Using: rbp-test at")
 				.wait("OK")
 				.expect("Adding robyn")
 				.wait("OK")
@@ -92,18 +92,18 @@ module.exports = {
 			}
 		};
 
-		nexpect.spawn("robyn", ["list", "robyn-test"], {
+		nexpect.spawn("robyn", ["list", "rbp-test"], {
 			stripColors: true
 		})
-		.expect("robyn-test at")
+		.expect("rbp-test at")
 		.expect("On branch")
 		.run(function (err) {
 			if (err) {
 				var url = repositoryUrl;
-				nexpect.spawn("robyn", ["add", "robyn-test", url, "--branch", "feature/robyn"], {
+				nexpect.spawn("robyn", ["add", "rbp-test", url, "--branch", "feature/robyn"], {
 					stripColors: true
 				})
-				.expect("Added nest robyn-test at %u".replace("%u", url))
+				.expect("Added nest rbp-test at %u".replace("%u", url))
 				.expect("On branch:")
 				.run(function (err) {
 					if (err) {
