@@ -8,11 +8,16 @@ var grunt = require("../lib/grunt");
 describe("Caboose Tasks", function () {
 
 	describe("Compass", function () {
+		var asyncFileDetect = /overwrite project\/static\/css\/(style|ie)\.css/;
+
 		it("grunt compass:dev", function (done) {
 			grunt.spawn("compass:dev")
 
 			.expect('Running "compass:dev" (compass) task')
-			.wait('Done, without errors.')
+			.expect(asyncFileDetect)
+			.expect(asyncFileDetect)
+
+			.expect('Done, without errors.')
 
 			.run(done);
 		});
@@ -21,7 +26,10 @@ describe("Caboose Tasks", function () {
 			grunt.spawn("compass:prod")
 
 			.expect('Running "compass:prod" (compass) task')
-			.wait('Done, without errors.')
+			.expect(asyncFileDetect)
+			.expect(asyncFileDetect)
+
+			.expect('Done, without errors.')
 
 			.run(done);
 		});

@@ -8,6 +8,8 @@ var grunt = require("../lib/grunt");
 describe("Modernizr Tasks", function () {
 
 	it("grunt modernizr", function (done) {
+		var asyncFileDetect = /(cache|200) modernizr(-latest|\.load\.1\.5\.4).js/;
+
 		grunt.spawn("modernizr")
 
 		.expect('Running "modernizr" task')
@@ -20,8 +22,10 @@ describe("Modernizr Tasks", function () {
 		.expect('Looking for Modernizr references')
 
 		.expect('Downloading source files')
+		.expect(asyncFileDetect)
+		.expect(asyncFileDetect)
 
-		.wait('>> Generating a custom Modernizr build')
+		.expect('>> Generating a custom Modernizr build')
 		.expect('>> Uglifying')
 
 		.expect('>> Wrote file to project/static/js/libs/modernizr.min.js')
