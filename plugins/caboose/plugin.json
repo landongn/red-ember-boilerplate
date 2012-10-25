@@ -29,6 +29,8 @@
 		"replaceVars": false,
 		"requiredPaths": [
 			".bundle",
+			"Gemfile",
+			"Gemfile.lock",
 			"resources/compass/gems"
 		],
 		"excludedPaths": [
