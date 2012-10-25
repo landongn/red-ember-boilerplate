@@ -143,14 +143,6 @@ describe("Clone Check", function () {
 				cwd: test,
 				stripColors: true
 			})
-			.wait(".editorconfig")
-			.expect(".gitignore")
-			.expect(".gitmodules")
-			.expect(".robyn")
-			.expect("README.md")
-			.expect("grunt.js")
-			.expect("package.json")
-			.expect("robyn.json")
 			.run(done);
 		});
 	});
