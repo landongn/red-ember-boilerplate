@@ -141,8 +141,7 @@ describe("Setup Check", function () {
 				nexpect.spawn("git", ["commit", "-am", "."], {
 					stripColors: true
 				})
-				.expect("[master (root-commit) cfea318] .")
-				.expect(" 7 files changed, 127 insertions(+)")
+				.wait(" 7 files changed, 127 insertions(+)")
 				.expect(".editorconfig")
 				.expect(".gitignore")
 				.expect(".gitmodules")
