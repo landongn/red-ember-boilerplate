@@ -12,8 +12,7 @@ describe("Caboose Tasks", function () {
 			grunt.spawn("compass:dev")
 
 			.expect('Running "compass:dev" (compass) task')
-			.expect('overwrite project/static/css/ie.css')
-			.expect('overwrite project/static/css/style.css')
+			.wait('Done, without errors.')
 
 			.run(done);
 		});
@@ -22,8 +21,7 @@ describe("Caboose Tasks", function () {
 			grunt.spawn("compass:prod")
 
 			.expect('Running "compass:prod" (compass) task')
-			.expect('overwrite project/static/css/ie.css')
-			.expect('overwrite project/static/css/style.css')
+			.wait('Done, without errors.')
 
 			.run(done);
 		});

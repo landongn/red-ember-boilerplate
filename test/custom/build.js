@@ -14,10 +14,8 @@ describe("Build Task", function () {
 		.expect('Running "compass:bundle" task')
 		.expect("The Gemfile's dependencies are satisfied")
 		.expect('Running "compass:prod" (compass) task')
-		.wait('project/static/css/ie.css')
-		.expect('project/static/css/style.css')
 
-		.expect('Running "build:modernizr" (build) task')
+		.wait('Running "build:modernizr" (build) task')
 		.expect('Running "modernizr" task')
 		.expect('Enabled Extras')
 		.expect('>> shiv')
