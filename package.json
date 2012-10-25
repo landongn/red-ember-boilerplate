@@ -1,8 +1,8 @@
 {
-	"name": "red-boilerplate",
-	"version": "2.7.5",
+	"name": "robyn",
+	"version": "1.0.0",
 	"author": "RED Interactive <geeks@ff0000.com>",
-	"description": "A highly customizable boilerplate to initialize common projects.",
+	"description": "RED Interactive's custom Robyn boilerplate",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/ff0000/red-boilerplate.git"
@@ -12,25 +12,32 @@
 		"wrench": "1.3.x",
 		"colors": "0.6.x"
 	},
+	"devDependencies": {
+		"robyn": "*",
+		"grunt": ">=0.3.x",
+		"mocha": ">=1.6.0",
+		"expect.js": ">=0.2.0",
+		"nexpect": "https://github.com/doctyper/nexpect/tarball/master",
+		"glob-whatev": ">=0.1.8"
+	},
 	"config": {
-		"vars": {},
-		"tmpDir": ".rbp-temp",
-		"ignoreTasks": [
-			"init",
-			"concat",
-			"min",
-			"qunit",
-			"test"
-		],
-		"installedPlugins": {}
+		"dirs": {
+			"robyn": ".",
+			"plugins": "plugins",
+			"tasks": "tasks",
+			"plugTmpl": "config/__PLUGIN__"
+		}
 	},
 	"license": "MIT",
-	"devDependencies": {},
 	"optionalDependencies": {},
 	"systemDependencies": {
+		"git": "*",
 		"grunt": ">=0.3.0"
 	},
+	"scripts": {
+		"test": "node test/runner.js"
+	},
 	"engines": {
-		"node": "*"
+		"node": ">=0.8"
 	}
 }
