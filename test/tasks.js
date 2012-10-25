@@ -181,21 +181,16 @@ describe("Clone Check", function () {
 		.expect('Running "start" task')
 
 		.expect('[*] Starting the party')
-		.expect('    Installing npm modules').wait('OK')
+		.expect('Installing npm modules').wait('OK')
+
+		.expect('Installing bundle. This may take a minute').wait('OK')
+		.expect('Looks like RED Start was already run on this project. Skipping ahead...')
+		.expect('Creating a virtualenv. This may take a minute').wait('OK')
 
 		.wait("[*] This party's already been started. You can install individual plugins with `grunt install`")
 
-		.expect('Running "info" task')
-
-		.expect('[*] Project name: robynTest')
-		.expect('    Project version: 0.1.0')
-		.expect('    Project author: RED Interactive <geeks@ff0000.com>')
-		.expect('    Project repository: _PROJECT_REPOSITORY_')
-
-		.expect('[*] robyn version: 3.0.0')
-		.expect('    via ' + repositoryUrl + ' @ branch')
-
-		.expect('Done, without errors.')
+		.expect('Running "tasks" task')
+		.wait('Done, without errors.')
 		.run(function (err) {
 			var wrench = require("wrench");
 			wrench.rmdirSyncRecursive(clone);
