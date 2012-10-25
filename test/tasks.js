@@ -180,7 +180,7 @@ describe("Clone Check", function () {
 		.expect('[*] Starting the party')
 		.expect('    Installing npm modules').wait('OK')
 
-		.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
+		.wait("[*] This party's already been started. You can install individual plugins with `grunt install`")
 
 		.expect('Running "info" task')
 
