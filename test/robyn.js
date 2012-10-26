@@ -43,7 +43,7 @@ module.exports = {
 			.expect("    project name: robynTest, project title: Robyn Test")
 
 			.expect("Please answer the following:")
-			.expect("[?] Would you like to add caboose (RED Interactive's internal SASS + Compass framework)? (Y/n)")
+			.expect("[?] Would you like to add caboose (RED Interactive's internal Sass + Compass framework)? (Y/n)")
 			.sendline("")
 			.expect("[?] Would you like to add modernizr (Build out a lean, mean Modernizr machine.)? (Y/n)")
 			.sendline("")
