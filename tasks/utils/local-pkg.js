@@ -16,16 +16,14 @@ if (!fs.existsSync(pkgFile)) {
 
 	if (!fs.existsSync(configDir)) {
 		var dirs = configDir.replace(cwd + "/", "").split(path.sep),
-			dir = dirs.shift(), curr;
+			curr = cwd;
 
 		while (dirs.length) {
-			curr = path.join(cwd, dir);
+			curr = path.join(curr, dirs.shift());
 
 			if (!fs.existsSync(curr)) {
 				fs.mkdirSync(curr);
 			}
-
-			dir = path.join(dir, dirs.shift());
 		}
 	}
 
