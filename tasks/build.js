@@ -7,10 +7,10 @@ module.exports = function (grunt) {
 		this.requiresConfig("build");
 
 		grunt.helper("check_initialized", function (initialized) {
-			var tasks = [];
+			var tasks = ["sync"];
 
 			if (!initialized) {
-				tasks.push("start");
+				tasks.unshift("start");
 			}
 
 			if (typeof this.data === typeof []) {
