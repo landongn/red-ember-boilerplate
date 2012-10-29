@@ -90,13 +90,19 @@ describe("Setup Check", function () {
 		});
 
 		it("should follow semver versioning", function () {
-			expect(robynPkg.version).to.match(/[\d]+\.[\d]+\.[\d]+/);
+			var semver = require("semver");
+			expect(semver.valid(robynPkg.version)).to.be.ok();
 		});
 
 		it("should point to a valid repository", function () {
 			expect(robynPkg.repository).to.be.an("object");
 			expect(robynPkg.repository.type).to.equal("git");
-			expect(robynPkg.repository.url).to.match(/(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/);
+
+			if (fs.existsSync(robynPkg.repository.url)) {
+				expect(fs.existsSync(robynPkg.repository.url)).to.be.ok();
+			} else {
+				expect(robynPkg.repository.url).to.match(/(^((git@)|(http(s)|git):\/\/)(.*)\.git$)|(^$)/);
+			}
 		});
 
 		it("should have a config object", function () {
@@ -164,17 +170,13 @@ describe("Clone Check", function () {
 			stripColors: true
 		})
 
-		.expect("Submodule '.robyn' (" + repositoryUrl + ") registered for path '.robyn'")
-		.expect("Cloning into '.robyn'")
-		.expect("Submodule path '.robyn': checked out")
-
+		.expect("registered for path '.robyn'")
 		.run(done);
 	});
 
 	it("Should run the default grunt task", function (done) {
 		grunt.spawn("", {
-			cwd: clone,
-			verbose: true
+			cwd: clone
 		})
 
 		.wait('Running "default" task')
@@ -225,8 +227,8 @@ describe("Default Tasks", function () {
 	describe("info", function () {
 		it("grunt info", function (done) {
 			grunt.spawn("info")
-			.wait("[*] robyn version: 3.0.0")
-			.expect("via " + repositoryUrl)
+			.wait("[*] robyn version:")
+			.expect("via ")
 			.run(done);
 		});
 	});
@@ -251,7 +253,7 @@ describe("Default Tasks", function () {
 	describe("update", function () {
 		it("grunt update", function (done) {
 			grunt.spawn("update")
-			.wait("Updating .robyn")
+			.wait("Checking for newer version")
 			.expect(".")
 			.wait("OK")
 			.expect("Done, without errors.")
