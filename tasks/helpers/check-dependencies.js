@@ -6,17 +6,7 @@ module.exports = function (grunt) {
 		// TODO: ditch this when grunt v0.4 is released
 		grunt.util = grunt.util || grunt.utils;
 
-		if (!dep.version || dep.version === "*") {
-			if (cb) {
-				return cb();
-			}
-		}
-
-		var match = dep.version.match(/(?:([<>=]+)?(?:\s+)?)([\d\.]+)/);
-
-		var range = match[1];
-		var requiredVersion = match[2];
-
+		var semver = require("semver");
 		var warning;
 
 		grunt.util.spawn({
@@ -33,54 +23,33 @@ module.exports = function (grunt) {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
-				var installedVersion = data.replace(/x/g, "0").match(/[\d\.]+/).join("");
+				var tagRegExp = new RegExp(
+					"\\s*[v=]*\\s*([0-9]+)" +            // major
+					"\\.([0-9]+)"  +                     // minor
+					"(?:\\.([0-9]+))?" +                 // patch
+					"(-[0-9]+-?)?" +                     // build
+					"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?"     // tag
+				);
 
-				while (installedVersion.split(".").length < 3) {
-					installedVersion += ".0";
+				var match = (data.match(tagRegExp) || []),
+					installed, i, j, newVer = [];
+
+				// Pip being dumb.
+				if (match.length && typeof match[3] === "undefined") {
+					match[3] = "0";
+
+					for (i = 1, j = match.length; i < j; i++) {
+						if (typeof match[i] !== "undefined") {
+							newVer.push(match[i]);
+						}
+					}
+
+					match[0] = newVer.join(".");
 				}
 
-				dep.installedVersion = installedVersion;
-
-				var iBits = installedVersion.split("."),
-					iMajor = iBits[0],
-					iMinor = iBits[1],
-					iPatch = iBits[2];
-
-				var rBits = requiredVersion.split("."),
-					rMajor = rBits[0],
-					rMinor = rBits[1],
-					rPatch = rBits[2];
-
-				switch (range) {
-				case ">":
-					if (iMajor <= rMajor && iMinor <= rMinor && iPatch <= rPatch) {
-						warning = dep;
-					}
-					break;
-
-				case ">=":
-					if (iMajor < rMajor && iMinor < rMinor && iPatch < rPatch) {
-						warning = dep;
-					}
-					break;
-
-				case "<":
-					if (iMajor >= rMajor && iMinor >= rMinor && iPatch >= rPatch) {
-						warning = dep;
-					}
-					break;
-
-				case "<=":
-					if (iMajor > rMajor && iMinor > rMinor && iPatch > rPatch) {
-						warning = dep;
-					}
-					break;
-
-				default:
-					if (iMajor !== rMajor && iMinor !== rMinor && iPatch !== rPatch) {
-						warning = dep;
-					}
-					break;
+				installed = semver.clean(match[0]);
+				if (!semver.satisfies(installed, dep.version)) {
+					warning = dep;
 				}
 			}
 
