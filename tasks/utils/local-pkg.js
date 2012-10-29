@@ -2,9 +2,10 @@
 
 var fs = require("fs");
 var pkg = require("./pkg");
+var cwd = process.cwd();
 var path = require("path");
 
-var configDir = path.join(process.cwd(), pkg.config.dirs.config);
+var configDir = path.join(cwd, pkg.config.dirs.config);
 
 var localPkg = path.join(configDir, "robyn-local.json");
 var defaultLocalPkg = path.join(__dirname, "../../config/local-default.json");
@@ -14,8 +15,16 @@ var pkgFile = localPkg;
 if (!fs.existsSync(pkgFile)) {
 
 	if (!fs.existsSync(configDir)) {
-		var wrench = require("wrench");
-		wrench.mkdirSyncRecursive(configDir);
+		var dirs = configDir.replace(cwd + "/", "").split(path.sep),
+			curr = cwd;
+
+		while (dirs.length) {
+			curr = path.join(curr, dirs.shift());
+
+			if (!fs.existsSync(curr)) {
+				fs.mkdirSync(curr);
+			}
+		}
 	}
 
 	pkgFile = defaultLocalPkg;

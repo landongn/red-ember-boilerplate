@@ -23,25 +23,134 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		if (plugin === pkg.name) {
-			branch = branch || pkg.repository.branch || "master";
+		var pluginCheck = function () {
+			var install;
+
+			if (plugin !== pkg.name) {
+				branch = branch || "master";
+				install = "install:%p@%b:update";
+				install = install.replace("%p", plugin);
+				install = install.replace("%b", branch);
+
+				grunt.task.run(install);
+			}
+
+			done();
+		};
+
+		var onFetch = function (code, tag) {
 			grunt.helper("spawn", {
 				cmd: "git",
-				args: ["submodule", "foreach", "git", "pull", "origin", branch],
-				title: "Updating %s".replace("%s", pkg.config.dirs.robyn),
+				args: ["checkout", tag],
+				cwd: pkg.config.dirs.robyn,
+				title: "Updating to version " + tag,
 				complete: function (code) {
 					if (code !== 0) {
 						done(false);
 					}
 
-					done();
+					pluginCheck();
 				}
 			});
-		} else {
-			branch = branch || "master";
-			grunt.task.run("install:%p@%b:update".replace("%p", plugin).replace("%b", branch));
-			done();
-		}
+		};
+
+		var testAssertion = function (props, tag) {
+			var assert = grunt.helper("get_assertion", props.force);
+
+			if (assert) {
+				grunt.helper("spawn", {
+					cmd: "git",
+					args: ["fetch", "--all"],
+					cwd: pkg.config.dirs.robyn,
+					title: "Fetching latest from origin remote",
+					complete: function (code, err, out) {
+						onFetch(code, tag);
+					}
+				});
+			} else {
+				done();
+			}
+		};
+
+		var onListTags = function (code, err, out) {
+			if (code !== 0) {
+				done(false);
+			}
+
+			var semver = require("semver");
+
+			var currentVersion = pkg.version;
+
+			var tagRegExp = new RegExp(
+				"\\s*[v=]*\\s*([0-9]+)" +            // major
+				"\\.([0-9]+)"  +                     // minor
+				"\\.([0-9]+)"  +                     // patch
+				"(-[0-9]+-?)?" +                     // build
+				"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?" +   // tag
+				"$"
+			);
+
+			var tags = out.split("\n").map(function (line) {
+				var match = line.match(tagRegExp) || [];
+				return match[0];
+			}).filter(function (line) {
+				return line;
+			});
+
+			var filtered = currentVersion;
+
+			tags.forEach(function (tag) {
+				if (!tag) {
+					return;
+				}
+
+				var gt = semver.gt(tag, filtered);
+
+				if (gt) {
+					filtered = semver.clean(tag);
+				}
+			});
+
+			if (semver.gt(filtered, currentVersion)) {
+				var prompt = require("prompt");
+				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
+				prompt.delimiter = prompt.delimter || " ";
+
+				grunt.log.writeln();
+
+				prompt.start();
+
+				var message = [
+					"An updated version of your boilerplate (".magenta +
+						filtered.white.bold + ") has been found.\n   ".magenta,
+					"Your current version: ".magenta + currentVersion + "\n   ",
+					"Would you like to upgrade?".magenta
+				].join(" ");
+
+				prompt.get([{
+					name: "force",
+					message: message,
+					validator: /[y\/n]+/i,
+					"default": "Y/n"
+				}], function (err, props) {
+					if (err) {
+						done(err);
+					}
+
+					testAssertion(props, filtered);
+				});
+			} else {
+				pluginCheck();
+			}
+		};
+
+		grunt.helper("spawn", {
+			cmd: "git",
+			args: ["ls-remote", "--tags", "origin"],
+			cwd: pkg.config.dirs.robyn,
+			title: "Checking for newer version",
+			complete: onListTags
+		});
 	});
 
 };
