@@ -5,10 +5,13 @@ module.exports = function (grunt) {
 	grunt.registerHelper("spawn", function (opts) {
 		var cp = require("child_process");
 		var isVerbose = grunt.option("verbose");
-		var err = [];
+
+		var err = "";
+		var out = "";
 
 		var child = cp.spawn(opts.cmd, opts.args, {
-			stdio: isVerbose ? "inherit" : "pipe"
+			stdio: isVerbose ? "inherit" : "pipe",
+			cwd: opts.cwd
 		});
 
 		if (!isVerbose) {
@@ -18,13 +21,14 @@ module.exports = function (grunt) {
 
 			grunt.log.write(".".grey);
 
-			child.stdout.on("data", function () {
+			child.stdout.on("data", function (data) {
 				grunt.log.write(".".grey);
+				out += data.toString();
 			});
 
 			if (opts.cmd !== "npm") {
 				child.stderr.on("data", function (data) {
-					err.push(data.toString());
+					err += data.toString();
 				});
 			} else {
 				child.stderr.on("data", function () {
@@ -42,15 +46,15 @@ module.exports = function (grunt) {
 				} else {
 					grunt.log.write("ERR".red);
 
-					if (err.length) {
+					if (err) {
 						grunt.log.write("\n\n");
-						grunt.fail.fatal(err.join("\n"));
+						grunt.fail.fatal(err);
 					}
 				}
 			}
 
 			if (opts.complete) {
-				opts.complete(code);
+				opts.complete(code, err, out);
 			}
 		});
 	});
