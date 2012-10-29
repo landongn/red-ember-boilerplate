@@ -245,13 +245,16 @@ module.exports = function (grunt) {
 		};
 
 		var installDependencies = function (plug, plugPkg, cb) {
+			var projectPkg = require(path.join(cwd, "package.json"));
+			var semver = require("semver");
 			var callUpdate;
 			var dep;
-			var projectPkg = require(path.join(cwd, "package.json"));
+			var isGreater;
 			var pluginDeps = [];
 
 			for (dep in plugPkg.dependencies) {
-				if (!projectPkg.dependencies[dep] || projectPkg.dependencies[dep] !== plugPkg.dependencies[dep]) {
+				isGreater = semver.gt(plugPkg.dependencies[dep], projectPkg.dependencies[dep]);
+				if (!projectPkg.dependencies[dep] || isGreater) {
 					projectPkg.dependencies[dep] = plugPkg.dependencies[dep];
 					pluginDeps.push(dep + "@" + plugPkg.dependencies[dep]);
 
@@ -260,7 +263,8 @@ module.exports = function (grunt) {
 			}
 
 			for (dep in plugPkg.devDependencies) {
-				if (!projectPkg.devDependencies[dep] || projectPkg.devDependencies[dep] !== plugPkg.devDependencies[dep]) {
+				isGreater = semver.gt(plugPkg.devDependencies[dep], projectPkg.devDependencies[dep]);
+				if (!projectPkg.devDependencies[dep] || isGreater) {
 					projectPkg.devDependencies[dep] = plugPkg.devDependencies[dep];
 				}
 			}
@@ -312,20 +316,21 @@ module.exports = function (grunt) {
 		};
 
 		var saveSystemDependencies = function (plug, plugPkg, cb) {
+			var semver = require("semver");
+
 			var plugSysDeps = plugPkg.systemDependencies,
 				currSysDeps = pkg.systemDependencies || {},
-				regexp = /(?:([<>=]+)?(?:\s+)?)([\d\.]+)/,
-				plugDep, currDep, plugMatch, currMatch;
+				plugDep, currDep;
 
 			for (var dep in plugSysDeps) {
 				plugDep = plugSysDeps[dep];
+				plugDep = plugDep.version || plugDep;
+
 				currDep = currSysDeps[dep];
+				currDep = currDep.version || currDep;
 
 				if (currDep) {
-					plugMatch = (plugDep.version || plugDep).match(regexp);
-					currMatch = (currDep.version || currDep).match(regexp);
-
-					if (plugMatch[2] > currMatch[2]) {
+					if (semver.gt(plugDep, currDep)) {
 						currSysDeps[dep] = plugDep;
 					}
 				} else {
