@@ -86,12 +86,15 @@ module.exports = function (grunt) {
 				"\\.([0-9]+)"  +                     // minor
 				"\\.([0-9]+)"  +                     // patch
 				"(-[0-9]+-?)?" +                     // build
-				"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?"     // tag
+				"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?" +   // tag
+				"$"
 			);
 
 			var tags = out.split("\n").map(function (line) {
 				var match = line.match(tagRegExp) || [];
 				return match[0];
+			}).filter(function (line) {
+				return line;
 			});
 
 			var filtered = currentVersion;
