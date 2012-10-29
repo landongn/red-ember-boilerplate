@@ -93,6 +93,8 @@ module.exports = function (grunt) {
 			var tags = out.split("\n").map(function (line) {
 				var match = line.match(tagRegExp) || [];
 				return match[0];
+			}).filter(function (line) {
+				return line;
 			});
 
 			var filtered = currentVersion;
