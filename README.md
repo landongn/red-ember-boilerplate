@@ -173,6 +173,20 @@ A set of pre-defined tasks for your project management. You should feel free to 
 See above for a list of built-in tasks.
 
 
+Custom Build Tags
+=====================
+
+In order to keep major/minor/patch versions synced with Robyn, you should use the following format to tag your custom bootstrap releases:
+
+`major.minor.patch-build`
+
+For instance:
+
+```bash
+git tag -a "1.0.0-12" -m "Adding custom functionality"
+```
+
+
 Adding Custom Plugins
 =====================
 
@@ -265,6 +279,16 @@ An array of paths to exclude during file traversal. Example below:
 
 Changelog
 ==========
+
+1.1.0
+------------------
+- Now parsing dependencies using `node-semver`
+- Adding a `grunt sync` task to update your boilerplate to the latest checked-in version.
+- `grunt build` now runs `grunt sync` before building to keep dependencies synchronized.
+- Spawn util now takes a `cwd` parameter. Takes the current working directory.
+- Spawn util now returns stderr / stdout.
+- Robyn now updates itself based on a tag versioning system. Tags should follow semver.org.
+- Remove dependency on wrench in `tasks/utils/local-pkg.js` to avoid a requirement catch-22.
 
 1.0.0
 ------------------
