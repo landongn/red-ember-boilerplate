@@ -77,32 +77,38 @@ module.exports = function (grunt) {
 				done(false);
 			}
 
+			var semver = require("semver");
+
 			var currentVersion = pkg.version;
-			var tagRegExp = /refs\/tags\/([\d]+\.[\d]+\.[\d]+)$/;
 
-			var tag = out.split("\n").filter(function (line) {
-				var match = line.match(tagRegExp);
+			var tagRegExp = new RegExp(
+				"\\s*[v=]*\\s*([0-9]+)" +            // major
+				"\\.([0-9]+)"  +                     // minor
+				"\\.([0-9]+)"  +                     // patch
+				"(-[0-9]+-?)?" +                     // build
+				"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?"     // tag
+			);
 
-				if (match && match[1]) {
-					var cBits = currentVersion.split(".");
-					var mBits = match[1].split(".");
+			var tags = out.split("\n").map(function (line) {
+				var match = line.match(tagRegExp) || [];
+				return match[0];
+			});
 
-					var e1 = (mBits[0] === cBits[0]);
-					var e2 = (mBits[1] === cBits[1]);
+			var filtered = currentVersion;
 
-					var g1 = (mBits[0] > cBits[0]);
-					var g2 = (mBits[1] > cBits[1]);
-					var g3 = (mBits[2] > cBits[2]);
-
-					return (g1 || (e1 && g2) || (e1 && e2 && g3));
+			tags.forEach(function (tag) {
+				if (!tag) {
+					return;
 				}
 
-				return false;
-			}).map(function (line) {
-				return line.match(tagRegExp)[1];
-			}).sort().pop();
+				var gt = semver.gt(tag, filtered);
 
-			if (tag) {
+				if (gt) {
+					filtered = semver.clean(tag);
+				}
+			});
+
+			if (semver.gt(filtered, currentVersion)) {
 				var prompt = require("prompt");
 				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 				prompt.delimiter = prompt.delimter || " ";
@@ -112,10 +118,11 @@ module.exports = function (grunt) {
 				prompt.start();
 
 				var message = [
-					"An updated version of your boilerplate (" +
-						tag.white + ") has been found.",
-					"Would you like to upgrade?"
-				].join(" ").magenta;
+					"An updated version of your boilerplate (".magenta +
+						filtered.white.bold + ") has been found.\n   ".magenta,
+					"Your current version: ".magenta + currentVersion + "\n   ",
+					"Would you like to upgrade?".magenta
+				].join(" ");
 
 				prompt.get([{
 					name: "force",
@@ -127,7 +134,7 @@ module.exports = function (grunt) {
 						done(err);
 					}
 
-					testAssertion(props, tag);
+					testAssertion(props, filtered);
 				});
 			} else {
 				pluginCheck();
