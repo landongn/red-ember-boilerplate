@@ -8,6 +8,7 @@
 		"url": "__PROJECT_REPOSITORY__"
 	},
 	"systemDependencies": {
+		"git": "*",
 		"grunt": ">=0.3.0"
 	},
 	"engines": {
