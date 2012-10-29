@@ -53,8 +53,10 @@ describe("Plugin Integrity", function () {
 					});
 
 					if (plugPkg.version) {
+						var semver = require("semver");
+
 						it("semver versioning", function () {
-							expect(plugPkg.version).to.match(/[\d]+\.[\d]+\.[\d]+/);
+							expect(semver.valid(plugPkg.version)).to.be.ok();
 						});
 					}
 				});
