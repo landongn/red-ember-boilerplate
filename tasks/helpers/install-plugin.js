@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 
 		var handleProcess = function (file, plug, plugPkg, cb) {
 			if (fs.existsSync(file)) {
-				var handler = require(file);
+				var handler = require(fs.realpathSync(file));
 
 				handler(grunt, function (error) {
 					if (error) {
@@ -324,14 +324,13 @@ module.exports = function (grunt) {
 
 			for (var dep in plugSysDeps) {
 				plugDep = plugSysDeps[dep];
-				plugDep = plugDep.version || plugDep;
 
 				currDep = currSysDeps[dep];
 
 				if (currDep) {
 					currDep = currDep.version || currDep;
 
-					if (semver.gt(plugDep, currDep)) {
+					if (semver.gt(plugDep.version || plugDep, currDep)) {
 						currSysDeps[dep] = plugDep;
 					}
 				} else {
