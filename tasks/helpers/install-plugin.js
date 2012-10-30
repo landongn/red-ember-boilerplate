@@ -324,14 +324,13 @@ module.exports = function (grunt) {
 
 			for (var dep in plugSysDeps) {
 				plugDep = plugSysDeps[dep];
-				plugDep = plugDep.version || plugDep;
 
 				currDep = currSysDeps[dep];
 
 				if (currDep) {
 					currDep = currDep.version || currDep;
 
-					if (semver.gt(plugDep, currDep)) {
+					if (semver.gt(plugDep.version || plugDep, currDep)) {
 						currSysDeps[dep] = plugDep;
 					}
 				} else {
