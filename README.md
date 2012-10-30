@@ -280,6 +280,10 @@ An array of paths to exclude during file traversal. Example below:
 Changelog
 ==========
 
+1.1.2
+------------------
+- Fix accidental overwriting of system dependencies objects.
+
 1.1.1
 ------------------
 - Update tests to pass new version.
