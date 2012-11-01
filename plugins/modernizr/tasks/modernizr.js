@@ -55,9 +55,12 @@ module.exports = function (grunt) {
 		// Files added here will be excluded when looking for Modernizr refs.
 		"excludeFiles" : [
 			"env/**/*",
+			"robyn/**/*",
 			"node_modules/**/*",
-			".{git,sass-cache}/**/*",
-			"deploy/**/*"
+			"resources/compass/gems/**/*",
+			".{git,sass-cache,robyn}/**/*",
+			"project/static/js/**/*.min.js",
+			"project/static/js/{libs,test}/**/*"
 		]
 	});
 
