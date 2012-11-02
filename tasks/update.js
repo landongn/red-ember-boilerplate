@@ -45,7 +45,7 @@ module.exports = function (grunt) {
 			var semver = require("semver");
 
 			var localPath = path.join(cwd, "package.json");
-			var robynPath = path.join(cwd, pkg.config.dirs.robyn, "robyn.json");
+			var robynPath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "robyn.json");
 			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "package.json");
 
 			if (!fs.existsSync(localPath) || !fs.existsSync(robynPath) || !fs.existsSync(pristinePath)) {
