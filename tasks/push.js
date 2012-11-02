@@ -42,11 +42,7 @@ module.exports = function (grunt) {
 			});
 
 			child.on("exit", function (code) {
-				if (code !== 0 || !out) {
-					grunt.fail.warn(code);
-				}
-
-				out = out.trim();
+				out = out.trim() || "master";
 				tasks[0] += out;
 
 				if (out === "develop" || out === "master") {
