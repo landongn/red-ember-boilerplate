@@ -268,9 +268,7 @@ describe("Default Tasks", function () {
 		});
 
 		it("grunt update", function (done) {
-			grunt.spawn("update", {
-				verbose: true
-			})
+			grunt.spawn("update")
 			.wait("Checking for newer version").wait("OK")
 			.expect("[?] An updated version of your boilerplate")
 			.expect("    Your current version:")
@@ -296,7 +294,6 @@ describe("Default Tasks", function () {
 				var equals = ["name", "version", "author", "description"];
 
 				equals.forEach(function (key) {
-					console.log(key, testPkg[key], robynPkg[key]);
 					expect(testPkg[key]).to.equal(robynPkg[key]);
 				});
 

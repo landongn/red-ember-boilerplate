@@ -86,8 +86,6 @@ module.exports = function (grunt) {
 			var robynPath = path.join(cwd, "robyn.json");
 			var pristineRobynPath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "robyn.json");
 
-			console.log(pristineRobynPath, fs.existsSync(pristineRobynPath));
-
 			if (!fs.existsSync(robynPath) || !fs.existsSync(pristineRobynPath)) {
 				return packageCheck();
 			}
@@ -98,7 +96,6 @@ module.exports = function (grunt) {
 			var equals = ["name", "version", "author", "description"];
 
 			equals.forEach(function (key) {
-				console.log(robynPkg[key], pristineRobynPkg[key]);
 				robynPkg[key] = pristineRobynPkg[key];
 			});
 
