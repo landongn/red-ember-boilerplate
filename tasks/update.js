@@ -5,6 +5,10 @@ module.exports = function (grunt) {
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
 		var done = this.async();
 
+		var fs = require("fs");
+		var path = require("path");
+
+		var cwd = process.cwd();
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
@@ -38,6 +42,68 @@ module.exports = function (grunt) {
 			done();
 		};
 
+		var packageCheck = function () {
+			var semver = require("semver");
+
+			var localPath = path.join(cwd, "package.json");
+			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "package.json");
+
+			if (!fs.existsSync(localPath) || !fs.existsSync(pristinePath)) {
+				return pluginCheck();
+			}
+
+			var localPkg = require(localPath);
+			var pristinePkg = require(pristinePath);
+
+			var deps = pristinePkg.dependencies;
+			var key, local;
+
+			for (key in deps) {
+				local = localPkg.dependencies[key];
+
+				if (!local || semver.gt(deps[key], local)) {
+					localPkg.dependencies[key] = deps[key];
+				}
+			}
+
+			fs.writeFileSync(localPath, JSON.stringify(localPkg, null, "\t") + "\n");
+
+			grunt.helper("spawn", {
+				cmd: "npm",
+				args: ["install", "--production"],
+				title: "Installing npm modules",
+				complete: function (code) {
+					if (code !== 0) {
+						done(false);
+					}
+
+					pluginCheck();
+				}
+			});
+		};
+
+		var robynCheck = function () {
+			var robynPath = path.join(cwd, "robyn.json");
+			var pristineRobynPath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "robyn.json");
+
+			if (!fs.existsSync(robynPath) || !fs.existsSync(pristineRobynPath)) {
+				return packageCheck();
+			}
+
+			var robynPkg = require(robynPath);
+			var pristineRobynPkg = require(pristineRobynPath);
+
+			var equals = ["name", "version", "author", "description"];
+
+			equals.forEach(function (key) {
+				robynPkg[key] = pristineRobynPkg[key];
+			});
+
+			fs.writeFileSync(robynPath, JSON.stringify(robynPkg, null, "\t") + "\n");
+
+			packageCheck();
+		};
+
 		var onFetch = function (code, tag) {
 			grunt.helper("spawn", {
 				cmd: "git",
@@ -49,7 +115,7 @@ module.exports = function (grunt) {
 						done(false);
 					}
 
-					pluginCheck();
+					robynCheck();
 				}
 			});
 		};
