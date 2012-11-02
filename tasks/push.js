@@ -6,19 +6,43 @@ module.exports = function (grunt) {
 		var done = this.async();
 		var cp = require("child_process");
 
+		var err = "";
+
 		var cmd = "git";
-		var args = ["push", "origin", branch];
+		var args = ["remote", "show", "origin"];
 
 		var child = cp.spawn(cmd, args, {
-			stdio: "inherit"
+			stdio: "pipe"
+		});
+
+		child.stderr.on("data", function (data) {
+			err += data.toString();
 		});
 
 		child.on("exit", function (code) {
-			if (code !== 0) {
-				grunt.fail.warn(code);
+			if (err) {
+				grunt.fail.warn(err);
 			}
 
-			done();
+			args = ["push", "origin", branch];
+
+			child = cp.spawn(cmd, args, {
+				stdio: "pipe"
+			});
+
+			process.stdout.pipe(child.stdout);
+
+			child.stderr.on("data", function (data) {
+				err += data.toString();
+			});
+
+			child.on("exit", function (code) {
+				if (err) {
+					grunt.fail.warn(err);
+				}
+
+				done();
+			});
 		});
 	});
 
@@ -29,6 +53,7 @@ module.exports = function (grunt) {
 
 		if (!branch) {
 			var out = "";
+			var err = "";
 
 			var cmd = "git";
 			var args = ["rev-parse", "--abbrev-ref", "HEAD"];
@@ -38,10 +63,18 @@ module.exports = function (grunt) {
 			});
 
 			child.stdout.on("data", function (data) {
-				out += data;
+				out += data.toString();
+			});
+
+			child.stderr.on("data", function (data) {
+				err += data.toString();
 			});
 
 			child.on("exit", function (code) {
+				if (err) {
+					grunt.fatal(err);
+				}
+
 				out = out.trim() || "master";
 				tasks[0] += out;
 
