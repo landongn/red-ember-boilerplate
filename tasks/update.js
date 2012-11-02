@@ -5,6 +5,9 @@ module.exports = function (grunt) {
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
 		var done = this.async();
 
+		var fs = require("fs");
+		var path = require("path");
+
 		var cwd = process.cwd();
 		var pkg = require("./utils/pkg");
 
@@ -40,30 +43,20 @@ module.exports = function (grunt) {
 		};
 
 		var packageCheck = function () {
-			var fs = require("fs");
-			var path = require("path");
 			var semver = require("semver");
 
 			var localPath = path.join(cwd, "package.json");
-			var robynPath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "robyn.json");
 			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "package.json");
 
-			if (!fs.existsSync(localPath) || !fs.existsSync(robynPath) || !fs.existsSync(pristinePath)) {
+			if (!fs.existsSync(localPath) || !fs.existsSync(pristinePath)) {
 				return pluginCheck();
 			}
 
 			var localPkg = require(localPath);
-			var robynPkg = require(robynPath);
 			var pristinePkg = require(pristinePath);
 
 			var deps = pristinePkg.dependencies;
 			var key, local;
-
-			var equals = ["name", "version", "author", "description"];
-
-			equals.forEach(function (key) {
-				localPkg[key] = robynPkg[key];
-			});
 
 			for (key in deps) {
 				local = localPkg.dependencies[key];
@@ -89,6 +82,31 @@ module.exports = function (grunt) {
 			});
 		};
 
+		var robynCheck = function () {
+			var robynPath = path.join(cwd, "robyn.json");
+			var pristineRobynPath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "robyn.json");
+
+			console.log(pristineRobynPath, fs.existsSync(pristineRobynPath));
+
+			if (!fs.existsSync(robynPath) || !fs.existsSync(pristineRobynPath)) {
+				return packageCheck();
+			}
+
+			var robynPkg = require(robynPath);
+			var pristineRobynPkg = require(pristineRobynPath);
+
+			var equals = ["name", "version", "author", "description"];
+
+			equals.forEach(function (key) {
+				console.log(robynPkg[key], pristineRobynPkg[key]);
+				robynPkg[key] = pristineRobynPkg[key];
+			});
+
+			fs.writeFileSync(robynPath, JSON.stringify(robynPkg, null, "\t") + "\n");
+
+			packageCheck();
+		};
+
 		var onFetch = function (code, tag) {
 			grunt.helper("spawn", {
 				cmd: "git",
@@ -100,7 +118,7 @@ module.exports = function (grunt) {
 						done(false);
 					}
 
-					packageCheck();
+					robynCheck();
 				}
 			});
 		};
