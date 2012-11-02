@@ -295,9 +295,10 @@ describe("Default Tasks", function () {
 
 				var equals = ["name", "version", "author", "description"];
 
-				for (var key in equals) {
+				equals.forEach(function (key) {
+					console.log(key, testPkg[key], robynPkg[key]);
 					expect(testPkg[key]).to.equal(robynPkg[key]);
-				}
+				});
 
 				done(err);
 			});

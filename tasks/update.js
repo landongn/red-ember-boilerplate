@@ -61,9 +61,9 @@ module.exports = function (grunt) {
 
 			var equals = ["name", "version", "author", "description"];
 
-			for (key in equals) {
+			equals.forEach(function (key) {
 				localPkg[key] = robynPkg[key];
-			}
+			});
 
 			for (key in deps) {
 				local = localPkg.dependencies[key];
