@@ -256,13 +256,51 @@ describe("Default Tasks", function () {
 	});
 
 	describe("update", function () {
+		before(function (done) {
+			var testPath = path.join(test, "robyn.json");
+
+			if (fs.existsSync(testPath)) {
+				var testPkg = require(testPath);
+				testPkg.version = "0.1.0";
+				fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
+				done();
+			}
+		});
+
 		it("grunt update", function (done) {
-			grunt.spawn("update")
-			.wait("Checking for newer version")
-			.expect(".")
-			.wait("OK")
+			grunt.spawn("update", {
+				verbose: true
+			})
+			.wait("Checking for newer version").wait("OK")
+			.expect("[?] An updated version of your boilerplate")
+			.expect("    Your current version:")
+			.expect("    Would you like to upgrade?")
+			.sendline("")
+			.expect("Fetching latest from origin remote").wait("OK")
+			.expect("Updating to version").wait("OK")
+			.expect("Installing npm modules").wait("OK")
 			.expect("Done, without errors.")
-			.run(done);
+			.run(function (err) {
+				var testPath = path.join(test, "robyn.json");
+				expect(fs.existsSync(testPath)).to.be.ok();
+
+				var robynPath = path.join(test, "defaults", "robyn.json");
+				expect(fs.existsSync(robynPath)).to.be.ok();
+
+				var testPkg = require(testPath);
+				expect(testPkg).to.be.an("object");
+
+				var robynPkg = require(robynPath);
+				expect(robynPkg).to.be.an("object");
+
+				var equals = ["name", "version", "author", "description"];
+
+				for (var key in equals) {
+					expect(testPkg[key]).to.equal(robynPkg[key]);
+				}
+
+				done(err);
+			});
 		});
 	});
 });
