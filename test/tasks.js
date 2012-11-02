@@ -284,7 +284,7 @@ describe("Default Tasks", function () {
 				var testPath = path.join(test, "robyn.json");
 				expect(fs.existsSync(testPath)).to.be.ok();
 
-				var robynPath = path.join(test, "defaults", "robyn.json");
+				var robynPath = path.join(test, ".robyn", "defaults", "robyn.json");
 				expect(fs.existsSync(robynPath)).to.be.ok();
 
 				var testPkg = require(testPath);
