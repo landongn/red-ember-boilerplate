@@ -101,7 +101,7 @@ module.exports = {
 		.run(function (err) {
 			if (err) {
 				var url = repositoryUrl;
-				nexpect.spawn("robyn", ["add", "rbp-test", url, "--branch", "feature/robyn"], {
+				nexpect.spawn("robyn", ["add", "rbp-test", url, "--branch", "develop"], {
 					stripColors: true
 				})
 				.expect("Added nest rbp-test at %u".replace("%u", url))
