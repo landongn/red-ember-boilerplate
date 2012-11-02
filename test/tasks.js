@@ -263,8 +263,9 @@ describe("Default Tasks", function () {
 				var testPkg = require(testPath);
 				testPkg.version = "0.1.0";
 				fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
-				done();
 			}
+
+			done();
 		});
 
 		it("grunt update", function (done) {
