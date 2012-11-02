@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
 		var done = this.async();
 
+		var cwd = process.cwd();
 		var pkg = require("./utils/pkg");
 
 		// Sanity check
@@ -38,6 +39,56 @@ module.exports = function (grunt) {
 			done();
 		};
 
+		var packageCheck = function () {
+			var fs = require("fs");
+			var path = require("path");
+			var semver = require("semver");
+
+			var localPath = path.join(cwd, "package.json");
+			var robynPath = path.join(cwd, pkg.config.dirs.robyn, "robyn.json");
+			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "package.json");
+
+			if (!fs.existsSync(localPath) || !fs.existsSync(robynPath) || !fs.existsSync(pristinePath)) {
+				return pluginCheck();
+			}
+
+			var localPkg = require(localPath);
+			var robynPkg = require(robynPath);
+			var pristinePkg = require(pristinePath);
+
+			var deps = pristinePkg.dependencies;
+			var key, local;
+
+			var equals = ["name", "version", "author", "description"];
+
+			for (key in equals) {
+				localPkg[key] = robynPkg[key];
+			}
+
+			for (key in deps) {
+				local = localPkg.dependencies[key];
+
+				if (!local || semver.gt(deps[key], local)) {
+					localPkg.dependencies[key] = deps[key];
+				}
+			}
+
+			fs.writeFileSync(localPath, JSON.stringify(localPkg, null, "\t") + "\n");
+
+			grunt.helper("spawn", {
+				cmd: "npm",
+				args: ["install", "--production"],
+				title: "Installing npm modules",
+				complete: function (code) {
+					if (code !== 0) {
+						done(false);
+					}
+
+					pluginCheck();
+				}
+			});
+		};
+
 		var onFetch = function (code, tag) {
 			grunt.helper("spawn", {
 				cmd: "git",
@@ -49,7 +100,7 @@ module.exports = function (grunt) {
 						done(false);
 					}
 
-					pluginCheck();
+					packageCheck();
 				}
 			});
 		};
