@@ -286,10 +286,10 @@ describe("Default Tasks", function () {
 				var robynPath = path.join(test, ".robyn", "defaults", "robyn.json");
 				expect(fs.existsSync(robynPath)).to.be.ok();
 
-				var testPkg = require(testPath);
+				var testPkg = JSON.parse(fs.readFileSync(testPath, "utf8"));
 				expect(testPkg).to.be.an("object");
 
-				var robynPkg = require(robynPath);
+				var robynPkg = JSON.parse(fs.readFileSync(robynPath, "utf8"));
 				expect(robynPkg).to.be.an("object");
 
 				var equals = ["name", "version", "author", "description"];
