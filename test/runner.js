@@ -19,6 +19,7 @@
 		// Custom Functionality
 		mocha.addFile("test/custom/build.js");
 		mocha.addFile("test/custom/bump.js");
+		mocha.addFile("test/custom/push.js");
 		mocha.addFile("test/custom/tasks.js");
 
 		mocha.addFile("test/plugins.js");
