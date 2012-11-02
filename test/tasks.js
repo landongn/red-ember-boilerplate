@@ -1,5 +1,5 @@
 /*jshint node:true*/
-/*global describe, before, it*/
+/*global describe, before, it, after*/
 
 "use strict";
 
@@ -251,12 +251,66 @@ describe("Default Tasks", function () {
 	});
 
 	describe("update", function () {
+		var currentBranch;
+
+		before(function (done) {
+			var testPath = path.join(test, "robyn.json");
+
+			if (fs.existsSync(testPath)) {
+				nexpect.spawn("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+					cwd: path.join(test, ".robyn"),
+					stripColors: true
+				})
+				.run(function (err, result) {
+					var testPkg = require(testPath);
+					testPkg.version = "0.1.0";
+					fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
+
+					currentBranch = result[0];
+					done(err);
+				});
+			}
+		});
+
 		it("grunt update", function (done) {
 			grunt.spawn("update")
-			.wait("Checking for newer version")
-			.expect(".")
-			.wait("OK")
+			.wait("Checking for newer version").wait("OK")
+			.expect("[?] An updated version of your boilerplate")
+			.expect("    Your current version:")
+			.expect("    Would you like to upgrade?")
+			.sendline("")
+			.expect("Fetching latest from origin remote").wait("OK")
+			.expect("Updating to version").wait("OK")
+			.expect("Installing npm modules").wait("OK")
 			.expect("Done, without errors.")
+			.run(function (err) {
+				var testPath = path.join(test, "robyn.json");
+				expect(fs.existsSync(testPath)).to.be.ok();
+
+				var robynPath = path.join(test, ".robyn", "defaults", "robyn.json");
+				expect(fs.existsSync(robynPath)).to.be.ok();
+
+				var testPkg = JSON.parse(fs.readFileSync(testPath, "utf8"));
+				expect(testPkg).to.be.an("object");
+
+				var robynPkg = JSON.parse(fs.readFileSync(robynPath, "utf8"));
+				expect(robynPkg).to.be.an("object");
+
+				var equals = ["name", "version", "author", "description"];
+
+				equals.forEach(function (key) {
+					expect(testPkg[key]).to.equal(robynPkg[key]);
+				});
+
+				done(err);
+			});
+		});
+
+		after(function (done) {
+			nexpect.spawn("git", ["checkout", currentBranch], {
+				cwd: path.join(test, ".robyn"),
+				stripColors: true
+			})
 			.run(done);
 		});
 	});
