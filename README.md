@@ -280,26 +280,4 @@ An array of paths to exclude during file traversal. Example below:
 Changelog
 ==========
 
-1.1.2
-------------------
-- Fix accidental overwriting of system dependencies objects.
-
-1.1.1
-------------------
-- Update tests to pass new version.
-- Add semver versioning instead of trying to RegExp parse.
-- Increase slow timer.
-
-1.1.0
-------------------
-- Now parsing dependencies using `node-semver`
-- Adding a `grunt sync` task to update your boilerplate to the latest checked-in version.
-- `grunt build` now runs `grunt sync` before building to keep dependencies synchronized.
-- Spawn util now takes a `cwd` parameter. Takes the current working directory.
-- Spawn util now returns stderr / stdout.
-- Robyn now updates itself based on a tag versioning system. Tags should follow semver.org.
-- Remove dependency on wrench in `tasks/utils/local-pkg.js` to avoid a requirement catch-22.
-
-1.0.0
-------------------
-- Initial release
+See [changelog](tree/master/changelog)
