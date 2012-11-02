@@ -1,5 +1,5 @@
 /*jshint node:true*/
-/*global describe, before, it*/
+/*global describe, before, it, after*/
 
 "use strict";
 
@@ -256,16 +256,25 @@ describe("Default Tasks", function () {
 	});
 
 	describe("update", function () {
+		var currentBranch;
+
 		before(function (done) {
 			var testPath = path.join(test, "robyn.json");
 
 			if (fs.existsSync(testPath)) {
-				var testPkg = require(testPath);
-				testPkg.version = "0.1.0";
-				fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
-			}
+				nexpect.spawn("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+					cwd: path.join(test, ".robyn"),
+					stripColors: true
+				})
+				.run(function (err, result) {
+					var testPkg = require(testPath);
+					testPkg.version = "0.1.0";
+					fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
 
-			done();
+					currentBranch = result[0];
+					done(err);
+				});
+			}
 		});
 
 		it("grunt update", function (done) {
@@ -300,6 +309,14 @@ describe("Default Tasks", function () {
 
 				done(err);
 			});
+		});
+
+		after(function (done) {
+			nexpect.spawn("git", ["checkout", currentBranch], {
+				cwd: path.join(test, ".robyn"),
+				stripColors: true
+			})
+			.run(done);
 		});
 	});
 });
