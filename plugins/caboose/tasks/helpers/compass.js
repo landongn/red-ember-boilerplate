@@ -37,6 +37,10 @@ module.exports = function (grunt) {
 		var cmd = bundle ? "bundle" : "compass";
 		var args = [watch ? "watch" : "compile"];
 
+		// Delete custom properties
+		delete data.bundle_exec;
+		delete data.force_compile;
+
 		var config = {
 			// Build temp config path
 			path : path.join("/", "tmp", tmp),
@@ -54,10 +58,6 @@ module.exports = function (grunt) {
 				return lines.join("\n") + "\n";
 			}())
 		};
-
-		// Delete custom properties
-		delete data.bundle_exec;
-		delete data.force_compile;
 
 		// Write temporary file
 		grunt.file.write(config.path, config.rb);
