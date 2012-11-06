@@ -51,8 +51,10 @@ module.exports = function (grunt) {
 					value, key;
 
 				for (key in data) {
-					value = stringify(data[key]);
-					lines.push(key + " = " + value);
+					if (data[key] !== null && typeof data[key] !== "undefined") {
+						value = stringify(data[key]);
+						lines.push(key + " = " + value);
+					}
 				}
 
 				return lines.join("\n") + "\n";
