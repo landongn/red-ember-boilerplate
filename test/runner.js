@@ -9,7 +9,7 @@
 
 		var mocha = new Mocha({
 			setup : "bdd",
-			reporter : process.env.TRAVIS ? "list" : "spec",
+			reporter : process.env.TRAVIS ? "tap" : "spec",
 			slow : 5000,
 			timeout : 30000
 		});
