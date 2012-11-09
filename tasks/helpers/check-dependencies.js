@@ -49,6 +49,7 @@ module.exports = function (grunt) {
 
 				installed = semver.clean(match[0]);
 				if (!semver.satisfies(installed, dep.version)) {
+					dep.installedVersion = installed;
 					warning = dep;
 				}
 			}
@@ -106,6 +107,10 @@ module.exports = function (grunt) {
 
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
+
+							if (!warn || !warn.installedVersion) {
+								break;
+							}
 
 							console.warn([
 								"[!] ".yellow + warn.plugin.cyan + (" requires " + warn.bin + " " + warn.version).yellow,
