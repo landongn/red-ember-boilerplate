@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 
 		grunt.helper("spawn", {
 			cmd: "git",
-			args: ["submodule", "update"],
+			args: ["submodule", "update", pkg.config.dirs.robyn],
 			title: "Syncing %s".replace("%s", pkg.name),
 			complete: function (code) {
 				if (code !== 0) {
