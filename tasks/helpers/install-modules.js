@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		grunt.helper("spawn", {
 			cmd: "npm",
 			args: ["install"].concat(args),
-			title: "Installing npm modules",
+			title: "Installing npm packages",
 			complete: cb
 		});
 	});

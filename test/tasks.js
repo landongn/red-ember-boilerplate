@@ -183,7 +183,7 @@ describe("Clone Check", function () {
 		.expect('Running "start" task')
 
 		.expect('[*] Starting the party')
-		.expect('Installing npm modules').wait('OK')
+		.expect('Installing npm packages').wait('OK')
 
 		.expect('Installing bundle. This may take a minute').wait('OK')
 		.expect('Looks like RED Start was already run on this project. Skipping ahead...')
@@ -208,7 +208,7 @@ describe("Default Tasks", function () {
 		it("grunt start", function (done) {
 			grunt.spawn("start")
 			.wait("[*] Starting the party")
-			.expect("Installing npm modules")
+			.expect("Installing npm packages")
 			.wait("OK")
 			.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
 			.run(done);
@@ -281,7 +281,7 @@ describe("Default Tasks", function () {
 			.sendline("")
 			.expect("Fetching latest from origin remote").wait("OK")
 			.expect("Updating to version").wait("OK")
-			.expect("Installing npm modules").wait("OK")
+			.expect("Installing npm packages").wait("OK")
 			.expect("Done, without errors.")
 			.run(function (err) {
 				var testPath = path.join(test, "robyn.json");
