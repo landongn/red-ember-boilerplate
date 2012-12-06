@@ -34,7 +34,7 @@ module.exports = {
 			.expect('Running "start" task')
 
 			.expect("[*] Starting the party")
-			.expect("    Installing npm modules").wait("OK")
+			.expect("    Installing npm packages").wait("OK")
 
 			.expect("[*] Checking for available plugins.")
 			.expect("    Found the following: caboose, modernizr, red-start, rosy, statix")
@@ -64,7 +64,7 @@ module.exports = {
 			.expect("    Installing bundle. This may take a minute").wait("OK")
 
 			.expect("[+] Installing modernizr via .robyn/plugins/modernizr")
-			.expect("    Installing npm modules").wait("OK")
+			.expect("    Installing npm packages").wait("OK")
 			.expect("    Copying files into project").wait("OK")
 
 			.expect("[+] Installing red-start via .robyn/plugins/red-start")
@@ -73,13 +73,15 @@ module.exports = {
 			.expect("    Creating a virtualenv. This may take a minute").wait("OK")
 
 			.expect("[+] Installing rosy via https://github.com/ff0000/rosy.git")
-			.expect("    Installing npm modules").wait("OK")
+			.expect("    Installing npm packages").wait("OK")
 			.expect("    Cloning repository").wait("OK")
 			.expect("    Copying files into project").wait("OK")
 			.expect("    Installing external libraries").wait("OK")
 
 			.expect("[+] Installing statix via .robyn/plugins/statix")
 			.expect("    Copying files into project").wait("OK")
+
+			.expect("[*] Shrinkwrapped npm packages.")
 
 			.expect("[*] You should edit your package.json and fill in your project details.")
 			.expect("[*] All done! Commit you changes and you're on your way.")
