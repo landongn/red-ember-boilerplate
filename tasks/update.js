@@ -3,6 +3,9 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
+		// TODO: ditch this when grunt v0.4 is released
+		grunt.util = grunt.util || grunt.utils;
+
 		var done = this.async();
 
 		var fs = require("fs");
@@ -42,6 +45,16 @@ module.exports = function (grunt) {
 			done();
 		};
 
+		var shrinkWrap = function () {
+			grunt.util.spawn({
+				cwd: cwd,
+				cmd: "npm",
+				args: ["shrinkwrap", "--depth", "100000"]
+			}, function () {
+				pluginCheck();
+			});
+		};
+
 		var packageCheck = function () {
 			var semver = require("semver");
 
@@ -71,13 +84,13 @@ module.exports = function (grunt) {
 			grunt.helper("spawn", {
 				cmd: "npm",
 				args: ["install", "--production"],
-				title: "Installing npm modules",
+				title: "Installing npm packages",
 				complete: function (code) {
 					if (code !== 0) {
 						done(false);
 					}
 
-					pluginCheck();
+					shrinkWrap();
 				}
 			});
 		};

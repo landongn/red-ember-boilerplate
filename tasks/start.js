@@ -71,13 +71,25 @@ module.exports = function (grunt) {
 			done();
 		};
 
+		var shrinkWrap = function () {
+			grunt.util.spawn({
+				cmd: "npm",
+				args: ["shrinkwrap"]
+			}, function () {
+				grunt.log.writeln();
+				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
+
+				finalizeInstall();
+			});
+		};
+
 		var resetGit = function () {
 			var child = cp.spawn("git", ["reset", "--hard", "HEAD"], {
 				cwd: pkg.config.dirs.robyn,
 				stdio: "pipe"
 			});
 
-			child.on("exit", finalizeInstall);
+			child.on("exit", shrinkWrap);
 		};
 
 		var handleSettings = function (err, props, overrideProps) {
