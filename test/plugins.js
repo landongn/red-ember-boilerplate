@@ -72,7 +72,7 @@ describe("Plugin Integrity", function () {
 
 					var nodeDir = path.join(cwd, "node_modules");
 
-					it("npm modules directory", function (done) {
+					it("npm packages directory", function (done) {
 						expect(fs.existsSync(nodeDir)).to.be.ok();
 						done();
 					});
