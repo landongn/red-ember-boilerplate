@@ -76,7 +76,9 @@ module.exports = function (grunt) {
 				cmd: "npm",
 				args: ["shrinkwrap"]
 			}, function () {
+				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
+
 				finalizeInstall();
 			});
 		};
