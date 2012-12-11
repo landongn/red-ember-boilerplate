@@ -3,7 +3,7 @@
 
 module.exports = function (grunt, cb) {
 	var fs = require("fs"),
-			path = require("path");
+		path = require("path");
 
 	var installExternalScripts = function () {
 		var installpath = path.join(process.cwd(), "project/static/js/libs/_install");
@@ -21,9 +21,24 @@ module.exports = function (grunt, cb) {
 					return exit("An error occurred while installing external libraries.");
 				}
 
-				return cleanupFiles(installpath);
+				return ignoreTests(installpath);
 			}
 		});
+	};
+
+	var ignoreTests = function (installpath) {
+		var ignorepath = path.join(process.cwd(), "project/static/js"),
+			ignorefile = path.join(ignorepath, ".jshintignore");
+
+		if (!fs.existsSync(ignorefile)) {
+			return exit();
+		}
+
+		var newcontent = fs.readFileSync(ignorefile).toString().trim();
+		newcontent += "\n" + "test" + "\n";
+
+		fs.writeFileSync(ignorefile, newcontent);
+		return cleanupFiles(installpath);
 	};
 
 	var cleanupFiles = function (installpath) {
