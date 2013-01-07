@@ -1,7 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    chunky_png (1.2.6)
+    chunky_png (1.2.7)
     compass (0.12.2)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
@@ -9,12 +9,12 @@ GEM
     fssm (0.2.9)
     oily_png (1.0.2)
       chunky_png (~> 1.2.1)
-    sass (3.2.0)
+    sass (3.2.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  compass (>= 0.12.2)
-  oily_png (>= 1.0.2)
-  sass (>= 3.2)
+  compass (= 0.12.2)
+  oily_png (= 1.0.2)
+  sass (= 3.2.5)
