@@ -57,6 +57,7 @@ module.exports = function (grunt) {
 			"env/**/*",
 			"robyn/**/*",
 			"node_modules/**/*",
+			"collected-static/**/*",
 			"resources/compass/gems/**/*",
 			".{git,sass-cache,robyn}/**/*",
 			"project/static/js/**/*.min.js",
