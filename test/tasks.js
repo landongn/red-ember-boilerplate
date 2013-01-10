@@ -248,6 +248,21 @@ describe("Default Tasks", function () {
 				.run(done);
 			});
 		});
+
+		it("grunt uninstall", function (done) {
+			grunt.spawn("uninstall")
+			.wait("Remove plugins with `grunt")
+			.expect("[*] Installed plugins:")
+			.run(function (err) {
+				if (err) {
+					done(err);
+				}
+
+				grunt.spawn("uninstall")
+				.wait("Done, without errors.")
+				.run(done);
+			});
+		});
 	});
 
 	describe("update", function () {
