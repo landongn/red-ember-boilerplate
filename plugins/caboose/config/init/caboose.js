@@ -73,6 +73,36 @@ module.exports = function (grunt, cb) {
 		installGems();
 	};
 
+	var removeCabooseTests = function () {
+		var fs = require("fs"),
+			path = require("path"),
+			wrench = require("wrench"),
+			testpath = path.join(process.cwd(), "resources/compass/test");
+
+		if (fs.existsSync(testpath)) {
+			wrench.rmdirSyncRecursive(testpath);
+		}
+
+		moveGemfileToRoot();
+	};
+
+	var moveHTCToImageDir = function () {
+		var fs = require("fs"),
+			path = require("path"),
+			file = "boxsizing.htc",
+			dirpath = path.join(process.cwd(), "resources/compass/images"),
+			htcpath = path.join(dirpath, file);
+
+		if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
+			copy(htcpath, path.join(process.cwd(), "project/static/img", file));
+
+			fs.unlinkSync(htcpath);
+			fs.rmdirSync(dirpath);
+		}
+
+		return removeCabooseTests();
+	};
+
 	var exit = function (error) {
 		if (cb) {
 			cb(error);
@@ -81,6 +111,6 @@ module.exports = function (grunt, cb) {
 		}
 	};
 
-	moveGemfileToRoot();
+	moveHTCToImageDir();
 
 };
