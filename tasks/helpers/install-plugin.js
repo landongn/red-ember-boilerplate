@@ -140,7 +140,7 @@ module.exports = function (grunt) {
 				return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
 			}).forEach(function (file) {
 				if (file.split(path.sep).indexOf(".git") === -1) {
-					newFile = file.replace(plug, path.join("../", scope)).replace(/\/\//g, "/");
+					newFile = file.replace(plugDir, path.join(process.cwd(), scope)).replace(/\/\//g, "/");
 					grunt.file.copy(file, newFile);
 
 					grunt.log.write(".".grey);
