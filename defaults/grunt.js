@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
 			var warn = [
 				"%s is not yet initialized".replace("%s", d),
-				"Run `git submodule update --init` to enable",
+				"Run `git submodule update .robyn --init`",
 				"Then try this command again."
 			].join("\n       ").trim();
 
