@@ -167,7 +167,8 @@ describe("Clone Check", function () {
 	it("Should initialize the robyn submodule", function (done) {
 		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
 			cwd: clone,
-			stripColors: true
+			stripColors: true,
+			verbose: true
 		})
 
 		.expect("registered for path '.robyn'")
