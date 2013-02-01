@@ -1,6 +1,6 @@
 before_install:
-  - git config user.email "bot@travis-ci.org"
-  - git config user.name "Travis CI"
+  - git config --global user.email "bot@travis-ci.org"
+  - git config --global user.name "Travis CI"
 language: node_js
 node_js:
   - 0.8
