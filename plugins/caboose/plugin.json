@@ -29,14 +29,13 @@
 		"replaceVars": false,
 		"requiredPaths": [
 			".bundle",
+			".bundle/gems"
 			"Gemfile",
-			"Gemfile.lock",
-			"resources/compass/gems"
+			"Gemfile.lock"
 		],
 		"excludedPaths": [
 			".bundle",
-			".sass-cache",
-			"resources/compass/gems"
+			".sass-cache"
 		]
 	}
 }
