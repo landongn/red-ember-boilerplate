@@ -108,8 +108,8 @@ module.exports = function (grunt) {
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
 
-							if (!warn || !warn.installedVersion) {
-								break;
+							if (!warn || (!warn.installedVersion && !warn.error)) {
+								continue;
 							}
 
 							console.warn([
