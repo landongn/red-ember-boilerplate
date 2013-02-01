@@ -52,7 +52,7 @@ module.exports = function (grunt) {
 					match[0] = newVer.join(".");
 				}
 
-				installed = semver.clean(match[0]);
+				installed = semver.clean(match[0]) || "0.0.0";
 				if (!semver.satisfies(installed, dep.version)) {
 					dep.installedVersion = installed;
 					warning = dep;
