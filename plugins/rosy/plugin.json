@@ -34,7 +34,7 @@
 		"update" : "./config/init/rosy.js"
 	},
 	"config": {
-		"scope": "project/static/js",
+		"scope": "project/source/js",
 		"replaceVars": true
 	}
 }

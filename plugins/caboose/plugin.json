@@ -25,7 +25,7 @@
 		"update" : "./config/init/caboose.js"
 	},
 	"config": {
-		"scope": "resources/compass",
+		"scope": "project/source",
 		"replaceVars": false,
 		"requiredPaths": [
 			".bundle",
