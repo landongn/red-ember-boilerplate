@@ -29,7 +29,7 @@
 		"replaceVars": false,
 		"requiredPaths": [
 			".bundle",
-			".bundle/gems"
+			".bundle/gems",
 			"Gemfile",
 			"Gemfile.lock"
 		],
