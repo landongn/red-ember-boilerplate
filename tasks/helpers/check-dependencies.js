@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 				if (~ err.toString().indexOf("No such file or directory")) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
 					warning = dep;
-				} else {
+				} else if (dep.version !== "*") {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
