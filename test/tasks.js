@@ -155,7 +155,8 @@ describe("Clone Check", function () {
 
 	it("Should clone the repository", function (done) {
 		nexpect.spawn("git", ["clone", "--local", test, clone], {
-			stripColors: true
+			stripColors: true,
+			verbose: true
 		})
 
 		.expect("Cloning into")
@@ -165,7 +166,7 @@ describe("Clone Check", function () {
 	});
 
 	it("Should initialize the robyn submodule", function (done) {
-		nexpect.spawn("git", ["submodule", "update", "--init"], {
+		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
 			cwd: clone,
 			stripColors: true,
 			verbose: true
