@@ -142,12 +142,14 @@ describe("Clone Check", function () {
 
 		nexpect.spawn("git", ["add", "--all"], {
 			cwd: test,
-			stripColors: true
+			stripColors: true,
+			verbose: true
 		})
 		.run(function () {
 			nexpect.spawn("git", ["commit", "-am", "."], {
 				cwd: test,
-				stripColors: true
+				stripColors: true,
+				verbose: true
 			})
 			.run(done);
 		});
