@@ -74,7 +74,7 @@ module.exports = function (grunt, cb) {
 		if (fs.existsSync(pkgPath)) {
 			var pkg = require(pkgPath),
 				wrench = require("wrench"),
-				testpath = path.join(cwd, pkg.config.scope, "scss/test");
+				testpath = path.join(cwd, pkg.config.scope, "test");
 
 			console.log(fs.existsSync(testpath));
 
@@ -90,7 +90,7 @@ module.exports = function (grunt, cb) {
 		if (fs.existsSync(pkgPath)) {
 			var pkg = require(pkgPath),
 				file = "boxsizing.htc",
-				dirpath = path.join(cwd, pkg.config.scope, "scss/images"),
+				dirpath = path.join(cwd, pkg.config.scope, "images"),
 				htcpath = path.join(dirpath, file);
 
 			if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
