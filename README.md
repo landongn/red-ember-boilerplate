@@ -5,7 +5,7 @@ A highly customizable bootstrapper to initialize common projects. Robyn allows y
 
 Robyn is highly extendable. It provides the bare essentials for you, but it is meant to be forked and extended based on your organization's needs.
 
-[![Build Status](https://secure.travis-ci.org/ff0000/robyn.png)](http://travis-ci.org/ff0000/robyn)
+[![Build Status](https://secure.travis-ci.org/ff0000/robyn.png?branch=develop)](http://travis-ci.org/ff0000/robyn)
 
 
 Installing Robyn
