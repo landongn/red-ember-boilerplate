@@ -47,7 +47,7 @@ module.exports = function (grunt, cb) {
 	var installGems = function () {
 		grunt.helper("spawn", {
 			cmd: "bundle",
-			args: ["install", "--path", ".bundle/gems"],
+			args: ["install", "--path", ".bundle"],
 			title: "Installing bundle. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
