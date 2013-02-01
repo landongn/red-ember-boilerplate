@@ -1,14 +1,22 @@
-/*global module:false*/
+/*jslint node: true */
+"use strict";
+
 module.exports = function (grunt) {
+
+	var fs = require("fs"),
+		path = require("path"),
+		rosy = require(path.join(__dirname, "../../rosy", "plugin.json")),
+		output = "project/static/js",
+		source = rosy.config.scope;
 
 	// Project configuration.
 	grunt.config.set("modernizr", {
 
 		// [REQUIRED] Path to the build you're using for development.
-		"devFile" : "project/static/js/libs/modernizr.js",
+		"devFile" : path.join(source, "libs/modernizr.js"),
 
 		// [REQUIRED] Path to save out the built file.
-		"outputFile" : "project/static/js/libs/modernizr.min.js",
+		"outputFile" : path.join(output, "libs/modernizr.min.js"),
 
 		// Based on default settings on http://modernizr.com/download/
 		"extra" : {
@@ -56,19 +64,18 @@ module.exports = function (grunt) {
 		"excludeFiles" : [
 			"env/**/*",
 			"robyn/**/*",
+			".bundle/**/*",
 			"node_modules/**/*",
+			"project/static/**/*",
 			"collected-static/**/*",
-			"resources/compass/gems/**/*",
-			".{git,sass-cache,robyn}/**/*",
-			"project/static/js/**/*.min.js",
-			"project/static/js/{libs,test}/**/*"
+			".{git,sass-cache,robyn}/**/*"
 		]
 	});
 
 	grunt.config.set("watch.modernizr", {
 		files: [
-			"project/static/js/**/*[^.min].js",
-			"resources/compass/{sass,scss}/**/*.scss"
+			path.join(source, "**/*[^.min].js"),
+			path.join(source, "../{sass,scss}", "**/*.scss")
 		],
 		tasks: ["modernizr"]
 	});
