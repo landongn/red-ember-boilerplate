@@ -53,6 +53,7 @@ build/config/buildinfo.properties
 #Mr Developer
 .mr.developer.cfg
 
-# Robin
+# Robyn
 node_modules
 robyn-local.json
+project/static
