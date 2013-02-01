@@ -142,14 +142,12 @@ describe("Clone Check", function () {
 
 		nexpect.spawn("git", ["add", "--all"], {
 			cwd: test,
-			stripColors: true,
-			verbose: true
+			stripColors: true
 		})
 		.run(function () {
 			nexpect.spawn("git", ["commit", "-am", "."], {
 				cwd: test,
-				stripColors: true,
-				verbose: true
+				stripColors: true
 			})
 			.run(done);
 		});
@@ -157,8 +155,7 @@ describe("Clone Check", function () {
 
 	it("Should clone the repository", function (done) {
 		nexpect.spawn("git", ["clone", "--local", test, clone], {
-			stripColors: true,
-			verbose: true
+			stripColors: true
 		})
 
 		.expect("Cloning into")
@@ -170,8 +167,7 @@ describe("Clone Check", function () {
 	it("Should initialize the robyn submodule", function (done) {
 		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
 			cwd: clone,
-			stripColors: true,
-			verbose: true
+			stripColors: true
 		})
 
 		.expect("registered for path '.robyn'")
