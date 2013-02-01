@@ -3,7 +3,7 @@ RED Boilerplate
 
 RED Interactive's custom Robyn boilerplate.
 
-[![Build Status](https://secure.travis-ci.org/ff0000/red-boilerplate.png)](http://travis-ci.org/ff0000/red-boilerplate)
+[![Build Status](https://secure.travis-ci.org/ff0000/red-boilerplate.png?branch=master,develop)](http://travis-ci.org/ff0000/red-boilerplate)
 
 
 Installing Robyn
