@@ -1,11 +1,15 @@
+/*jslint node: true */
+"use strict";
+
 module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		scope = path.join("project", "static", "js"),
+		rosy = require(path.join(__dirname, "../plugin.json")),
+		source = rosy.config.scope,
 		jshint = require("jshint").JSHINT;
 
-	var FILES = path.join(scope, "**/*[^.min].js");
+	var FILES = path.join(source, "**/*[^.min].js");
 
 	function pad(str, len, padChar) {
 
@@ -35,7 +39,7 @@ module.exports = function (grunt) {
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
-		var jshintOptions = grunt.file.readJSON(path.join(scope, ".jshintrc"));
+		var jshintOptions = grunt.file.readJSON(path.join(source, ".jshintrc"));
 
 		if (mode === "browser") {
 			jshintOptions.node = false;
@@ -45,7 +49,7 @@ module.exports = function (grunt) {
 
 		var hasErrors = false;
 
-		var exclude = grunt.file.read(path.join(scope, ".jshintignore")).trim().split("\n");
+		var exclude = grunt.file.read(path.join(source, ".jshintignore")).trim().split("\n");
 		var files = grunt.file.expandFiles(FILES).filter(function (file) {
 			return exclude.every(function (x) {
 				x = x.replace(/\./g, "\\.");
