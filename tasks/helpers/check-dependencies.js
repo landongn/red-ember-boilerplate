@@ -15,6 +15,11 @@ module.exports = function (grunt) {
 		}, function (err, result, code) {
 			var data = result.toString();
 
+			// SPECIAL CASING PNGCRUSH BECAUSE THEY CAN'T FOLLOW SPEC
+			if (dep.bin === "pngcrush") {
+				err = null;
+			}
+
 			if (err) {
 				if (~ err.toString().indexOf("No such file or directory")) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
