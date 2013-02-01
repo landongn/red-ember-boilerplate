@@ -165,14 +165,20 @@ describe("Clone Check", function () {
 	});
 
 	it("Should initialize the robyn submodule", function (done) {
-		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
+		nexpect.spawn("git", ["submodule", "init", ".robyn"], {
 			cwd: clone,
 			stripColors: true,
 			verbose: true
-		})
+		}).run(function (err) {
+			nexpect.spawn("git", ["submodule", "update", ".robyn"], {
+				cwd: clone,
+				stripColors: true,
+				verbose: true
+			})
 
-		.expect("registered for path '.robyn'")
-		.run(done);
+			.expect("registered for path '.robyn'")
+			.run(done);
+		});
 	});
 
 	it("Should run the default grunt task", function (done) {
