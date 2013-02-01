@@ -15,6 +15,11 @@ module.exports = function (grunt) {
 		}, function (err, result, code) {
 			var data = result.toString();
 
+			// SPECIAL CASING PNGCRUSH BECAUSE THEY CAN'T FOLLOW SPEC
+			if (dep.bin === "pngcrush") {
+				err = null;
+			}
+
 			if (err) {
 				if (~ err.toString().indexOf("No such file or directory")) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
@@ -47,7 +52,7 @@ module.exports = function (grunt) {
 					match[0] = newVer.join(".");
 				}
 
-				installed = semver.clean(match[0]);
+				installed = semver.clean(match[0]) || "0.0.0";
 				if (!semver.satisfies(installed, dep.version)) {
 					dep.installedVersion = installed;
 					warning = dep;
