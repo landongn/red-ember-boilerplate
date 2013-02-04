@@ -16,6 +16,7 @@ module.exports = function (grunt) {
 			images_dir: path.join(output, "img"),
 			fonts_dir: path.join(output, "fonts"),
 			javascripts_dir: path.join(output, "js"),
+			generated_images_dir: [path.join(output, "img", "sprites")],
 			additional_import_paths: [path.join(source, "scss/caboose")],
 			output_style: ":expanded",
 			line_comments: true,
