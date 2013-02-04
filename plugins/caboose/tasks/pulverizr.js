@@ -4,8 +4,8 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
+		cwd = process.cwd(),
 		caboose = require(path.join(__dirname, "../plugin.json")),
-		output = path.join(process.cwd(), "project/static/img"),
 		source = path.join(caboose.config.scope, "img");
 
 	function getKBs(val) {
@@ -22,12 +22,15 @@ module.exports = function (grunt) {
 		return str + spacer;
 	}
 
-	grunt.registerTask("pulverizr", "Crunch your images", function () {
-		var done = this.async(),
-			pulverizr = require("pulverizr"),
-			wrench = require("wrench");
+	var timeSince = new Date().getTime();
 
-		console.log(this, arguments);
+	grunt.registerTask("pulverizr", "Crunch your images", function (watch) {
+		var done = this.async(),
+			output = path.join(cwd, "project/static/img"),
+			pulverizr = require("pulverizr"),
+			wrench = require("wrench"),
+			options = {},
+			modifiedFiles;
 
 		// Stop if no images found
 		if (!fs.existsSync(source)) {
@@ -35,15 +38,53 @@ module.exports = function (grunt) {
 		}
 
 		// Make sure parent directory exists
-		wrench.mkdirSyncRecursive(output);
+		if (!fs.existsSync(path.join(cwd, output))) {
+			wrench.mkdirSyncRecursive(path.join(cwd, output));
+		}
 
-		// Pristine copy
-		wrench.copyDirSyncRecursive(source, output);
+		if (watch) {
+			modifiedFiles = wrench.readdirSyncRecursive(source).filter(function (img) {
+				var stats = fs.statSync(path.join(source, img));
+				var isImage = stats.isFile() && (/\.(gif|png|jp(e)?g)/).test(img);
+				return isImage && stats.ctime.getTime() > timeSince;
+			});
+
+			var staticFiles = modifiedFiles.map(function (img) {
+				return path.join(output, img);
+			});
+
+			modifiedFiles = modifiedFiles.map(function (img) {
+				return path.join(source, img);
+			});
+
+			// Pristine copy
+			for (var i = 0, j = modifiedFiles.length; i < j; i++) {
+				var img = modifiedFiles[i];
+				var copy = staticFiles[i];
+
+				grunt.helper("writeln", ("Changes in " + img).yellow);
+
+				var content = fs.readFileSync(img);
+
+				if (!fs.existsSync(path.dirname(copy))) {
+					wrench.mkdirSyncRecursive(path.dirname(copy));
+				}
+
+				fs.writeFileSync(copy, content);
+
+				grunt.helper("writeln", "");
+			}
+
+			output = staticFiles;
+		} else {
+			wrench.copyDirSyncRecursive(source, output);
+
+			output = [output];
+			options.recursive = true;
+		}
 
 		// Start Pulverizr
-		var job = pulverizr.createJob([output], {
-			recursive : true
-		});
+		var job = pulverizr.createJob(output, options);
 
 		job.on("start", function () {
 			grunt.helper("writeln", "Starting optimizations...".grey);
@@ -51,7 +92,7 @@ module.exports = function (grunt) {
 		});
 
 		job.on("compression", function (data) {
-			grunt.helper("writeln", getKBs(data.oldSize - data.newSize).cyan + data.filename.replace(process.cwd() + "/", "").grey);
+			grunt.helper("writeln", getKBs(data.oldSize - data.newSize).cyan + data.filename.replace(cwd + "/", "").grey);
 		});
 
 		job.on("error-compression", function (err) {
@@ -63,7 +104,7 @@ module.exports = function (grunt) {
 				error = error.split("\n");
 				error.forEach(function (line) {
 					if (line) {
-						console.error(line.red);
+						grunt.helper("writeln", line.red);
 					}
 				});
 			}
@@ -74,19 +115,22 @@ module.exports = function (grunt) {
 		});
 
 		job.on("finish", function (report) {
-			grunt.helper("writeln", "");
-			grunt.helper("writeln", ("Scanned " + report.fileCount + " files").cyan);
-			grunt.log.ok((" Saved " + Math.ceil((report.size.start - report.size.end) / 1024) + "kb").cyan);
+			setTimeout(function () {
+				grunt.helper("writeln", "");
+				grunt.helper("writeln", ("Scanned " + report.fileCount + " files").cyan);
+				grunt.log.ok((" Saved " + Math.ceil((report.size.start - report.size.end) / 1024) + "kb").cyan);
 
-			done();
+				timeSince = new Date().getTime();
+				done();
+			}, 100);
 		});
 
 		job.run();
 	});
 
 	grunt.config.set("watch.pulverizr", {
-		files : [path.join(source, "**/*.{gif,png,jpeg,jpg,webm}")],
-		tasks : ["pulverizr"]
+		files : [path.join(source, "**/*.{gif,png,jpeg,jpg}")],
+		tasks : ["pulverizr:watch"]
 	});
 
 	grunt.config.set("build.pulverizr", ["pulverizr"]);
