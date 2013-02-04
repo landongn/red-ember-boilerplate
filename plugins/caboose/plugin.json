@@ -7,7 +7,7 @@
 		"url": "https://github.com/ff0000/caboose.git"
 	},
 	"dependencies": {
-		"pulverizr": "~0.7.x"
+		"grunt-img": "~0.1.4"
 	},
 	"systemDependencies": {
 		"ruby": {
@@ -21,25 +21,15 @@
 			"install": "gem install bundler",
 			"upgrade": "gem update bundler"
 		},
-		"gifsicle": {
-			"version": ">= 1.58.0",
-			"install": "brew install gifsicle",
-			"upgrade": "brew update && brew upgrade gifsicle"
-		},
 		"jpegtran": {
 			"version": "*",
-			"install": "brew install libjpeg",
-			"upgrade": "brew update && brew upgrade libjpeg"
+			"install": "brew install jpeg",
+			"upgrade": "brew update && brew upgrade jpeg"
 		},
 		"optipng": {
 			"version": ">= 0.6.3",
 			"install": "brew install optipng",
 			"upgrade": "brew update && brew upgrade optipng"
-		},
-		"pngcrush": {
-			"version": ">= 1.7.0",
-			"install": "brew install pngcrush",
-			"upgrade": "brew update && brew upgrade pngcrush"
 		}
 	},
 	"scripts": {
