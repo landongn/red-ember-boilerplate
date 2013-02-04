@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 		var done = this.async();
 		var wrench = require("wrench");
 
-		// Remove old files
+		// Replace old files
 		wrench.copyDirSyncRecursive(source, output);
 		done();
 	});
