@@ -7,24 +7,34 @@ module.exports = function (grunt) {
 		cwd = process.cwd(),
 		caboose = require(path.join(__dirname, "../plugin.json")),
 		source = path.join(caboose.config.scope, "img"),
-		output = path.join(cwd, "project/static/img");
+		output = path.join("project/static/img");
 
 	grunt.config.set("img", {
 		dev : {
-			src: source,
-			dest: output
+			src: path.join(output, "**", "*.{png,jpeg,jpg}")
 		},
 
 		prod: {
-			src: source,
-			dest: output
+			src: path.join(output, "**", "*.{png,jpeg,jpg}")
 		}
+	});
+
+	grunt.registerTask("img:prebuild", function () {
+		var done = this.async();
+		var wrench = require("wrench");
+
+		// Remove old files
+		wrench.copyDirSyncRecursive(source, output);
+		done();
 	});
 
 	grunt.config.set("watch.img", {
 		files : [path.join(source, "**/*.{gif,png,jpeg,jpg}")],
-		tasks : ["img:dev"]
+		tasks : ["img:prebuild"]
 	});
 
-	grunt.config.set("build.img", ["img:prod"]);
+	grunt.config.set("build.img", ["img:prebuild", "img:prod"]);
+
+	// Load task
+	grunt.loadNpmTasks("grunt-img");
 };
