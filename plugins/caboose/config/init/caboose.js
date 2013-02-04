@@ -76,8 +76,6 @@ module.exports = function (grunt, cb) {
 				wrench = require("wrench"),
 				testpath = path.join(cwd, pkg.config.scope, "test");
 
-			console.log(fs.existsSync(testpath));
-
 			if (fs.existsSync(testpath)) {
 				wrench.rmdirSyncRecursive(testpath);
 			}
