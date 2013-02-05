@@ -23,8 +23,32 @@ module.exports = function (grunt) {
 		var done = this.async();
 		var wrench = require("wrench");
 
+		if (!fs.existsSync(output)) {
+			wrench.mkdirSyncRecursive(output);
+		}
+
 		// Replace old files
-		wrench.copyDirSyncRecursive(source, output);
+		var topLevelDirs = grunt.file.expand(path.join(source, "*")).filter(function (dir) {
+			return dir.indexOf("sprites") === -1;
+		});
+
+		for (var i = 0, j = topLevelDirs.length; i < j; i++) {
+			var dir = topLevelDirs[i];
+
+			if (!fs.existsSync(dir)) {
+				continue;
+			}
+
+			var stats = fs.statSync(dir);
+			var newPath = dir.replace(source, output);
+
+			if (stats.isFile()) {
+				grunt.file.copy(dir, newPath);
+			} else {
+				wrench.copyDirSyncRecursive(dir, newPath);
+			}
+		}
+
 		done();
 	});
 
