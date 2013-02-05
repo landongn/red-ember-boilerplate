@@ -59,6 +59,7 @@ module.exports = {
 			.expect("[*] Stored and updated your project variables.")
 
 			.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
+			.expect("    Installing npm packages").wait("OK")
 			.expect("    Cloning repository").wait("OK")
 			.expect("    Copying files into project").wait("OK")
 			.expect("    Installing bundle. This may take a minute").wait("OK")
