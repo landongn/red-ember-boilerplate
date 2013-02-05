@@ -20,7 +20,6 @@ module.exports = function (grunt) {
 		var fs = require("fs");
 		var cwd = process.cwd();
 
-		var done = this.async();
 		var wrench = require("wrench");
 		var files = this.data;
 
