@@ -9,16 +9,32 @@ module.exports = function (grunt) {
 		var path = require("path");
 		var cwd = process.cwd() + path.sep;
 
-		var wrench = require("wrench");
-		var files = this.data;
+		var data = this.data;
 
-		for (var i = 0, j = files.length; i < j; i++) {
-			var current = files[i].src;
-			var dest = files[i].dest;
+		var exclude = [
+			"**/test/**/*"
+		];
 
-			if (fs.existsSync(current)) {
-				grunt.helper("writeln", ("Copying " + current.replace(cwd, "") + " to " + dest.replace(cwd, "")).grey);
-				wrench.copyDirSyncRecursive(current, dest);
+		for (var i = 0, j = data.length; i < j; i++) {
+			var src = data[i].src;
+			var dest = data[i].dest;
+
+			var wildcard = src;
+
+			if (fs.existsSync(src) && fs.statSync(src).isDirectory() && src.indexOf("*") === -1) {
+				wildcard = path.join(src, "**", "*");
+			}
+
+			var files = grunt.file.expandFiles(wildcard);
+
+			for (var k = 0, l = files.length; k < l; k++) {
+				var file = files[k];
+
+				if (fs.existsSync(file) && !grunt.file.isMatch(exclude, file)) {
+					grunt.helper("writeln", (file.replace(src, dest)).grey);
+
+					grunt.file.copy(file, file.replace(src, dest));
+				}
 			}
 		}
 	});
