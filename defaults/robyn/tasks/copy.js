@@ -30,12 +30,12 @@ module.exports = function (grunt) {
 		}]
 	});
 
-	grunt.config.set("build.copy", ["copy:prod"]);
-
 	grunt.config.set("watch.copy", {
 		files : grunt.config.get("copy").dev.map(function (obj) {
 			return path.join(obj.src, "**", "*");
 		}),
 		tasks : ["copy:dev:soft"]
 	});
+
+	grunt.config.set("build.copy", ["copy:prod"]);
 };
