@@ -6,7 +6,8 @@ module.exports = function (grunt) {
 		this.requiresConfig("copy");
 
 		var fs = require("fs");
-		var cwd = process.cwd() + "/";
+		var path = require("path");
+		var cwd = process.cwd() + path.sep;
 
 		var wrench = require("wrench");
 		var files = this.data;
