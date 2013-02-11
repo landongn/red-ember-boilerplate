@@ -36,6 +36,6 @@ module.exports = function (grunt) {
 		files : grunt.config.get("copy").dev.map(function (obj) {
 			return path.join(obj.src, "**", "*");
 		}),
-		tasks : ["copy:dev"]
+		tasks : ["copy:dev:soft"]
 	});
 };

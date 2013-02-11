@@ -2,7 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerMultiTask("copy", "Copy source files to static dir.", function () {
+	var timestamp = new Date().getTime();
+
+	grunt.registerMultiTask("copy", "Copy source files to static dir.", function (soft) {
 		this.requiresConfig("copy");
 
 		var fs = require("fs");
@@ -31,12 +33,19 @@ module.exports = function (grunt) {
 				var file = files[k];
 
 				if (fs.existsSync(file) && !grunt.file.isMatch(exclude, file)) {
-					grunt.helper("writeln", (file.replace(src, dest)).grey);
+					var stats = fs.statSync(file);
 
+					if (!!soft && new Date(stats.ctime).getTime() < timestamp) {
+						continue;
+					}
+
+					grunt.helper("writeln", (file.replace(src, dest)).grey);
 					grunt.file.copy(file, file.replace(src, dest));
 				}
 			}
 		}
+
+		timestamp = new Date().getTime();
 	});
 
 };
