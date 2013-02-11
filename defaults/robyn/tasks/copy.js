@@ -4,6 +4,8 @@ module.exports = function (grunt) {
 
 	var path = require("path");
 
+	// By default, dev / prod are the same
+	// Feel free to customize to your needs
 	grunt.config.set("copy", {
 		dev: [{
 			src: "project/source/local",
