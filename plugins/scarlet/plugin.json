@@ -1,12 +1,12 @@
 {
 	"name": "scarlet",
-	"description": "Scarlet is a something something",
+	"description": "Scarlet is a xxx",
 	"version": "0.0.1",
 	"scripts" : {
-        "install": "./config/init/scarlet.js"
+		"install": "./config/init/scarlet.js"
 	},
 	"config": {
-		"admin_path": "scarlet/scarlet/cms/",
+		"admin_path": ["scarlet","scarlet", "cms"],
 		"repo": "git@github.com:ff0000/scarlet.git"
 	}
 }

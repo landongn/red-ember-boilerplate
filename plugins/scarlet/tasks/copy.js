@@ -1,23 +1,23 @@
 /*jshint node:true*/
 module.exports = function (grunt) {
 	"use strict";
-    var config = require('../plugin.json').config
-    var path = require('path');
+	var path = require('path');
+	var paths = require('./utils/paths');
 
 	// By default, dev / prod are the same
 	// Feel free to customize to your needs
 	grunt.config.set("copy.admin", [
-        {
-	        src: config.admin_path + "source/fonts",
-	        dest: config.admin_path + "static/scarlet/fonts"
-        }, {
-	        src: config.admin_path + "source/js",
-	        dest: config.admin_path + "static/scarlet/js"
-    	}, {
-	        src: config.admin_path + "source/img",
-	        dest: config.admin_path + "static/scarlet/img"
-    	}
-    ]);
+		{
+			src: path.join(paths.source_path, "fonts"),
+			dest: path.join(paths.static_path, "fonts")
+		}, {
+			src: path.join(paths.source_path, "js"),
+			dest: path.join(paths.static_path, "js")
+		}, {
+			src: path.join(paths.source_path, "img"),
+			dest: path.join(paths.static_path, "img")
+		}
+	]);
 
 	grunt.config.set("watch.copy_admin", {
 		files : grunt.config.get("copy").admin.map(function (obj) {

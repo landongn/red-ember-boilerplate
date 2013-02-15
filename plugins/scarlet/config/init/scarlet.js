@@ -2,7 +2,11 @@
 "use strict";
 
 module.exports = function (grunt, cb) {
-    var config = require('../../plugin.json').config
+	var config = require('../../plugin.json').config;
+	var cwd = process.cwd();
+	var path = require("path");
+	var fs = require("fs");
+
 	var runSetup = function () {
 		grunt.helper("spawn", {
 			cmd: "git",
@@ -12,30 +16,22 @@ module.exports = function (grunt, cb) {
 				if (code !== 0) {
 					return exit("Something went wrong while adding the submodule");
 				}
-                grunt.helper("spawn", {
-			                cmd: "git",
-			                args: ["submodule", "update"],
-			                title: "Update submodule",
-		                });
+				grunt.helper("spawn", {
+							cmd: "git",
+							args: ["submodule", "update", "--init", "scarlet"],
+							title: "Update submodule"
+					});
 				return exit();
 			}
 		});
 	};
 
 	var checkInstall = function () {
-
-		grunt.helper("spawn", {
-			cmd: "grep",
-			args: ["scarlet", ".gitmodules"],
-			title: "Checking for scarlet submodule",
-			complete: function (code) {
-				if (code !== 1) {
-					return exit("The scarlet submodule is already present");
-				} else {
-                    runSetup();
-                }
-			}
-		});
+		if (fs.existsSync(path.join(cwd, "scarlet"))) {
+			return exit("A scarlet directory is already present");
+		} else {
+			runSetup();
+		}
 	};
 
 	var exit = function (error) {
@@ -47,5 +43,4 @@ module.exports = function (grunt, cb) {
 	};
 
 	checkInstall();
-
 };

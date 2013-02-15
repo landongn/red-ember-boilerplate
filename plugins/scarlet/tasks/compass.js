@@ -1,29 +1,26 @@
 /*jshint node:true*/
 module.exports = function (grunt) {
 	"use strict";
-    var fs = require('fs');
-    var base_source = 'project/source/'
-    if (fs.existsSync(base_source)) {
-    } else {
-        base_source = 'resources/'
-    }
-    var config = require('../plugin.json').config
+	var paths = require('./utils/paths');
+	var path = require('path');
 
 	// Config options
 	grunt.config.set("compass.admin", {
 		http_path: "/",
-		sass_dir: config.admin_path + "source/compass/scss/admin",
-		css_dir: config.admin_path + "static/scarlet/css",
-		images_dir: config.admin_path + "static/scarlet/img",
-		fonts_dir: config.admin_path + "static/scarlet/fonts",
-		javascripts_dir: config.admin_path + "scarlet/static/js",
-		additional_import_paths: [base_source + "compass/scss/caboose"],
-		output_style: ":expanded",
+		sass_dir: path.join(paths.source_path_rel, "compass", "scss", "admin"),
+		css_dir: path.join(paths.static_path_rel, "css"),
+		images_dir: path.join(paths.static_path_rel, "img"),
+		fonts_dir: path.join(paths.static_path_rel, "fonts"),
+		javascripts_dir: path.join(paths.static_path_rel, "js"),
+		additional_import_paths: [
+			path.join(paths.base_source, "compass","scss","caboose")
+		],
+		output_style: ":compressed",
 		line_comments: true,
 		relative_assets: true,
 		bundle_exec: true,
 		force_compile: true
-    });
+});
 
-    grunt.config.set("build.compass_admin", ['compass:admin']);
+	grunt.config.set("build.compass_admin", ['compass:admin']);
 };
