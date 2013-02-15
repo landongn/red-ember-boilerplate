@@ -4,6 +4,12 @@ module.exports = function (grunt) {
 	var path = require('path');
 	var paths = require('./utils/paths');
 
+	var copy = grunt.config.get("copy");
+
+	if (!copy) {
+		return;
+	}
+
 	// By default, dev / prod are the same
 	// Feel free to customize to your needs
 	grunt.config.set("copy.admin", [
