@@ -13,14 +13,14 @@ module.exports = function (grunt) {
 		fonts_dir: path.join(paths.static_path_rel, "fonts"),
 		javascripts_dir: path.join(paths.static_path_rel, "js"),
 		additional_import_paths: [
-			path.join(paths.base_source, "compass","scss","caboose")
+			path.join(paths.base_source, "compass", "scss", "caboose")
 		],
 		output_style: ":compressed",
 		line_comments: true,
 		relative_assets: true,
 		bundle_exec: true,
 		force_compile: true
-});
+	});
 
 	grunt.config.set("build.compass_admin", ['compass:admin']);
 };

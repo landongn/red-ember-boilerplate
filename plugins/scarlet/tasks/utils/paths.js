@@ -6,7 +6,7 @@ var path = require('path');
 var fs = require('fs');
 
 var admin_path = null;
-for (i=0; i<config.admin_path.length; i++) {
+for (var i = 0; i < config.admin_path.length; i++) {
 	admin_path = path.join(admin_path, config.admin_path[i]);
 }
 

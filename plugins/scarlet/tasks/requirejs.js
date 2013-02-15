@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 	// Project configuration.
 	grunt.config.set("requirejs.admin", {
 		options : {
-			mainConfigFile : path.join(paths.source_path, "js","config.js"),
+			mainConfigFile : path.join(paths.source_path, "js", "config.js"),
 			urlArgs : null,
 			include : ["config.js"],
 			paths : {
