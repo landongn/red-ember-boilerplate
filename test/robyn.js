@@ -80,6 +80,11 @@ module.exports = {
 			.expect("    Copying files into project").wait("OK")
 			.expect("    Installing external libraries").wait("OK")
 
+			.expect("[+] Installing scarlet via .robyn/plugins/scarlet")
+			.expect("    Copying files into project").wait("OK")
+			.expect("    Adding scarlet as a submodule").wait("OK")
+			.expect("    Update submodule").wait("OK")
+
 			.expect("[+] Installing statix via .robyn/plugins/statix")
 			.expect("    Copying files into project").wait("OK")
 
