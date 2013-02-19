@@ -8,7 +8,7 @@ before_install:
   - sudo easy_install virtualenv
   - sudo pip install red-start
   # Node
-- npm install statix -g
+  - npm install statix -g
 language: node_js
 node_js:
   - 0.8
