@@ -142,13 +142,11 @@ describe("Clone Check", function () {
 
 		nexpect.spawn("git", ["add", "--all"], {
 			cwd: test,
-			verbose: true,
 			stripColors: true
 		})
 		.run(function () {
 			nexpect.spawn("git", ["commit", "-am", "."], {
 				cwd: test,
-				verbose: true,
 				stripColors: true
 			})
 			.run(done);
@@ -178,8 +176,7 @@ describe("Clone Check", function () {
 
 	it("Should run the default grunt task", function (done) {
 		grunt.spawn("", {
-			cwd: clone,
-			verbose: true
+			cwd: clone
 		})
 
 		.wait('Running "default" task')

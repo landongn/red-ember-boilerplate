@@ -21,7 +21,7 @@ describe("Modernizr Tasks", function () {
 
 		.expect('Looking for Modernizr references')
 
-		.expect('Downloading source files')
+		.wait('Downloading source files')
 		.expect(asyncFileDetect)
 		.expect(asyncFileDetect)
 

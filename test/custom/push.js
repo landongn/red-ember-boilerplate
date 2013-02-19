@@ -9,7 +9,7 @@ describe("Push Task", function () {
 
 	it("grunt push", function (done) {
 		grunt.spawn("push")
-		.expect('Running "push" task')
+		.wait('Running "push" task')
 		.wait("Aborted due to warnings.")
 		.run(done);
 	});
