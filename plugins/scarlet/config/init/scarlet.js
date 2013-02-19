@@ -2,7 +2,7 @@
 "use strict";
 
 module.exports = function (grunt, cb) {
-	var config = require('../../plugin.json').config;
+	var config = require("../../plugin.json").config;
 	var cwd = process.cwd();
 	var path = require("path");
 	var fs = require("fs");
@@ -17,10 +17,10 @@ module.exports = function (grunt, cb) {
 					return exit("Something went wrong while adding the submodule");
 				}
 				grunt.helper("spawn", {
-							cmd: "git",
-							args: ["submodule", "update", "--init", "scarlet"],
-							title: "Update submodule"
-					});
+					cmd: "git",
+					args: ["submodule", "update", "--init", "scarlet"],
+					title: "Update submodule"
+				});
 				return exit();
 			}
 		});
