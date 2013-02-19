@@ -16,12 +16,15 @@ module.exports = function (grunt, cb) {
 				if (code !== 0) {
 					return exit("Something went wrong while adding the submodule");
 				}
+
 				grunt.helper("spawn", {
 					cmd: "git",
 					args: ["submodule", "update", "--init", "scarlet"],
-					title: "Update submodule"
+					title: "Update submodule",
+					complete: function (code) {
+						return exit();
+					}
 				});
-				return exit();
 			}
 		});
 	};
