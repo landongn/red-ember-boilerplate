@@ -1,16 +1,15 @@
 before_install:
   - git config --global user.email "bot@travis-ci.org"
   - git config --global user.name "Travis CI"
+  - sudo apt-get update
+  # Ruby
+  - sudo gem install bundler
+  # Python
+  - sudo easy_install virtualenv
+  - sudo pip install red-start
+  # Node
+- npm install statix -g
 language: node_js
 node_js:
   - 0.8
   - 0.9
-before_install:
-- sudo apt-get update
-# Ruby
-- sudo gem install bundler
-# Python
-- sudo easy_install virtualenv
-- sudo pip install red-start
-# Node
-- npm install statix -g
