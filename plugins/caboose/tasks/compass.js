@@ -16,7 +16,22 @@ module.exports = function (grunt) {
 			line_comments: true,
 			relative_assets: true,
 			bundle_exec: true,
-			force_compile: true
+			force_compile: true,
+
+			// Extra config options
+			extras: {
+
+				// Gems?
+				// require: ["susy", "stitch"],
+
+				// Additional import paths?
+				// add_import_path: "",
+
+				// Bust the cache?
+				// asset_cache_buster: ":none"
+
+			}
+
 		},
 		prod: {
 			http_path: "<config:compass.dev.http_path>",

@@ -31,8 +31,12 @@ module.exports = function (grunt) {
 		var path = require("path");
 		var fs = require("fs");
 		var data = this.data;
+
+		// Custom params
 		var force = data.force_compile;
 		var bundle = data.bundle_exec;
+		var extras = data.extras;
+
 		var tmp = [process.pid, "compass", new Date().getTime()].join("-");
 		var cmd = bundle ? "bundle" : "compass";
 		var args = [watch ? "watch" : "compile"];
@@ -40,6 +44,7 @@ module.exports = function (grunt) {
 		// Delete custom properties
 		delete data.bundle_exec;
 		delete data.force_compile;
+		delete data.extras;
 
 		var config = {
 			// Build temp config path
@@ -48,12 +53,32 @@ module.exports = function (grunt) {
 			// Build config text, array => string conversion, etc
 			rb : (function () {
 				var lines = [],
-					value, key;
+					value, key,
+					extra, i, j;
 
 				for (key in data) {
 					if (data[key] !== null && typeof data[key] !== "undefined") {
-						value = stringify(data[key]);
-						lines.push(key + " = " + value);
+						if (data[key]) {
+							value = stringify(data[key]);
+							lines.push(key + " = " + value);
+						}
+					}
+				}
+
+				if (extras) {
+					for (key in extras) {
+						extra = extras[key];
+
+						if (!Array.isArray(extra)) {
+							extra = [extra];
+						}
+
+						for (i = 0, j = extra.length; i < j; i++) {
+							if (extra[i]) {
+								value = stringify(extra[i]);
+								lines.push(key + " " + value);
+							}
+						}
 					}
 				}
 
