@@ -1,9 +1,9 @@
 {
 	"name": "modernizr",
 	"description": "Build out a lean, mean Modernizr machine.",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"dependencies": {
-		"grunt-modernizr": ">=0.1.x"
+		"grunt-modernizr": "~0.2.x"
 	},
 	"systemDependencies": {
 		"node": {
