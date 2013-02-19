@@ -7,10 +7,12 @@ module.exports = function (grunt, cb) {
 	var path = require("path");
 	var fs = require("fs");
 
+	var scarletDir = "scarlet";
+
 	var runSetup = function () {
 		grunt.helper("spawn", {
 			cmd: "git",
-			args: ["submodule", "add", config.repo, "scarlet"],
+			args: ["submodule", "add", config.repo, scarletDir],
 			title: "Adding scarlet as a submodule",
 			complete: function (code) {
 				if (code !== 0) {
@@ -19,7 +21,7 @@ module.exports = function (grunt, cb) {
 
 				grunt.helper("spawn", {
 					cmd: "git",
-					args: ["submodule", "update", "--init", "scarlet"],
+					args: ["submodule", "update", "--init", scarletDir],
 					title: "Update submodule",
 					complete: function (code) {
 						return exit();
@@ -30,8 +32,15 @@ module.exports = function (grunt, cb) {
 	};
 
 	var checkInstall = function () {
-		if (fs.existsSync(path.join(cwd, "scarlet"))) {
-			return exit("A scarlet directory is already present");
+		if (fs.existsSync(path.join(cwd, scarletDir))) {
+			grunt.helper("spawn", {
+				cmd: "git",
+				args: ["submodule", "update", "--init", scarletDir],
+				title: "Update submodule",
+				complete: function (code) {
+					return exit();
+				}
+			});
 		} else {
 			runSetup();
 		}
