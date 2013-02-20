@@ -15,14 +15,19 @@ module.exports = {
 				wrench.rmdirSyncRecursive(test);
 			}
 
-			nexpect.spawn("git", [
-				"rev-parse",
-				"--abbrev-ref",
-				"HEAD"
-			]).run(function (err, result) {
+			nexpect.spawn("git", ["status"]).run(function (err, result) {
+				var str = (result || "").toString();
+				str = str.match(/On branch ([\w]+)/);
+
+				var branch = "master";
+
+				if (str && str[1]) {
+					branch = str[1].toString().trim();
+				}
+
 				nexpect.spawn("robyn", [
 					"init", "robyn-test", test,
-					"--branch", (result.toString() || "master").trim(),
+					"--branch", branch,
 					"--name", "robynTest",
 					"--title", "Robyn Test",
 					"--all"
