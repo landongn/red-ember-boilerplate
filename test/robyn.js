@@ -16,14 +16,21 @@ module.exports = {
 			}
 
 			nexpect.spawn("git", [
-				"rev-parse",
-				"--abbrev-ref",
-				"HEAD"
+				"status"
 			]).run(function (err, result) {
 				console.log(result);
+
+				var branch = "master";
+
+				var str = (result || "").toString().match(/On branch ([\w]+)/);
+
+				if (str && str[1]) {
+					branch = str[1];
+				}
+
 				nexpect.spawn("robyn", [
 					"init", "robyn-test", test,
-					"--branch", (result.toString() || "master").trim(),
+					"--branch", branch,
 					"--name", "robynTest",
 					"--title", "Robyn Test",
 					"--all"
