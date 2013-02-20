@@ -22,7 +22,7 @@ module.exports = {
 			]).run(function (err, result) {
 				nexpect.spawn("robyn", [
 					"init", "robyn-test", test,
-					"--branch", (result.trim() || "master").toString(),
+					"--branch", (result.toString() || "master").trim(),
 					"--name", "robynTest",
 					"--title", "Robyn Test",
 					"--all"
