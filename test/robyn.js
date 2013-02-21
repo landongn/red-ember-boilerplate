@@ -15,83 +15,92 @@ module.exports = {
 				wrench.rmdirSyncRecursive(test);
 			}
 
-			nexpect.spawn("robyn", [
-				"init", "rbp-test", test,
-				"--name", "robynTest",
-				"--title", "Robyn Test"
-			], {
-				stripColors: true,
-				verbose: true
-			})
-			.wait("[*] Bootstrapping robyn")
-			.expect("Using: rbp-test at")
-			.wait("OK")
-			.expect("Adding robyn")
-			.wait("OK")
-			.expect("[*] Project shell complete.")
+			nexpect.spawn("git", [
+				"rev-parse",
+				"--abbrev-ref",
+				"HEAD"
+			]).run(function (err, result) {
+				var branch = (process.env.TRAVIS_BRANCH || (result || "")).toString();
 
-			// RED Boilerplate
-			.expect('Running "start" task')
+				nexpect.spawn("robyn", [
+					"init", "rbp-test", test,
+					"--branch", branch.trim(),
+					"--name", "robynTest",
+					"--title", "Robyn Test"
+				], {
+					stripColors: true,
+					verbose: true
+				})
+				.wait("[*] Bootstrapping robyn")
+				.expect("Using: rbp-test at")
+				.wait("OK")
+				.expect("Adding robyn")
+				.wait("OK")
+				.expect("[*] Project shell complete.")
 
-			.expect("[*] Starting the party")
-			.expect("    Installing npm packages").wait("OK")
+				// RED Boilerplate
+				.expect('Running "start" task')
 
-			.expect("[*] Checking for available plugins.")
-			.expect("    Found the following: caboose, modernizr, red-start, rosy, statix")
+				.expect("[*] Starting the party")
+				.expect("    Installing npm packages").wait("OK")
 
-			.expect("[*] Checking param overrides.")
-			.expect("    project name: robynTest, project title: Robyn Test")
+				.expect("[*] Checking for available plugins.")
+				.expect("    Found the following: caboose, modernizr, red-start, rosy, statix")
 
-			.expect("Please answer the following:")
-			.expect("[?] Would you like to add caboose")
-			.sendline("")
-			.expect("[?] Would you like to add modernizr")
-			.sendline("")
-			.expect("[?] Would you like to add red-start")
-			.sendline("")
-			.expect("[?] Would you like to add rosy")
-			.sendline("")
-			.expect("[?] Would you like to add statix")
-			.sendline("")
-			.expect("[?] Do you need to make any changes to the above before continuing? (y/N)")
-			.sendline("")
+				.expect("[*] Checking param overrides.")
+				.expect("    project name: robynTest, project title: Robyn Test")
 
-			.expect("[*] Stored and updated your project variables.")
+				.expect("Please answer the following:")
+				.expect("[?] Would you like to add caboose")
+				.sendline("")
+				.expect("[?] Would you like to add modernizr")
+				.sendline("")
+				.expect("[?] Would you like to add red-start")
+				.sendline("")
+				.expect("[?] Would you like to add rosy")
+				.sendline("")
+				.expect("[?] Would you like to add statix")
+				.sendline("")
+				.expect("[?] Do you need to make any changes to the above before continuing? (y/N)")
+				.sendline("")
 
-			.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
-			.expect("    Cloning repository").wait("OK")
-			.expect("    Copying files into project").wait("OK")
-			.expect("    Installing bundle. This may take a minute").wait("OK")
+				.expect("[*] Stored and updated your project variables.")
 
-			.expect("[+] Installing modernizr via .robyn/plugins/modernizr")
-			.expect("    Installing npm packages").wait("OK")
-			.expect("    Copying files into project").wait("OK")
+				.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
+				.expect("    Cloning repository").wait("OK")
+				.expect("    Copying files into project").wait("OK")
+				.expect("    Installing bundle. This may take a minute").wait("OK")
 
-			.expect("[+] Installing red-start via .robyn/plugins/red-start")
-			.expect("    Copying files into project").wait("OK")
-			.expect("    Creating a new red-start project").wait("OK")
-			.expect("    Creating a virtualenv. This may take a minute").wait("OK")
+				.expect("[+] Installing modernizr via .robyn/plugins/modernizr")
+				.expect("    Installing npm packages").wait("OK")
+				.expect("    Copying files into project").wait("OK")
 
-			.expect("[+] Installing rosy via https://github.com/ff0000/rosy.git")
-			.expect("    Installing npm packages").wait("OK")
-			.expect("    Cloning repository").wait("OK")
-			.expect("    Copying files into project").wait("OK")
-			.expect("    Installing external libraries").wait("OK")
+				.expect("[+] Installing red-start via .robyn/plugins/red-start")
+				.expect("    Copying files into project").wait("OK")
+				.expect("    Creating a new red-start project").wait("OK")
+				.expect("    Creating a virtualenv. This may take a minute").wait("OK")
 
-			.expect("[+] Installing statix via .robyn/plugins/statix")
-			.expect("    Copying files into project").wait("OK")
+				.expect("[+] Installing rosy via https://github.com/ff0000/rosy.git")
+				.expect("    Installing npm packages").wait("OK")
+				.expect("    Cloning repository").wait("OK")
+				.expect("    Copying files into project").wait("OK")
+				.expect("    Installing external libraries").wait("OK")
 
-			.expect("[*] Shrinkwrapped npm packages.")
+				.expect("[+] Installing statix via .robyn/plugins/statix")
+				.expect("    Copying files into project").wait("OK")
 
-			.expect("[*] You should edit your package.json and fill in your project details.")
-			.expect("[*] All done! Commit you changes and you're on your way.")
-			.run(function (err) {
-				if (err) {
-					console.error(err);
-					process.exit();
-				}
+				.expect("[*] Shrinkwrapped npm packages.")
 
-				callback();
+				.expect("[*] You should edit your package.json and fill in your project details.")
+				.expect("[*] All done! Commit you changes and you're on your way.")
+				.run(function (err) {
+					if (err) {
+						console.error(err);
+						process.exit();
+					}
+
+					callback();
+				});
 			});
 		};
 

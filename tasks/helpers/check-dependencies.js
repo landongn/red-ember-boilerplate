@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 				if (~ err.toString().indexOf("No such file or directory")) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
 					warning = dep;
-				} else {
+				} else if (dep.version !== "*") {
 					grunt.fail.warn((err.stderr || err.stdout || err).toString());
 				}
 			} else if (data.length) {
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 					match[0] = newVer.join(".");
 				}
 
-				installed = semver.clean(match[0]);
+				installed = semver.clean(match[0]) || "0.0.0";
 				if (!semver.satisfies(installed, dep.version)) {
 					dep.installedVersion = installed;
 					warning = dep;
@@ -108,8 +108,8 @@ module.exports = function (grunt) {
 						for (j = 0, k = warnings.length; j < k; j++) {
 							warn = warnings[j];
 
-							if (!warn || !warn.installedVersion) {
-								break;
+							if (!warn || (!warn.installedVersion && !warn.error)) {
+								continue;
 							}
 
 							console.warn([
