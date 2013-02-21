@@ -3,10 +3,14 @@
 
 module.exports = function (grunt, cb) {
 	var fs = require("fs"),
-		path = require("path");
+		path = require("path"),
+		pkgPath = path.join(__dirname, "..", "..", "plugin.json"),
+		pkg = require(pkgPath),
+		source = pkg.config.scope,
+		cwd = process.cwd();
 
 	var installExternalScripts = function () {
-		var installpath = path.join(process.cwd(), "project/static/js/libs/_install");
+		var installpath = path.join(cwd, source, "libs/_install");
 
 		if (!fs.existsSync(path.join(installpath, "installer.js"))) {
 			return exit();
@@ -27,7 +31,7 @@ module.exports = function (grunt, cb) {
 	};
 
 	var ignoreTests = function (installpath) {
-		var ignorepath = path.join(process.cwd(), "project/static/js"),
+		var ignorepath = path.join(cwd, source),
 			ignorefile = path.join(ignorepath, ".jshintignore");
 
 		if (!fs.existsSync(ignorefile)) {

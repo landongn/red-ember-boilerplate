@@ -1,9 +1,3 @@
 # Caboose
 .bundle
 *.sass-cache
-resources/compass/gems
-
-# Avoid committing generated CSS
-project/static/css/*.css
-project/static/css/*/*.css
-project/static/css/*/*/*.css

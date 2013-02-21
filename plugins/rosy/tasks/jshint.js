@@ -1,11 +1,14 @@
+/*jslint node: true */
 module.exports = function (grunt) {
+	"use strict";
 
 	var fs = require("fs"),
 		path = require("path"),
-		scope = path.join("project", "static", "js"),
+		rosy = require(path.join(__dirname, "../plugin.json")),
+		source = rosy.config.scope,
 		jshint = require("jshint").JSHINT;
 
-	var FILES = path.join(scope, "**/*[^.min].js");
+	var FILES = path.join(source, "**/*[^.min].js");
 
 	function pad(str, len, padChar) {
 
@@ -32,10 +35,12 @@ module.exports = function (grunt) {
 		return str.slice(0, i + 1);
 	}
 
+	var timestamp = new Date().getTime();
+
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
-		var jshintOptions = grunt.file.readJSON(path.join(scope, ".jshintrc"));
+		var jshintOptions = grunt.file.readJSON(path.join(source, ".jshintrc"));
 
 		if (mode === "browser") {
 			jshintOptions.node = false;
@@ -45,7 +50,7 @@ module.exports = function (grunt) {
 
 		var hasErrors = false;
 
-		var exclude = grunt.file.read(path.join(scope, ".jshintignore")).trim().split("\n");
+		var exclude = grunt.file.read(path.join(source, ".jshintignore")).trim().split("\n");
 		var files = grunt.file.expandFiles(FILES).filter(function (file) {
 			return exclude.every(function (x) {
 				x = x.replace(/\./g, "\\.");
@@ -58,9 +63,15 @@ module.exports = function (grunt) {
 
 		for (var i = 0; i < files.length; i ++) {
 			var file = files[i];
+			var stats = fs.statSync(file);
+
 			var fa = file.split("/");
 			fa[fa.length - 1] = fa[fa.length - 1].white;
 			var filename = fa.join("/").grey;
+
+			if (mode === "soft" && new Date(stats.ctime).getTime() < timestamp) {
+				continue;
+			}
 
 			var contents = grunt.file.read(file);
 
@@ -86,12 +97,13 @@ module.exports = function (grunt) {
 			}
 		}
 
+		timestamp = new Date().getTime();
 		done(!hasErrors);
 	});
 
 	grunt.config.set("watch.jshint", {
 		files: FILES,
-		tasks: ["jshint"]
+		tasks: ["jshint:soft"]
 	});
 
 	grunt.config.set("build.jshint", "jshint:browser");

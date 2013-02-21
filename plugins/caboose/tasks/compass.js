@@ -2,16 +2,23 @@
 module.exports = function (grunt) {
 	"use strict";
 
+	var path = require("path"),
+		caboose = require(path.join(__dirname, "../plugin.json")),
+		output = "project/static",
+		source = caboose.config.scope;
+
 	// Config options
 	grunt.config.set("compass", {
 		dev: {
 			http_path: "/",
-			sass_dir: "resources/compass/scss/project",
-			css_dir: "project/static/css",
-			images_dir: "project/static/img",
-			fonts_dir: "project/static/fonts",
-			javascripts_dir: "project/static/js",
-			additional_import_paths: ["resources/compass/scss/caboose"],
+			sass_dir: path.join(source, "scss/project"),
+			css_dir: path.join(output, "css"),
+			images_dir: path.join(output, "img"),
+			fonts_dir: path.join(output, "fonts"),
+			javascripts_dir: path.join(output, "js"),
+			generated_images_dir: path.join(output, "img"),
+			additional_import_paths: [path.join(source, "scss/caboose")],
+			sprite_load_path: [path.join(source, "img")],
 			output_style: ":expanded",
 			line_comments: true,
 			relative_assets: true,
@@ -40,7 +47,9 @@ module.exports = function (grunt) {
 			images_dir: "<config:compass.dev.images_dir>",
 			fonts_dir: "<config:compass.dev.fonts_dir>",
 			javascripts_dir: "<config:compass.dev.javascripts_dir>",
+			generated_images_dir: "<config:compass.dev.generated_images_dir>",
 			additional_import_paths: "<config:compass.dev.additional_import_paths>",
+			sprite_load_path: "<config:compass.dev.sprite_load_path>",
 			output_style: ":compressed",
 			line_comments: false,
 			relative_assets: "<config:compass.dev.relative_assets>",
