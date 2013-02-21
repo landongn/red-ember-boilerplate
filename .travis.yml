@@ -2,6 +2,10 @@ before_install:
   - git config --global user.email "bot@travis-ci.org"
   - git config --global user.name "Travis CI"
   - sudo apt-get update
+  # JPEGTran
+  - sudo apt-get install libjpeg-progs
+  # OptiPNG
+  - sudo apt-get install optipng
   # Ruby
   - sudo gem install bundler
   # Python
