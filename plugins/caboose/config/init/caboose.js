@@ -2,6 +2,10 @@
 "use strict";
 
 module.exports = function (grunt, cb) {
+	var fs = require("fs"),
+		cwd = process.cwd(),
+		path = require("path"),
+		pkgPath = path.join(__dirname, "..", "..", "plugin.json");
 
 	var copy = function (source, destination) {
 		var fs = require("fs"),
@@ -25,13 +29,8 @@ module.exports = function (grunt, cb) {
 	};
 
 	var removeConfig = function () {
-		var fs = require("fs"),
-			path = require("path"),
-			pkgPath = path.join(__dirname, "..", "..", "plugin.json");
-
 		if (fs.existsSync(pkgPath)) {
 			var pkg = require(pkgPath),
-				cwd = process.cwd(),
 				rbPath = path.join(cwd, pkg.config.scope, "config.rb");
 
 			if (fs.existsSync(rbPath)) {
@@ -48,7 +47,7 @@ module.exports = function (grunt, cb) {
 	var installGems = function () {
 		grunt.helper("spawn", {
 			cmd: "bundle",
-			args: ["install", "--path", "resources/compass/gems"],
+			args: ["install", "--path", ".bundle"],
 			title: "Installing bundle. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
@@ -61,43 +60,43 @@ module.exports = function (grunt, cb) {
 	};
 
 	var moveGemfileToRoot = function () {
-		var fs = require("fs"),
-			path = require("path"),
-			gempath = path.join(__dirname, "../Gemfile");
+		var gempath = path.join(__dirname, "../Gemfile");
 
 		if (fs.existsSync(gempath)) {
-			copy(gempath, process.cwd() + "/Gemfile");
-			copy(gempath + ".lock", process.cwd() + "/Gemfile.lock");
+			copy(gempath, cwd + "/Gemfile");
+			copy(gempath + ".lock", cwd + "/Gemfile.lock");
 		}
 
 		installGems();
 	};
 
 	var removeCabooseTests = function () {
-		var fs = require("fs"),
-			path = require("path"),
-			wrench = require("wrench"),
-			testpath = path.join(process.cwd(), "resources/compass/test");
+		if (fs.existsSync(pkgPath)) {
+			var pkg = require(pkgPath),
+				wrench = require("wrench"),
+				testpath = path.join(cwd, pkg.config.scope, "test");
 
-		if (fs.existsSync(testpath)) {
-			wrench.rmdirSyncRecursive(testpath);
+			if (fs.existsSync(testpath)) {
+				wrench.rmdirSyncRecursive(testpath);
+			}
 		}
 
 		moveGemfileToRoot();
 	};
 
 	var moveHTCToImageDir = function () {
-		var fs = require("fs"),
-			path = require("path"),
-			file = "boxsizing.htc",
-			dirpath = path.join(process.cwd(), "resources/compass/images"),
-			htcpath = path.join(dirpath, file);
+		if (fs.existsSync(pkgPath)) {
+			var pkg = require(pkgPath),
+				file = "boxsizing.htc",
+				dirpath = path.join(cwd, pkg.config.scope, "images"),
+				htcpath = path.join(dirpath, file);
 
-		if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
-			copy(htcpath, path.join(process.cwd(), "project/static/img", file));
+			if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
+				copy(htcpath, path.join(cwd, pkg.config.scope, "img", file));
 
-			fs.unlinkSync(htcpath);
-			fs.rmdirSync(dirpath);
+				fs.unlinkSync(htcpath);
+				fs.rmdirSync(dirpath);
+			}
 		}
 
 		return removeCabooseTests();

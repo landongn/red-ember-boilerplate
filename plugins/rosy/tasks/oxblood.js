@@ -1,7 +1,13 @@
-module.exports = function (grunt) {
-	"use strict";
+/*jslint node: true */
+"use strict";
 
-	/*jshint node:true*/
+module.exports = function (grunt) {
+
+	var fs = require("fs"),
+		path = require("path"),
+		rosy = require(path.join(__dirname, "../plugin.json")),
+		output = "project/static/js",
+		source = rosy.config.scope;
 
 	grunt.registerTask("oxblood", "Run Rosy + Mocha unit tests", function (mode) {
 		var done = this.async();
@@ -12,7 +18,7 @@ module.exports = function (grunt) {
 		var cwd = process.cwd();
 		var pkg = require(path.join(cwd, "package.json"));
 
-		var jsDir = path.join("project/static/js");
+		var jsDir = output;
 		var runner = path.join(jsDir, "test/runner.js");
 
 		if (!fs.existsSync(path.join(cwd, runner))) {
