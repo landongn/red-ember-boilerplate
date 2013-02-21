@@ -20,13 +20,7 @@ module.exports = {
 				"--abbrev-ref",
 				"HEAD"
 			]).run(function (err, result) {
-				var branch = (result || "").toString();
-				var slug = process.env.TRAVIS_REPO_SLUG;
-
-				if (slug) {
-					branch = slug.split("/")[1];
-				}
-
+				var branch = (process.env.TRAVIS_BRANCH || (result || "")).toString();
 				console.log(branch);
 
 				nexpect.spawn("robyn", [
