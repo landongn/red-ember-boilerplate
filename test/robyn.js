@@ -15,30 +15,40 @@ module.exports = {
 				wrench.rmdirSyncRecursive(test);
 			}
 
-			nexpect.spawn("robyn", [
-				"init", "robyn-test", test,
-				"--name", "robynTest",
-				"--title", "Robyn Test",
-				"--all"
-			], {
-				stripColors: true,
-				verbose: true
-			})
-			.wait("[*] Bootstrapping robyn")
-			.expect("Using: robyn-test at")
-			.wait("OK")
-			.expect("Adding robyn")
-			.wait("OK")
-			.expect("[*] Project shell complete.")
-			.wait("[*] You should edit your package.json and fill in your project details.")
-			.expect("[*] All done! Commit you changes and you're on your way.")
-			.run(function (err) {
-				if (err) {
-					console.error(err);
-					process.exit();
-				}
+			nexpect.spawn("git", [
+				"rev-parse",
+				"--abbrev-ref",
+				"HEAD"
+			]).run(function (err, result) {
+				var branch = (process.env.TRAVIS_BRANCH || (result || "")).toString();
+				console.log(branch);
 
-				callback();
+				nexpect.spawn("robyn", [
+					"init", "robyn-test", test,
+					"--branch", branch.trim(),
+					"--name", "robynTest",
+					"--title", "Robyn Test",
+					"--all"
+				], {
+					stripColors: true,
+					verbose: true
+				})
+				.wait("[*] Bootstrapping robyn")
+				.expect("Using: robyn-test at")
+				.wait("OK")
+				.expect("Adding robyn")
+				.wait("OK")
+				.expect("[*] Project shell complete.")
+				.wait("[*] You should edit your package.json and fill in your project details.")
+				.expect("[*] All done! Commit you changes and you're on your way.")
+				.run(function (err) {
+					if (err) {
+						console.error(err);
+						process.exit();
+					}
+
+					callback();
+				});
 			});
 		};
 

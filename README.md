@@ -249,7 +249,7 @@ A hash containing key/pair mappings of system-wide dependencies and versions. Ex
 A hash containing key/pair parameters specific to your plugin. Accepted values are:
 
 ###### scope
-The main entry point of your plugin. For example, RED Interactive's [`rosy`](https://github.com/ff0000/red-boilerplate/blob/master/plugins/rosy/plugin.json#L27) plugin is scoped to `project/static/js`, and its associated files are copied to that location.
+The main entry point of your plugin. For example, RED Interactive's [`rosy`](https://github.com/ff0000/red-boilerplate/blob/master/plugins/rosy/plugin.json#L27) plugin is scoped to `project/source/js`, and its associated files are copied to that location.
 
 ###### replaceVars
 A boolean. When `true`, Robyn will traverse through the plugin's files and replace instances of the placeholder values `__PROJECT_NAME__` and `__PROJECT_TITLE__`

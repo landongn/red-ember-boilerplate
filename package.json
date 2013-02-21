@@ -1,6 +1,6 @@
 {
 	"name": "robyn",
-	"version": "1.3.3",
+	"version": "1.3.4",
 	"author": "RED Interactive <geeks@ff0000.com>",
 	"description": "A highly customizable boilerplate to initialize common projects.",
 	"repository": {
@@ -15,7 +15,7 @@
 	},
 	"devDependencies": {
 		"robyn": "*",
-		"grunt": ">=0.3.x",
+		"grunt": "~0.3.0",
 		"mocha": ">=1.6.0",
 		"expect.js": ">=0.2.0",
 		"nexpect": ">=0.2.4",
@@ -33,7 +33,7 @@
 	"optionalDependencies": {},
 	"systemDependencies": {
 		"git": "*",
-		"grunt": ">=0.3.0"
+		"grunt": "~0.3.0"
 	},
 	"scripts": {
 		"test": "node test/runner.js"
