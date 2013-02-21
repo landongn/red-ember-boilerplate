@@ -1,3 +1,5 @@
+/*jshint node:true */
+
 module.exports = {
 	check : function (callback) {
 		var fs = require("fs");
@@ -64,13 +66,10 @@ module.exports = {
 				.expect("[?] Do you need to make any changes to the above before continuing? (y/N)")
 				.sendline("")
 
-			.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
-			.expect("    Installing npm packages").wait("OK")
-			.expect("    Cloning repository").wait("OK")
-			.expect("    Copying files into project").wait("OK")
-			.expect("    Installing bundle. This may take a minute").wait("OK")
+				.expect("[*] Stored and updated your project variables.")
 
 				.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
+				.expect("    Installing npm packages").wait("OK")
 				.expect("    Cloning repository").wait("OK")
 				.expect("    Copying files into project").wait("OK")
 				.expect("    Installing bundle. This may take a minute").wait("OK")
