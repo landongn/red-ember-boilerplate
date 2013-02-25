@@ -233,7 +233,6 @@ module.exports = function (grunt) {
 
 			if (branch) {
 				opts.push("on branch: %s".replace("%s", branch));
-
 			}
 
 			if (override) {
