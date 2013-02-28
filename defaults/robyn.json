@@ -9,7 +9,7 @@
 	},
 	"systemDependencies": {
 		"git": "*",
-		"grunt": "0.1.x"
+		"grunt": ">=0.3.0"
 	},
 	"engines": {
 		"node": "*"
