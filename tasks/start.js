@@ -13,14 +13,14 @@ module.exports = function (grunt) {
 
 		var done = this.async();
 
-		var name = grunt.option("name");
-		var title = grunt.option("title");
+		var name = grunt.option("name") || grunt.option("N");
+		var title = grunt.option("title") || grunt.option("T");
 
-		branch = grunt.option("branch") || branch;
-		override = grunt.option("include-plugins") || (function () {
-			if (grunt.option("all")) {
+		branch = grunt.option("branch") || grunt.option("b") || branch;
+		override = grunt.option("include-plugins") || grunt.option("i") || (function () {
+			if (grunt.option("all") || grunt.option("A")) {
 				return "all";
-			} else if (grunt.option("bare")) {
+			} else if (grunt.option("bare") || grunt.option("B")) {
 				return "bare";
 			}
 
@@ -233,7 +233,6 @@ module.exports = function (grunt) {
 
 			if (branch) {
 				opts.push("on branch: %s".replace("%s", branch));
-
 			}
 
 			if (override) {

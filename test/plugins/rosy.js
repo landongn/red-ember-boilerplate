@@ -22,13 +22,6 @@ describe("Rosy Tasks", function () {
 		it("grunt requirejs", function (done) {
 			grunt.spawn("requirejs")
 
-			.expect('Running "requirejs:desktop" (requirejs) task')
-
-			.expect('Tracing dependencies for: robynTest/Site')
-			.expect('Cannot optimize network URL, skipping: //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
-			.expect('Uglifying file: project/static/js/site.min.js')
-
-			.expect('Built with the following modules:')
 			.wait('Done, without errors.')
 
 			.run(done);

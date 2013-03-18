@@ -69,16 +69,18 @@ module.exports = function (grunt) {
 		var cp = require("child_process");
 
 		var child = cp.spawn("bundle", ["check"], {
-			stdio: "inherit"
+			stdio: grunt.option("quiet") ? "pipe" : "inherit"
 		});
 
 		child.on("exit", function (code) {
 			if (code !== 0) {
-				grunt.log.writeln();
-				grunt.log.writeln("Installing missing gems...");
+				if (!grunt.option("quiet")) {
+					grunt.log.writeln();
+					grunt.log.writeln("Installing missing gems...");
+				}
 
 				child = cp.spawn("bundle", ["install"], {
-					stdio: "inherit"
+					stdio: grunt.option("quiet") ? "pipe" : "inherit"
 				});
 
 				child.on("exit", function (code) {
