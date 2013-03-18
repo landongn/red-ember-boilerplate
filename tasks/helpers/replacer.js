@@ -62,7 +62,7 @@ module.exports = function (grunt) {
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
 
 		opts = opts || {};
-		var root = opts.root;
+		var root = opts.root || "";
 		var config = opts.config || {};
 
 		delete require.cache[updatePath + ".js"];

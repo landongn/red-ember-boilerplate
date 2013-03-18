@@ -90,9 +90,7 @@ module.exports = function (grunt) {
 					grunt.log.writeln(pad("", 22) + trim(err.evidence).white);
 					grunt.log.writeln();
 				}
-			}
-
-			else {
+			} else if (!grunt.option("quiet")) {
 				grunt.log.writeln("Ok  ".green + filename);
 			}
 		}

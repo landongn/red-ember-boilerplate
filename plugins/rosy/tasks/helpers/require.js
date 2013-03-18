@@ -43,6 +43,10 @@ module.exports = function (grunt) {
 		// by overriding the r.js logger (or submit issue to r.js to expand logging support)
 		requirejs.define("node/print", [], function () {
 			return function print(msg) {
+				if (grunt.option("quiet")) {
+					return;
+				}
+
 				if (msg.substring(0, 5) === "Error") {
 					grunt.log.errorlns(msg);
 					grunt.fail.warn("RequireJS failed.");
@@ -75,7 +79,7 @@ module.exports = function (grunt) {
 			logLevel: 0
 		});
 
-		absPath = fs.realpathSync() + "/";
+		absPath = process.cwd();
 		var done = this.async();
 
 		_.each(options, function (value, key) {

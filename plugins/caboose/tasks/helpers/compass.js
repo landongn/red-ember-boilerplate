@@ -108,7 +108,7 @@ module.exports = function (grunt) {
 
 		// Run the command
 		var child = cp.spawn(cmd, args, {
-			stdio: "inherit"
+			stdio: grunt.option("quiet") ? "pipe" : "inherit"
 		});
 
 		// Clean up on exit
