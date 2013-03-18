@@ -39,7 +39,10 @@ module.exports = function (grunt) {
 						continue;
 					}
 
-					console.log("Copy ".green + file.replace(src, dest).grey);
+					if (!grunt.option("quiet")) {
+						console.log("Copy ".green + file.replace(src, dest).grey);
+					}
+
 					grunt.file.copy(file, file.replace(src, dest));
 				}
 			}
