@@ -21,7 +21,6 @@ module.exports = {
 				"HEAD"
 			]).run(function (err, result) {
 				var branch = (process.env.TRAVIS_BRANCH || (result || "")).toString();
-				console.log(branch);
 
 				nexpect.spawn("robyn", [
 					"init", "robyn-test", test,

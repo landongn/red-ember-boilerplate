@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 			cwd: opts.cwd
 		});
 
-		if (!isVerbose) {
+		if (!isVerbose && !grunt.option("quiet")) {
 			if (opts.title) {
 				grunt.helper("write", opts.title.grey);
 			}
@@ -39,10 +39,14 @@ module.exports = function (grunt) {
 
 		child.on("exit", function (code) {
 			if (!isVerbose) {
-				grunt.log.write("..".grey);
+				if (!grunt.option("quiet")) {
+					grunt.log.write("..".grey);
+				}
 
 				if (code === 0) {
-					grunt.log.ok();
+					if (!grunt.option("quiet")) {
+						grunt.log.ok();
+					}
 				} else {
 					grunt.log.write("ERR".red);
 
