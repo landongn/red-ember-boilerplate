@@ -11,12 +11,12 @@
 		"prompt": "0.1.x",
 		"wrench": "1.3.x",
 		"colors": "0.6.x",
-		"semver": "1.1.x"
+		"semver": "~1.1.x"
 	},
 	"license": "MIT",
 	"devDependencies": {},
 	"optionalDependencies": {},
 	"engines": {
-		"node": "*"
+		"node": ">=0.9"
 	}
 }

@@ -13,7 +13,7 @@ Installing Robyn
 
 ### Requirements
 
-- [`node`](http://nodejs.org) `>= 0.8.4`
+- [`node`](http://nodejs.org) `>= 0.9.x`
 - [`npm`](http://nodejs.org) `>= 1.1.45`
 - [`grunt`](http://gruntjs.com) `~ 0.3.x`
 
