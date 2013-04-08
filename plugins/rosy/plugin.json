@@ -19,7 +19,7 @@
 	},
 	"systemDependencies": {
 		"node": {
-			"version": ">= 0.8.7",
+			"version": ">=0.9",
 			"install": "brew update && brew install node",
 			"upgrade": "brew update && brew upgrade node"
 		},
