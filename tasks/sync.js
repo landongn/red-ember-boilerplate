@@ -16,6 +16,7 @@ module.exports = function (grunt) {
 					done(false);
 				}
 
+				grunt.config.set("synced", true);
 				done();
 			}
 		});
