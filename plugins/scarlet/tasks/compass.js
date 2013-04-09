@@ -12,6 +12,10 @@ module.exports = function (grunt) {
 	}
 
 	// Config options
+	if (!grunt.config.get("compass")) {
+		grunt.fail.warn("Scarlet requires the Caboose grunt task. Install via `grunt install:caboose`");
+	}
+
 	grunt.config.set("compass.admin", {
 		http_path: "/",
 		sass_dir: path.join(paths.sourcePathRel, "compass", "scss", "admin"),
