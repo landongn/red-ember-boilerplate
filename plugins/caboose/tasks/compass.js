@@ -8,54 +8,53 @@ module.exports = function (grunt) {
 		source = caboose.config.scope;
 
 	// Config options
-	grunt.config.set("compass", {
-		dev: {
-			http_path: "/",
-			sass_dir: path.join(source, "scss/project"),
-			css_dir: path.join(output, "css"),
-			images_dir: path.join(output, "img"),
-			fonts_dir: path.join(output, "fonts"),
-			javascripts_dir: path.join(output, "js"),
-			generated_images_dir: path.join(output, "img"),
-			additional_import_paths: [path.join(source, "scss/caboose")],
-			sprite_load_path: [path.join(source, "img")],
-			output_style: ":expanded",
-			line_comments: true,
-			relative_assets: true,
-			bundle_exec: true,
-			force_compile: true,
+	grunt.config.set("compass.dev", {
+		http_path: "/",
+		sass_dir: path.join(source, "scss/project"),
+		css_dir: path.join(output, "css"),
+		images_dir: path.join(output, "img"),
+		fonts_dir: path.join(output, "fonts"),
+		javascripts_dir: path.join(output, "js"),
+		generated_images_dir: path.join(output, "img"),
+		additional_import_paths: [path.join(source, "scss/caboose")],
+		sprite_load_path: [path.join(source, "img")],
+		output_style: ":expanded",
+		line_comments: true,
+		relative_assets: true,
+		bundle_exec: true,
+		force_compile: true,
 
-			// Extra config options
-			extras: {
+		// Extra config options
+		extras: {
 
-				// Gems?
-				// require: ["susy", "stitch"],
+			// Gems?
+			// require: ["susy", "stitch"],
 
-				// Additional import paths?
-				// add_import_path: "",
+			// Additional import paths?
+			// add_import_path: "",
 
-				// Bust the cache?
-				// asset_cache_buster: ":none"
+			// Bust the cache?
+			// asset_cache_buster: ":none"
 
-			}
-
-		},
-		prod: {
-			http_path: "<config:compass.dev.http_path>",
-			sass_dir: "<config:compass.dev.sass_dir>",
-			css_dir: "<config:compass.dev.css_dir>",
-			images_dir: "<config:compass.dev.images_dir>",
-			fonts_dir: "<config:compass.dev.fonts_dir>",
-			javascripts_dir: "<config:compass.dev.javascripts_dir>",
-			generated_images_dir: "<config:compass.dev.generated_images_dir>",
-			additional_import_paths: "<config:compass.dev.additional_import_paths>",
-			sprite_load_path: "<config:compass.dev.sprite_load_path>",
-			output_style: ":compressed",
-			line_comments: false,
-			relative_assets: "<config:compass.dev.relative_assets>",
-			bundle_exec: "<config:compass.dev.bundle_exec>",
-			force_compile: "<config:compass.dev.force_compile>"
 		}
+
+	});
+
+	grunt.config.set("compass.prod", {
+		http_path: "<config:compass.dev.http_path>",
+		sass_dir: "<config:compass.dev.sass_dir>",
+		css_dir: "<config:compass.dev.css_dir>",
+		images_dir: "<config:compass.dev.images_dir>",
+		fonts_dir: "<config:compass.dev.fonts_dir>",
+		javascripts_dir: "<config:compass.dev.javascripts_dir>",
+		generated_images_dir: "<config:compass.dev.generated_images_dir>",
+		additional_import_paths: "<config:compass.dev.additional_import_paths>",
+		sprite_load_path: "<config:compass.dev.sprite_load_path>",
+		output_style: ":compressed",
+		line_comments: false,
+		relative_assets: "<config:compass.dev.relative_assets>",
+		bundle_exec: "<config:compass.dev.bundle_exec>",
+		force_compile: "<config:compass.dev.force_compile>"
 	});
 
 	// Trick grunt by creating a task named "watch:compass"
