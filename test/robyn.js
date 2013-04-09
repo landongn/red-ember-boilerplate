@@ -47,7 +47,7 @@ module.exports = {
 				.expect("    Installing npm packages").wait("OK")
 
 				.expect("[*] Checking for available plugins.")
-				.expect("    Found the following: caboose, modernizr, red-start, rosy, statix")
+				.expect("    Found the following: caboose, modernizr, red-start, rosy, scarlet, statix")
 
 				.expect("[*] Checking param overrides.")
 				.expect("    project name: robynTest, project title: Robyn Test")
@@ -60,6 +60,8 @@ module.exports = {
 				.expect("[?] Would you like to add red-start")
 				.sendline("")
 				.expect("[?] Would you like to add rosy")
+				.sendline("")
+				.expect("[?] Would you like to add scarlet")
 				.sendline("")
 				.expect("[?] Would you like to add statix")
 				.sendline("")
@@ -87,6 +89,11 @@ module.exports = {
 				.expect("    Cloning repository").wait("OK")
 				.expect("    Copying files into project").wait("OK")
 				.expect("    Installing external libraries").wait("OK")
+
+				.expect("[+] Installing scarlet via .robyn/plugins/scarlet")
+				.expect("    Copying files into project").wait("OK")
+				.expect("    Adding scarlet as a submodule").wait("OK")
+				.expect("    Update submodule").wait("OK")
 
 				.expect("[+] Installing statix via .robyn/plugins/statix")
 				.expect("    Copying files into project").wait("OK")
