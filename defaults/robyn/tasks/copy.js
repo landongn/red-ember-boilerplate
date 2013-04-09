@@ -16,6 +16,9 @@ module.exports = function (grunt) {
 		}, {
 			src: "project/source/js",
 			dest: "project/static/js"
+		}, {
+			src: "project/source/img",
+			dest: "project/static/img"
 		}],
 
 		prod: [{
@@ -27,6 +30,9 @@ module.exports = function (grunt) {
 		}, {
 			src: "project/source/js",
 			dest: "project/static/js"
+		}, {
+			src: "project/source/img",
+			dest: "project/static/img"
 		}]
 	});
 
