@@ -1,6 +1,6 @@
 {
 	"name": "scarlet",
-	"description": "Scarlet is a xxx",
+	"description": "A content management system.",
 	"version": "0.0.1",
 	"systemDependencies": {
 		"python": ">= 2.7.2",
