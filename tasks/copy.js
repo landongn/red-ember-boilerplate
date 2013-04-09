@@ -17,6 +17,10 @@ module.exports = function (grunt) {
 			"**/test/**/*"
 		];
 
+		var spriteCheck = function (path) {
+			return !(/img\/sprites\//).test(path);
+		};
+
 		for (var i = 0, j = data.length; i < j; i++) {
 			var src = data[i].src;
 			var dest = data[i].dest;
@@ -27,7 +31,7 @@ module.exports = function (grunt) {
 				wildcard = path.join(src, "**", "*");
 			}
 
-			var files = grunt.file.expandFiles(wildcard);
+			var files = grunt.file.expandFiles(wildcard).filter(spriteCheck);
 
 			for (var k = 0, l = files.length; k < l; k++) {
 				var file = files[k];
