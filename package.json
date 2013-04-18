@@ -33,7 +33,7 @@
 	"optionalDependencies": {},
 	"systemDependencies": {
 		"git": "*",
-		"grunt": "~0.3.0"
+		"grunt": "~0.1.x"
 	},
 	"scripts": {
 		"test": "node test/runner.js"
