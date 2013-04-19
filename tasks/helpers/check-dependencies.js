@@ -7,16 +7,15 @@ module.exports = function (grunt) {
 		grunt.util = grunt.util || grunt.utils;
 
 		var semver = require("semver");
+		var cp = require("child_process");
+
 		var warning;
 
-		grunt.util.spawn({
-			cmd: dep.bin,
-			args: ["--version"]
-		}, function (err, result, code) {
+		cp.exec(dep.bin + " --version", function (err, result, code) {
 			var data = result.toString();
 
 			if (err) {
-				if (~ err.toString().indexOf("No such file or directory")) {
+				if (err.toString().indexOf("No such file or directory") !== -1 || err.toString().indexOf("not found") !== -1) {
 					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
 					warning = dep;
 				} else if (dep.version !== "*") {
