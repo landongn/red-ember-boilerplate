@@ -6,7 +6,8 @@ module.exports = function (grunt) {
 		path = require("path"),
 		cwd = process.cwd(),
 		pkg = require(path.join(cwd, "robyn.json")),
-		configPath = path.join(cwd, pkg.config.dirs.config, "statix");
+		configPath = path.join(cwd, pkg.config.dirs.config, "statix"),
+		statixPkg = path.join(configPath, "statix.js");
 
 	var exec = function (exec, args, cwd, doneCB) {
 
@@ -24,20 +25,18 @@ module.exports = function (grunt) {
 	grunt.registerTask("statix:build", "Build with statix", function () {
 		var done = this.async();
 
-		exec("statix", ["build"], configPath, function (success) {
-			done(1);
-		});
+		var statix = require("statix");
+		statix.build(statixPkg);
 	});
 
 	grunt.registerTask("statix:server", "Run the statix server", function (p) {
 		var port = p || 8000;
 		var done = this.async();
 		var projectPath = path.join(cwd, "project");
+		var statix = require("statix");
 
-		exec("statix", ["server", "-p", port, "-d", projectPath], configPath, function (success) {
-			done(1);
-			process.exit();
-		});
+		statix.server(statixPkg, projectPath, port);
+		done(1);
 	});
 
 };
