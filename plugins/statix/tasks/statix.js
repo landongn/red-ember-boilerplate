@@ -36,7 +36,10 @@ module.exports = function (grunt) {
 		var statix = require("statix");
 
 		statix.server(statixPkg, projectPath, port);
-		done(1);
+
+		process.on("exit", function () {
+			done(1);
+		});
 	});
 
 };
