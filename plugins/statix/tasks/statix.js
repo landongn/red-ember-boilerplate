@@ -42,4 +42,11 @@ module.exports = function (grunt) {
 		});
 	});
 
+	// If RED Start is installed, it's considered the dominant plugin
+	// Otherwise, map `grunt server` to statix
+	var hasRedStart = !!(pkg.installedPlugins["red-start"]);
+
+	if (!hasRedStart) {
+		grunt.registerTask("server", ["statix:server"]);
+	}
 };
