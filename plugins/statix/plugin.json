@@ -3,7 +3,7 @@
 	"description": "Statix is a static website generator.",
 	"version": "0.0.5",
 	"dependencies": {
-		"statix": ">=2.0.0"
+		"statix": "https://github.com/ff0000/statix/tarball/2.0.0"
 	},
 	"systemDependencies": {
 		"node": {
