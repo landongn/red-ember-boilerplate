@@ -30,12 +30,17 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask("statix:server", "Run the statix server", function (p) {
-		var port = p || 8000;
-		var done = this.async();
-		var projectPath = path.join(cwd, "project", "templates");
 		var statix = require("statix");
 
-		statix.server(statixPkg, projectPath, port);
+		var port = p || 8000;
+		var done = this.async();
+
+		var projectPaths = [
+			path.join(cwd, "project", "templates"),
+			path.join(cwd, "robyn", "config", "statix")
+		].join(",");
+
+		statix.server(statixPkg, projectPaths, port);
 
 		process.on("exit", function () {
 			done(1);
