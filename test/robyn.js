@@ -120,7 +120,7 @@ module.exports = {
 		.expect("On branch")
 		.run(function (err) {
 			if (err) {
-				var url = repositoryUrl;
+				var url = cwd;
 				nexpect.spawn("robyn", ["add", "rbp-test", url, "--branch", "develop"], {
 					stripColors: true
 				})
