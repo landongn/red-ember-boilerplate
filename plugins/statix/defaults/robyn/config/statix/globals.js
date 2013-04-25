@@ -4,7 +4,8 @@ var globals = {
 		TEMPLATE_DEBUG : true
 	},
 
-	STATIC_URL : "static/"
+	STATIC_URL : "static/",
+	SOURCE_URL : "source/"
 };
 
 module.exports = globals;
