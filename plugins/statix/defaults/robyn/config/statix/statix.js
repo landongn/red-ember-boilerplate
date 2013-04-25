@@ -1,9 +1,13 @@
+/* jshint node:true */
+
 var fs = require("fs");
 var wrench = require("wrench");
 var pages = require("./pages.js");
 var globals = require("./globals.js");
 var build = require("./build.js");
 var cp = require("child_process");
+var path = require("path");
+var cwd = process.cwd();
 
 var exec = function (exec, args, cwd, suppress, doneCB) {
 	process.stdin.resume();
@@ -39,7 +43,8 @@ module.exports = {
 
 	exclude_patterns : [
 		/^(.*)(base\.html{1})$/,
-		/^(.*)(\/templates{1})(.*)$/
+		/^(.*)(\/templates{1})(.*)$/,
+		/^(.*)(\/source{1})(.*)$/
 	],
 
 	/*
@@ -105,9 +110,8 @@ module.exports = {
 	postBuild : function (done) {
 
 		function moveFiles(from, to) {
-
-			from = (from[0] == "/") ? from : process.cwd() + "/" + from;
-			to = (to[0] == "/") ? to : process.cwd() + "/" + to;
+			from = (from[0] === "/") ? from : process.cwd() + "/" + from;
+			to = (to[0] === "/") ? to : process.cwd() + "/" + to;
 
 			var fromStats = fs.statSync(from);
 			var fromName = from.substr(from.lastIndexOf("/"));
@@ -119,7 +123,7 @@ module.exports = {
 				}
 
 				var files = fs.readdirSync(from);
-				for(var i = 0; i < files.length; i ++){
+				for (var i = 0; i < files.length; i ++) {
 					moveFiles(from + "/" + files[i], to + "/" + files[i]);
 				}
 
@@ -136,9 +140,15 @@ module.exports = {
 		}
 
 		moveFiles.bind(this);
-		moveFiles(this.output_dir + "/static/local", this.output_dir);
+
+		var output = path.join(__dirname, this.output_dir);
+		var local_dir = path.join(output, "static", "local");
+
+		if (fs.existsSync(local_dir)) {
+			moveFiles(local_dir, output);
+		}
 
 		done();
 	}
 
-}
+};
