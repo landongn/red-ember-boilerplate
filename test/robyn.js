@@ -97,6 +97,7 @@ module.exports = {
 				.expect("    Update submodule").wait("OK")
 
 				.expect("[+] Installing statix via .robyn/plugins/statix")
+				.expect("    Installing npm packages").wait("OK")
 				.expect("    Copying files into project").wait("OK")
 
 				.expect("[*] Shrinkwrapped npm packages.")
