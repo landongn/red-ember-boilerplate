@@ -11,7 +11,6 @@ describe("Statix Tasks", function () {
 		grunt.spawn("statix:build")
 		.wait('Done, without errors.')
 		.expect('Statix build complete!')
-		.expect('Done, without errors.')
 
 		.run(done);
 	});
