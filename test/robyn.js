@@ -41,6 +41,7 @@ module.exports = {
 				.expect("[*] Project shell complete.")
 
 				// RED Boilerplate
+				.expect("Install NPM modules").wait("OK")
 				.expect('Running "start" task')
 
 				.expect("[*] Starting the party")
