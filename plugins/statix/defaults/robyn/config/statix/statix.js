@@ -26,11 +26,11 @@ var exec = function (exec, args, cwd, suppress, doneCB) {
 
 module.exports = {
 
-	source_dir : "../../../project", // `source_dir` is the directory where all your source files are.
-	output_dir: "../../../deploy", // `output_dir` is the directory you want to compile your static site to.
+	source_dir : "project", // `source_dir` is the directory where all your source files are.
+	output_dir: "deploy", // `output_dir` is the directory you want to compile your static site to.
 
 	template_engine : "swig", // the npm package name of the template engine, only engines supported by consolidate.js will work
-	template_dir : "../../../project/templates", // Only relevant if using swig : The directory where all your templates are.
+	template_dir : "project/templates", // Only relevant if using swig : The directory where all your templates are.
 
 	/*
 		Literal regexes here. Statix won't include anything, unless it matches an `include_pattern` and also does
