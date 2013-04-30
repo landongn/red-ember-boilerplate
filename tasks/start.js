@@ -343,7 +343,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var installNPMModules = function () {
+		var installNpmModules = function () {
 			grunt.log.writeln();
 			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
@@ -353,7 +353,7 @@ module.exports = function (grunt) {
 		};
 
 		(function () {
-			installNPMModules();
+			installNpmModules();
 		}());
 
 	});
