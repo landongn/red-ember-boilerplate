@@ -221,7 +221,7 @@ A folder for your plugin-specific Grunt tasks.
 
 ### plugin.json
 A plugin-specific definition of your plugin's internals.
-Most of these parameters follow [NPM package.json](http://package.json.jit.su) conventions:
+Most of these parameters follow [npm package.json](http://package.json.jit.su) conventions:
 
 - name
 - description
