@@ -31,7 +31,9 @@ module.exports = function (grunt) {
 		}
 
 		if (fs.existsSync(pluginDir)) {
-			var branches = grunt.file.expandDirs(pluginDir + "/*");
+			var branches = grunt.file.expand({
+				filter: "isDirectory"
+			}, pluginDir + "/*");
 			var i, j, branch, branchPath;
 
 			for (i = 0, j = branches.length; i < j; i++) {
