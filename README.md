@@ -239,7 +239,7 @@ A hash containing key/pair mappings of system-wide dependencies and versions. Ex
 
 ```json
 "systemDependencies": {
-    "grunt": ">=0.3.0",
+    "grunt": "~0.4.x",
     "ruby": ">=1.8.x",
     "python": "*"
 }
