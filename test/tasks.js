@@ -42,11 +42,13 @@ describe("Setup Check", function () {
 			".gitmodules",
 			".robyn",
 			"README.md",
-			"grunt.js",
+			"Gruntfile.js",
 			"node_modules",
 			"node_modules/colors",
 			"node_modules/prompt",
 			"node_modules/wrench",
+			"node_modules/semver",
+			"node_modules/grunt",
 			"package.json",
 			"robyn",
 			"robyn/config",
@@ -271,13 +273,13 @@ describe("Default Tasks", function () {
 	});
 
 	describe("update", function () {
-		var currentBranch;
+		var currentSHA;
 
 		before(function (done) {
 			var testPath = path.join(test, "robyn.json");
 
 			if (fs.existsSync(testPath)) {
-				nexpect.spawn("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+				nexpect.spawn("git", ["rev-parse", "HEAD"], {
 					cwd: path.join(test, ".robyn"),
 					stripColors: true
 				})
@@ -286,14 +288,16 @@ describe("Default Tasks", function () {
 					testPkg.version = "0.1.0";
 					fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
 
-					currentBranch = result[0];
+					currentSHA = result[0];
 					done(err);
 				});
 			}
 		});
 
 		it("grunt update", function (done) {
-			grunt.spawn("update")
+			grunt.spawn("update", {
+				verbose: true
+			})
 			.wait("Checking for newer version").wait("OK")
 			.expect("[?] An updated version of your boilerplate")
 			.expect("    Your current version:")
@@ -327,7 +331,7 @@ describe("Default Tasks", function () {
 		});
 
 		after(function (done) {
-			nexpect.spawn("git", ["checkout", currentBranch], {
+			nexpect.spawn("git", ["checkout", currentSHA], {
 				cwd: path.join(test, ".robyn"),
 				stripColors: true
 			})

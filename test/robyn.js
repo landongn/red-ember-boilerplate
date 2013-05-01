@@ -1,3 +1,5 @@
+/* jshint node:true */
+
 module.exports = {
 	check : function (callback) {
 		var fs = require("fs");
