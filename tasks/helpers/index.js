@@ -12,12 +12,12 @@ module.exports = {
 
 		var helpers = {};
 
-		var loadHelpers = function (files) {
+		var loadHelpers = function (dir, files) {
 			var i, j, file;
 
 			for (i = 0, j = files.length; i < j; i++) {
 				file = files[i];
-				helpers[path.basename(file, ".js")] = require(path.join(__dirname, file))(grunt);
+				helpers[path.basename(file, ".js")] = require(path.join(dir, file))(grunt);
 			}
 		};
 
@@ -34,12 +34,12 @@ module.exports = {
 				helperDir = path.join(pluginDir, key, "tasks", "helpers");
 
 				if (fs.existsSync(helperDir)) {
-					loadHelpers(fs.readdirSync(helperDir));
+					loadHelpers(helperDir, fs.readdirSync(helperDir));
 				}
 			}
 		};
 
-		loadHelpers(files);
+		loadHelpers(__dirname, files);
 		loadPlugins();
 
 		return helpers;
