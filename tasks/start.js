@@ -211,7 +211,8 @@ module.exports = function (grunt) {
 			options = options.concat(pluginOpts);
 
 			if (options.length) {
-				prompt.start();
+				grunt.log.subhead("Please answer the following:");
+
 				prompt.get(options, function (err, props) {
 					handleSettings(err, props, overrideProps);
 				});
@@ -261,6 +262,8 @@ module.exports = function (grunt) {
 				done();
 			} else {
 				prompt = require("prompt");
+				prompt.start();
+
 				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 				prompt.delimiter = prompt.delimter || " ";
 
