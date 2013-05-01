@@ -66,8 +66,6 @@ module.exports = {
 				.sendline("")
 				.expect("[?] Would you like to add statix")
 				.sendline("")
-				.expect("[?] Do you need to make any changes to the above before continuing? (y/N)")
-				.sendline("")
 
 				.expect("[*] Stored and updated your project variables.")
 
