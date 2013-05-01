@@ -211,6 +211,7 @@ module.exports = function (grunt) {
 			options = options.concat(pluginOpts);
 
 			if (options.length) {
+				prompt.start();
 				prompt.get(options, function (err, props) {
 					handleSettings(err, props, overrideProps);
 				});
