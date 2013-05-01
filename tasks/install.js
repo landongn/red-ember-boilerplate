@@ -77,7 +77,7 @@ module.exports = function (grunt) {
 
 			if (!plugin) {
 				showPlugins(true);
-				done();
+				return done();
 			}
 
 			var cleanPlugin = plugin.split("@")[0];
