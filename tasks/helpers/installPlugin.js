@@ -85,7 +85,7 @@ module.exports = function (grunt) {
 			if (fs.existsSync(file)) {
 				var handler = require(fs.realpathSync(file));
 
-				handler(grunt, function (error) {
+				handler(grunt, helper, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
