@@ -51,7 +51,9 @@ module.exports = function (grunt) {
 		var hasErrors = false;
 
 		var exclude = grunt.file.read(path.join(source, ".jshintignore")).trim().split("\n");
-		var files = grunt.file.expandFiles(FILES).filter(function (file) {
+		var files = grunt.file.expand({
+			filter: "isFile"
+		}, FILES).filter(function (file) {
 			return exclude.every(function (x) {
 				x = x.replace(/\./g, "\\.");
 				x = x.replace(/^\*/g, ".*");

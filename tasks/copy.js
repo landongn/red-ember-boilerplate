@@ -31,7 +31,9 @@ module.exports = function (grunt) {
 				wildcard = path.join(src, "**", "*");
 			}
 
-			var files = grunt.file.expandFiles(wildcard).filter(spriteCheck);
+			var files = grunt.file.expand({
+				filter: "isFile"
+			}, wildcard).filter(spriteCheck);
 
 			for (var k = 0, l = files.length; k < l; k++) {
 				var file = files[k];
