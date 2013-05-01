@@ -121,7 +121,8 @@ module.exports = function (grunt) {
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
 			var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
-			var repoPaths = grunt.file.expandFiles({
+			var repoPaths = grunt.file.expand({
+				filter: "isFile",
 				dot : true
 			}, plugDir + "/**/*");
 			var i, j, file, newFile;
@@ -154,7 +155,8 @@ module.exports = function (grunt) {
 			var localDir = path.join(pluginDir, plug, localFiles);
 
 			if (fs.existsSync(localDir)) {
-				var localPaths = grunt.file.expandFiles({
+				var localPaths = grunt.file.expand({
+					filter: "isFile",
 					dot : true
 				}, localDir + "/**/*");
 
