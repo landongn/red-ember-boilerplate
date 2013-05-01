@@ -4,10 +4,12 @@ module.exports = function (grunt) {
 
 	// Default task.
 	grunt.registerTask("sync", "Sync your project with upstream changes", function () {
+		var helper = require("./helpers").init(grunt);
+
 		var done = this.async();
 		var pkg = require("./utils/pkg");
 
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "git",
 			args: ["submodule", "update", pkg.config.dirs.robyn],
 			title: "Syncing %s".replace("%s", pkg.name),

@@ -3,6 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("info", "List project info", function () {
+		var helper = require("./helpers").init(grunt);
 
 		var done = this.async();
 		var path = require("path");
@@ -25,18 +26,18 @@ module.exports = function (grunt) {
 				if (i === 0) {
 					grunt.log.writeln(str);
 				} else {
-					grunt.helper("writeln", str);
+					helper.writeln(str);
 				}
 			}
 		}
 
 		if (pkg.repository) {
-			grunt.helper("writeln", "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
+			helper.writeln("Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
 		grunt.log.writeln();
 		grunt.log.writeln("[*] ".grey + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
-		grunt.helper("writeln", "via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
+		helper.writeln("via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;

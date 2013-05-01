@@ -3,6 +3,8 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("uninstall", "Remove a previously installed plugin", function (plugin) {
+		var helper = require("./helpers").init(grunt);
+
 		var fs = require("fs");
 		var pkg = require("./utils/pkg");
 		var path = require("path");
@@ -10,7 +12,7 @@ module.exports = function (grunt) {
 
 		var done = this.async();
 
-		grunt.helper("check_for_available_plugins", function (plugins) {
+		helper.checkForPlugins(function (plugins) {
 			var i, j, current;
 			var installed = [];
 			var plug;
@@ -53,7 +55,7 @@ module.exports = function (grunt) {
 
 			if (!plugin) {
 				showPlugins(true);
-				done();
+				return done();
 			}
 
 			var cleanPlugin = plugin.split("@")[0];

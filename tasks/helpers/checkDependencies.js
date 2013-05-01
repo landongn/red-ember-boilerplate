@@ -2,64 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("check_dependency", function (dep, cb) {
-		// TODO: ditch this when grunt v0.4 is released
-		grunt.util = grunt.util || grunt.utils;
+	var checkDependencies = function (plugPkg, success, failure) {
+		var helper = require("../helpers").init(grunt);
 
-		var semver = require("semver");
-		var cp = require("child_process");
-
-		var warning;
-
-		cp.exec(dep.bin + " --version", function (err, result, code) {
-			var data = result.toString();
-
-			if (err) {
-				if (err.toString().indexOf("No such file or directory") !== -1 || err.toString().indexOf("not found") !== -1) {
-					dep.error = ("No executable named " + dep.bin.bold.underline + " was found").red;
-					warning = dep;
-				} else if (dep.version !== "*") {
-					grunt.fail.warn((err.stderr || err.stdout || err).toString());
-				}
-			} else if (data.length) {
-				var tagRegExp = new RegExp(
-					"\\s*[v=]*\\s*([0-9]+)" +            // major
-					"\\.([0-9]+)"  +                     // minor
-					"(?:\\.([0-9]+))?" +                 // patch
-					"(-[0-9]+-?)?" +                     // build
-					"([a-zA-Z-+][a-zA-Z0-9-\\.:]*)?"     // tag
-				);
-
-				var match = (data.match(tagRegExp) || []),
-					installed, i, j, newVer = [];
-
-				// Pip being dumb.
-				if (match.length && typeof match[3] === "undefined") {
-					match[3] = "0";
-
-					for (i = 1, j = match.length; i < j; i++) {
-						if (typeof match[i] !== "undefined") {
-							newVer.push(match[i]);
-						}
-					}
-
-					match[0] = newVer.join(".");
-				}
-
-				installed = semver.clean(match[0]) || "0.0.0";
-				if (!semver.satisfies(installed, dep.version)) {
-					dep.installedVersion = installed;
-					warning = dep;
-				}
-			}
-
-			if (cb) {
-				cb(warning);
-			}
-		});
-	});
-
-	grunt.registerHelper("check_dependencies", function (plugPkg, success, failure) {
 		var pkg = require("../utils/pkg");
 		var localPkg = require("../utils/local-pkg");
 		var sysDeps = plugPkg.systemDependencies || plugPkg;
@@ -85,7 +30,7 @@ module.exports = function (grunt) {
 		(function check(i) {
 			var dep = iterator[i];
 
-			grunt.helper("check_dependency", dep, function (warning) {
+			helper.checkDependency(dep, function (warning) {
 				if (warning) {
 					if (warning === true && failure) {
 						failure(warning);
@@ -129,7 +74,7 @@ module.exports = function (grunt) {
 							validator: /[y\/n]+/i,
 							"default": "Y/n"
 						}], function (err, props) {
-							var assert = grunt.helper("get_assertion", props.force);
+							var assert = helper.getAssertion(props.force);
 
 							if (assert) {
 								localPkg.config.warnings = localPkg.config.warnings || [];
@@ -149,6 +94,8 @@ module.exports = function (grunt) {
 				}
 			});
 		}(i));
-	});
+	};
+
+	return checkDependencies;
 
 };

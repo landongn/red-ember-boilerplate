@@ -1,63 +1,12 @@
-/*global module:false*/
+/* jshint node:true */
 module.exports = function (grunt) {
 
-	var pkg = require("../utils/pkg");
-	var fs = require("fs");
+	var replaceInFiles = function (cb, opts) {
+		var helper = require("../helpers").init(grunt);
 
-	grunt.registerHelper("is_okay", function (file, include, exclude) {
-		var ok = false;
-		var re;
+		var pkg = require("../utils/pkg");
+		var fs = require("fs");
 
-		for (var i = 0; i < include.length; i ++) {
-			re = include[i];
-			if (re.test(file)) {
-				ok = true;
-				break;
-			}
-		}
-		for (i = 0; i < exclude.length; i ++) {
-			re = exclude[i];
-			if (re.test(file)) {
-				ok = false;
-				break;
-			}
-		}
-		return ok;
-	});
-
-	grunt.registerHelper("replace_vars", function (str) {
-		var hasMatch;
-
-		for (var p in pkg.config.vars) {
-			var re = new RegExp("([\\t,\\s]*)({?#?__" + p + "__#?}?)", "g");
-			var re2 = new RegExp("([\\t,\\s]*)({#__" + p + "__#})([\\s\\S]*)({#\\/__" + p + "__#})", "g");
-
-			if (re.test(str)) {
-				var prefixRE = /([\t,\s]*)(?=[{#]*__" + p + "__[#}]*)/g;
-				var prefixMatch = str.match(prefixRE);
-
-				var prefix = prefixMatch ? prefixMatch[0] : "";
-
-				var repl = pkg.config.vars[p].split("\n").join("\n" + prefix);
-
-				if (!re2.test(str)) {
-					str = str.replace(re, "$1" + repl, "g");
-				} else {
-					str = str.replace(re2, "$1$2\n$1" + repl + "\n$1$4");
-				}
-
-				hasMatch = true;
-			}
-		}
-
-		if (!hasMatch) {
-			return false;
-		}
-
-		return str;
-	});
-
-	grunt.registerHelper("replace_in_files", function (cb, opts) {
 		var path = require("path");
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
 
@@ -88,7 +37,7 @@ module.exports = function (grunt) {
 			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isFile();
 		}).forEach(function (file) {
 			var contents = fs.readFileSync(file, "utf8");
-			contents = grunt.helper("replace_vars", contents.toString());
+			contents = helper.replaceVars(contents.toString());
 
 			if (contents) {
 				grunt.file.write(file, contents);
@@ -99,7 +48,7 @@ module.exports = function (grunt) {
 			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isDirectory();
 		}).forEach(function (file) {
 			if (fs.existsSync(file)) {
-				newFile = grunt.helper("replace_vars", file.toString());
+				newFile = helper.replaceVars(file.toString());
 
 				if (newFile && file !== newFile) {
 					var wrench = require("wrench");
@@ -114,6 +63,8 @@ module.exports = function (grunt) {
 		}
 
 		return;
-	});
+	};
+
+	return replaceInFiles;
 
 };

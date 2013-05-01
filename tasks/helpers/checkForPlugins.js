@@ -2,7 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("check_for_available_plugins", function (cb) {
+	var checkForPlugins = function (cb) {
+		var helper = require("../helpers").init(grunt);
+
 		var fs = require("fs"),
 			path = require("path"),
 			cwd = process.cwd(),
@@ -29,7 +31,9 @@ module.exports = function (grunt) {
 		}
 
 		if (fs.existsSync(pluginDir)) {
-			var branches = grunt.file.expandDirs(pluginDir + "/*");
+			var branches = grunt.file.expand({
+				filter: "isDirectory"
+			}, pluginDir + "/*");
 			var i, j, branch, branchPath;
 
 			for (i = 0, j = branches.length; i < j; i++) {
@@ -46,7 +50,7 @@ module.exports = function (grunt) {
 				plugins.push(plugin);
 			}
 
-			grunt.helper("writeln", ("Found the following: " + plugins.map(function (plug) {
+			helper.writeln(("Found the following: " + plugins.map(function (plug) {
 				return plug.name;
 			}).sort().join(", ")).grey);
 
@@ -54,9 +58,11 @@ module.exports = function (grunt) {
 				cb(plugins.sort(compare));
 			}
 		} else if (cb) {
-			grunt.helper("writeln", "No plugins found".grey);
+			helper.writeln("No plugins found".grey);
 			cb([]);
 		}
-	});
+	};
+
+	return checkForPlugins;
 
 };

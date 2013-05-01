@@ -4,10 +4,12 @@ module.exports = function (grunt) {
 
 	// Default task.
 	grunt.registerTask("default", function () {
+		var helper = require("./helpers").init(grunt);
+
 		var done = this.async();
 		var tasks = ["tasks"];
 
-		grunt.helper("check_initialized", function (initialized) {
+		helper.checkInitialized(function (initialized) {
 			if (!initialized) {
 				tasks.unshift("start");
 			}
