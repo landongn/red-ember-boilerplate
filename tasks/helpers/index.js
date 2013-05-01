@@ -42,8 +42,6 @@ module.exports = {
 		loadHelpers(files);
 		loadPlugins();
 
-		console.log(helpers);
-
 		return helpers;
 	}
 };
