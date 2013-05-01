@@ -9,7 +9,11 @@ module.exports = function (grunt) {
 		this.requiresConfig("build");
 
 		helper.checkInitialized(function (initialized) {
-			var tasks = ["sync"];
+			var tasks = [];
+
+			if (!grunt.config.get("synced")) {
+				tasks.push("sync");
+			}
 
 			if (!initialized) {
 				tasks.unshift("start");
