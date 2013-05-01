@@ -3,9 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
-		// TODO: ditch this when grunt v0.4 is released
-		grunt.util = grunt.util || grunt.utils;
-
+		var helper = require("./helpers").init(grunt);
 		var done = this.async();
 
 		var fs = require("fs");
@@ -81,7 +79,7 @@ module.exports = function (grunt) {
 
 			fs.writeFileSync(localPath, JSON.stringify(localPkg, null, "\t") + "\n");
 
-			grunt.helper("spawn", {
+			helper.spawn({
 				cmd: "npm",
 				args: ["install", "--production"],
 				title: "Installing npm packages",
@@ -118,7 +116,7 @@ module.exports = function (grunt) {
 		};
 
 		var onFetch = function (code, tag) {
-			grunt.helper("spawn", {
+			helper.spawn({
 				cmd: "git",
 				args: ["checkout", tag],
 				cwd: pkg.config.dirs.robyn,
@@ -134,10 +132,10 @@ module.exports = function (grunt) {
 		};
 
 		var testAssertion = function (props, tag) {
-			var assert = grunt.helper("get_assertion", props.force);
+			var assert = helper.getAssertion(props.force);
 
 			if (assert) {
-				grunt.helper("spawn", {
+				helper.spawn({
 					cmd: "git",
 					args: ["fetch", "--all"],
 					cwd: pkg.config.dirs.robyn,
@@ -223,7 +221,7 @@ module.exports = function (grunt) {
 			}
 		};
 
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "git",
 			args: ["ls-remote", "--tags", "origin"],
 			cwd: pkg.config.dirs.robyn,

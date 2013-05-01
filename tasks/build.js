@@ -3,10 +3,12 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerMultiTask("build", "Build your project.", function () {
+		var helper = require("./helpers").init(grunt);
+
 		var done = this.async();
 		this.requiresConfig("build");
 
-		grunt.helper("check_initialized", function (initialized) {
+		helper.checkInitialized(function (initialized) {
 			var tasks = ["sync"];
 
 			if (!initialized) {

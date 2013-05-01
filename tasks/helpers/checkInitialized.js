@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("check_initialized", function (done) {
+	var checkInitialized = function (done) {
 		var fs = require("fs");
 		var pkg = require("../utils/pkg");
 		var initialized = pkg.initialized;
@@ -27,6 +27,8 @@ module.exports = function (grunt) {
 		} else {
 			done(false);
 		}
-	});
+	};
+
+	return checkInitialized;
 
 };

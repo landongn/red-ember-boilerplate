@@ -6,7 +6,9 @@ module.exports = function (grunt, cb) {
 	// Just an example function that does nothing.
 	// Customize to your needs.
 	var doSomething = function () {
-		grunt.helper("spawn", {
+		var helper = require("./helpers").init(grunt);
+
+		helper.spawn({
 			cmd: "node",
 			args: ["--version"],
 			title: "Getting Node version",

@@ -3,11 +3,13 @@ module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("install", "Install a plugin", function (plugin, isUpdate) {
+		var helper = require("./helpers").init(grunt);
+
 		var pkg = require("./utils/pkg");
 		var colors = require("colors");
 		var done = this.async();
 
-		grunt.helper("check_for_available_plugins", function (plugins) {
+		helper.checkForPlugins(function (plugins) {
 			var i, j, current;
 			var available = [];
 			var installed = [];
@@ -90,7 +92,7 @@ module.exports = function (grunt) {
 				grunt.fail.warn(cleanPlugin.red.bold + " is not an available plugin".yellow);
 			}
 
-			grunt.helper("install_plugin", plugin, isUpdate, function (stop) {
+			helper.installPlugin(plugin, isUpdate, function (stop) {
 				if (stop === true) {
 					resetGit(false);
 				} else {
