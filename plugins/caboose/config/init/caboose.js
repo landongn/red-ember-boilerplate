@@ -1,7 +1,7 @@
 /*jslint node: true */
 "use strict";
 
-module.exports = function (grunt, cb) {
+module.exports = function (grunt, helper, cb) {
 	var fs = require("fs"),
 		cwd = process.cwd(),
 		path = require("path"),
@@ -45,7 +45,7 @@ module.exports = function (grunt, cb) {
 	};
 
 	var installGems = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "bundle",
 			args: ["install", "--path", ".bundle"],
 			title: "Installing bundle. This may take a minute",

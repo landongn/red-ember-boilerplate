@@ -1,7 +1,7 @@
 /*jslint node: true */
 "use strict";
 
-module.exports = function (grunt, cb) {
+module.exports = function (grunt, helper, cb) {
 	var fs = require("fs"),
 		path = require("path"),
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json"),
@@ -16,7 +16,7 @@ module.exports = function (grunt, cb) {
 			return exit();
 		}
 
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "node",
 			args: [path.join(installpath, "installer.js")],
 			title: "Installing external libraries",

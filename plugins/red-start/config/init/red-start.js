@@ -1,10 +1,10 @@
 /*jslint node: true */
 "use strict";
 
-module.exports = function (grunt, cb) {
+module.exports = function (grunt, helper, cb) {
 
 	var runSetup = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "sh",
 			args: ["./scripts/setup.sh"],
 			title: "Creating a virtualenv. This may take a minute",
@@ -19,7 +19,7 @@ module.exports = function (grunt, cb) {
 	};
 
 	var runRedStart = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "red-start",
 			args: ["--no-prompt", "--no-git"],
 			title: "Creating a new red-start project",
@@ -54,7 +54,7 @@ module.exports = function (grunt, cb) {
 		if (!isInstalled) {
 			runRedStart();
 		} else {
-			grunt.helper("writeln", "Looks like RED Start was already run on this project. Skipping ahead...".grey);
+			helper.writeln("Looks like RED Start was already run on this project. Skipping ahead...".grey);
 			runSetup();
 		}
 	};
