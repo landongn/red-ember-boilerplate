@@ -22,7 +22,6 @@ module.exports = function (grunt) {
 		line_comments: true,
 		relative_assets: true,
 		bundle_exec: true,
-		force_compile: true,
 
 		// Extra config options
 		extras: {
@@ -53,14 +52,13 @@ module.exports = function (grunt) {
 		output_style: ":compressed",
 		line_comments: false,
 		relative_assets: "<%= compass.dev.relative_assets %>",
-		bundle_exec: "<%= compass.dev.bundle_exec %>",
-		force_compile: "<%= compass.dev.force_compile %>"
+		bundle_exec: "<%= compass.dev.bundle_exec %>"
 	});
 
-	// Trick grunt by creating a task named "watch:compass"
-	// Instead of running the grunt watcher, it invokes the compass watcher
-	grunt.registerTask("watch:compass", function () {
-		grunt.task.run(["compass:dev:watch"]);
+	grunt.config.set("watch.compass", {
+		files: path.join(source, "**/*.s{a,c}ss"),
+		tasks: ["compass:dev"],
+		interrupt: true
 	});
 
 	grunt.registerTask("compass:bundle", function () {
