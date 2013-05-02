@@ -13,6 +13,9 @@ module.exports = function (grunt) {
 		}
 	});
 
+	// Load grunt-contrib-watch
+	grunt.loadNpmTasks("grunt-contrib-watch");
+
 	// Robin tasks
 	// Load your custom tasks *after* these
 	(function () {
