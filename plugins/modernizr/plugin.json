@@ -3,7 +3,7 @@
 	"description": "Build out a lean, mean Modernizr machine.",
 	"version": "1.0.2",
 	"dependencies": {
-		"grunt-modernizr": "~0.2.x"
+		"grunt-modernizr": "~0.3.x"
 	},
 	"systemDependencies": {
 		"node": {
