@@ -288,7 +288,7 @@ module.exports = function (grunt) {
 			if (fs.existsSync(file)) {
 				var initializer = require(file);
 
-				initializer(grunt, function (error) {
+				initializer(grunt, helper, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
