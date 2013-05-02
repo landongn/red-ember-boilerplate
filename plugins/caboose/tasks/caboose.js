@@ -41,20 +41,20 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("compass.prod", {
-		http_path: "<config:compass.dev.http_path>",
-		sass_dir: "<config:compass.dev.sass_dir>",
-		css_dir: "<config:compass.dev.css_dir>",
-		images_dir: "<config:compass.dev.images_dir>",
-		fonts_dir: "<config:compass.dev.fonts_dir>",
-		javascripts_dir: "<config:compass.dev.javascripts_dir>",
-		generated_images_dir: "<config:compass.dev.generated_images_dir>",
-		additional_import_paths: "<config:compass.dev.additional_import_paths>",
-		sprite_load_path: "<config:compass.dev.sprite_load_path>",
+		http_path: "<%= compass.dev.http_path %>",
+		sass_dir: "<%= compass.dev.sass_dir %>",
+		css_dir: "<%= compass.dev.css_dir %>",
+		images_dir: "<%= compass.dev.images_dir %>",
+		fonts_dir: "<%= compass.dev.fonts_dir %>",
+		javascripts_dir: "<%= compass.dev.javascripts_dir %>",
+		generated_images_dir: "<%= compass.dev.generated_images_dir %>",
+		additional_import_paths: "<%= compass.dev.additional_import_paths %>",
+		sprite_load_path: "<%= compass.dev.sprite_load_path %>",
 		output_style: ":compressed",
 		line_comments: false,
-		relative_assets: "<config:compass.dev.relative_assets>",
-		bundle_exec: "<config:compass.dev.bundle_exec>",
-		force_compile: "<config:compass.dev.force_compile>"
+		relative_assets: "<%= compass.dev.relative_assets %>",
+		bundle_exec: "<%= compass.dev.bundle_exec %>",
+		force_compile: "<%= compass.dev.force_compile %>"
 	});
 
 	// Trick grunt by creating a task named "watch:compass"
