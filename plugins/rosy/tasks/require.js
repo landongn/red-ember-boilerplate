@@ -25,12 +25,12 @@ module.exports = function (grunt) {
 				return;
 			}
 
-			if (msg.substring(0, 5) === "Error") {
-				grunt.log.errorlns(msg);
-				grunt.fail.warn("RequireJS failed.");
-			} else {
-				msg = msg.replace(new RegExp(absPath, "mg"), "");
+			msg = msg.replace(new RegExp(absPath + "(/)?", "mg"), "");
 
+			if (msg.substring(0, 5) === "Error") {
+				msg = msg.replace(absPath);
+				grunt.fail.warn(msg);
+			} else {
 				if (msg.indexOf(lineBreak) !== -1) {
 					msg = msg.split(lineBreak);
 					msg.shift();
