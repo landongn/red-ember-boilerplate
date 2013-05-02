@@ -78,9 +78,10 @@ module.exports = function (grunt) {
 	grunt.config.set("watch.modernizr", {
 		files: [
 			path.join(source, "**/*[^.min].js"),
-			path.join(source, "../{sass,scss}", "**/*.scss")
+			path.join(source, "../{sass,scss}", "**/*.s{a,c}ss")
 		],
-		tasks: ["modernizr"]
+		tasks: ["modernizr"],
+		interrupt: true
 	});
 
 	grunt.config.set("build.modernizr", "modernizr");
