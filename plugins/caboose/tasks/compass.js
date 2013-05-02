@@ -3,7 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 
 	// Create a new multi task.
-	grunt.registerMultiTask("compass", "Watch or compile your Compass files.", function (watch) {
+	grunt.registerMultiTask("compass", "Watch or compile your Compass files.", function () {
 		// require sass_dir
 		if (typeof this.data.sass_dir === "undefined") {
 			grunt.fail.warn("sass_dir must be defined");
@@ -39,7 +39,7 @@ module.exports = function (grunt) {
 
 		var tmp = [process.pid, "compass", new Date().getTime()].join("-");
 		var cmd = bundle ? "bundle" : "compass";
-		var args = [watch ? "watch" : "compile"];
+		var args = ["compile"];
 
 		// Delete custom properties
 		delete data.bundle_exec;
