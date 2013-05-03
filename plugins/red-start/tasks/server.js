@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		var cp = require("child_process");
 		var path = require("path");
 
-		var args = grunt.utils.toArray(arguments);
+		var args = grunt.util.toArray(arguments);
 		var done = this.async();
 
 		var port = (args[1] || args[0]);
