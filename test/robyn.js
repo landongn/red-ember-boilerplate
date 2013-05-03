@@ -1,5 +1,4 @@
-/*jshint node:true */
-
+/* jshint node: true */
 module.exports = {
 	check : function (callback) {
 		var fs = require("fs");
@@ -122,8 +121,8 @@ module.exports = {
 		.expect("On branch")
 		.run(function (err) {
 			if (err) {
-				var url = cwd;
-				nexpect.spawn("robyn", ["add", "rbp-test", url, "--branch", "develop"], {
+				var url = process.env.TRAVIS ? repositoryUrl : cwd;
+				nexpect.spawn("robyn", ["add", "robyn-test", url], {
 					stripColors: true
 				})
 				.expect("Added nest rbp-test at %u".replace("%u", url))
