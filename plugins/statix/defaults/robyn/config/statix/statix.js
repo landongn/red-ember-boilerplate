@@ -103,6 +103,10 @@ module.exports = {
 		});
 	},
 
+	swigSettings : {
+		cache: false
+	},
+
 	/*
 		Just like `preBuild()` but this method gets called after Statix has generated the static site. You can use this to
 		cleanup some files, git commit/push, or whatever you feel like. Just be sure to invoke the `done()` function afterwards.
