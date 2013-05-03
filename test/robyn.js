@@ -122,7 +122,7 @@ module.exports = {
 		.run(function (err) {
 			if (err) {
 				var url = process.env.TRAVIS ? repositoryUrl : cwd;
-				nexpect.spawn("robyn", ["add", "robyn-test", url], {
+				nexpect.spawn("robyn", ["add", "rbp-test", url], {
 					stripColors: true
 				})
 				.expect("Added nest rbp-test at %u".replace("%u", url))
