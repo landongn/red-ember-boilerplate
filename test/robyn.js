@@ -1,3 +1,4 @@
+/* jshint node: true */
 module.exports = {
 	check : function (callback) {
 		var fs = require("fs");
@@ -58,7 +59,7 @@ module.exports = {
 		.expect("On branch")
 		.run(function (err) {
 			if (err) {
-				var url = cwd;
+				var url = process.env.TRAVIS ? repositoryUrl : cwd;
 				nexpect.spawn("robyn", ["add", "robyn-test", url], {
 					stripColors: true
 				})
