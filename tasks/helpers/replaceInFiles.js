@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 		files.filter(function (file) {
 			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isFile();
 		}).forEach(function (file) {
-			var contents = fs.readFileSync(file, "utf8");
+			var contents = grunt.file.read(file);
 			contents = helper.replaceVars(contents.toString());
 
 			if (contents) {
