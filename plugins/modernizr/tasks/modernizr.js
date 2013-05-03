@@ -1,4 +1,4 @@
-/*jslint node: true */
+/* jshint node: true */
 "use strict";
 
 module.exports = function (grunt) {
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
 			path.join(source, "**/*[^.min].js"),
 			path.join(source, "../{sass,scss}", "**/*.s{a,c}ss")
 		],
-		tasks: ["modernizr"],
+		tasks: ["modernizr", "livereload"],
 		interrupt: true
 	});
 

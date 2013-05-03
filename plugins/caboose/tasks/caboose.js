@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/* jshint node: true */
 module.exports = function (grunt) {
 	"use strict";
 
@@ -55,12 +55,6 @@ module.exports = function (grunt) {
 		bundle_exec: "<%= compass.dev.bundle_exec %>"
 	});
 
-	grunt.config.set("watch.compass", {
-		files: path.join(source, "**/*.s{a,c}ss"),
-		tasks: ["compass:dev"],
-		interrupt: true
-	});
-
 	grunt.registerTask("compass:bundle", function () {
 		var done = this.async();
 		var cp = require("child_process");
@@ -93,5 +87,12 @@ module.exports = function (grunt) {
 		});
 	});
 
+	grunt.config.set("watch.compass", {
+		files: path.join(source, "**/*.s{a,c}ss"),
+		tasks: ["compass:dev", "livereload"],
+		interrupt: true
+	});
+
 	grunt.config.set("build.compass", ["compass:bundle", "compass:prod"]);
+
 };

@@ -1,4 +1,4 @@
-/*jslint node: true */
+/* jshint node: true */
 "use strict";
 
 module.exports = function (grunt) {
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 
 	grunt.config.set("watch.requirejs", {
 		files: path.join(source, "**/*[^.min].js"),
-		tasks: ["requirejs"],
+		tasks: ["requirejs", "livereload"],
 		interrupt: true
 	});
 

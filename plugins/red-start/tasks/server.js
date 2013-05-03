@@ -1,4 +1,5 @@
-module.exports = function(grunt) {
+/* jshint node: true */
+module.exports = function (grunt) {
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
 		var fs = require("fs");
@@ -51,6 +52,8 @@ module.exports = function(grunt) {
 				process.exit();
 			}
 		};
+
+		grunt.task.run(["livereload-start"]);
 
 		if (!fs.existsSync(activate)) {
 			setupProject();

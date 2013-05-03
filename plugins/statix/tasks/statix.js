@@ -40,6 +40,7 @@ module.exports = function (grunt) {
 			path.join(cwd, "robyn", "config", "statix")
 		].join(",");
 
+		grunt.task.run(["livereload-start"]);
 		statix.server(statixPkg, projectPaths, port);
 
 		process.on("exit", function () {
