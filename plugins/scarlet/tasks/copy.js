@@ -23,6 +23,10 @@ module.exports = function (grunt) {
 		files : grunt.config.get("copy").admin.map(function (obj) {
 			return path.join(obj.src, "**", "*");
 		}),
-		tasks : ["copy:admin:soft"]
+		tasks : ["copy:admin:soft"],
+		options: {
+			interrupt: true,
+			livereload: true
+		}
 	});
 };

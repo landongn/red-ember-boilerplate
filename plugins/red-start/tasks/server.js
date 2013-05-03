@@ -53,8 +53,6 @@ module.exports = function (grunt) {
 			}
 		};
 
-		grunt.task.run(["livereload-start"]);
-
 		if (!fs.existsSync(activate)) {
 			setupProject();
 		} else {

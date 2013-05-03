@@ -27,8 +27,11 @@ module.exports = function (grunt) {
 
 	grunt.config.set("watch.requirejs", {
 		files: path.join(source, "**/*[^.min].js"),
-		tasks: ["requirejs", "livereload"],
-		interrupt: true
+		tasks: ["requirejs"],
+		options: {
+			interrupt: true,
+			livereload: true
+		}
 	});
 
 	grunt.config.set("build.requirejs", "requirejs");

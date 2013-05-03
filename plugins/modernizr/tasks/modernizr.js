@@ -80,8 +80,11 @@ module.exports = function (grunt) {
 			path.join(source, "**/*[^.min].js"),
 			path.join(source, "../{sass,scss}", "**/*.s{a,c}ss")
 		],
-		tasks: ["modernizr", "livereload"],
-		interrupt: true
+		tasks: ["modernizr"],
+		options: {
+			interrupt: true,
+			livereload: true
+		}
 	});
 
 	grunt.config.set("build.modernizr", "modernizr");

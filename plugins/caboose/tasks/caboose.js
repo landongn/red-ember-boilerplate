@@ -89,8 +89,11 @@ module.exports = function (grunt) {
 
 	grunt.config.set("watch.compass", {
 		files: path.join(source, "**/*.s{a,c}ss"),
-		tasks: ["compass:dev", "livereload"],
-		interrupt: true
+		tasks: ["compass:dev"],
+		options: {
+			interrupt: true,
+			livereload: true
+		}
 	});
 
 	grunt.config.set("build.compass", ["compass:bundle", "compass:prod"]);

@@ -75,6 +75,11 @@
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
 		</script>
+
+		{# LiveReload #}
+		<script>
+			require(["//" + (location.host || "localhost").split(":")[0] + ":35729/livereload.js"]);
+		</script>
 		{% else %}
 		<script>
 			require.config({
