@@ -118,34 +118,44 @@ module.exports = function (grunt) {
 			}
 		};
 
+		var buildExcludes = function (root) {
+			var exclude = [
+				path.join(root, "{.git,test}", "**", "*"),
+				path.join(root, "package.json"),
+				path.join(root, ".{gitignore,travis.yml}"),
+				path.join(root, "README.md")
+			].map(function (path) {
+				return "!" + path;
+			});
+
+			return exclude;
+		};
+
 		var copyFiles = function (plug, plugPkg, cb) {
 			var scope = (plugPkg.config || {}).scope || "";
 			var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
-			var repoPaths = grunt.file.expand({
-				filter: "isFile",
-				dot : true
-			}, plugDir + "/**/*");
 			var i, j, file, newFile;
 
 			helper.write("Copying files into project".grey);
 
-			var exclude = [
-				"package.json",
-				".gitignore",
-				"README.md"
-			];
+			var exclude = buildExcludes(plugDir);
 
 			if (isUpdate) {
-				exclude.push("**/__" + "PROJECT_NAME" + "__/**/*");
+				exclude.push("!" + path.join(plugDir, "**", "__" + "PROJECT_NAME" + "__", "**", "*"));
 			}
 
-			repoPaths.filter(function (file) {
-				return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
-			}).forEach(function (file) {
-				if (file.split(path.sep).indexOf(".git") === -1) {
-					newFile = file.replace(plugDir, path.join(process.cwd(), scope)).replace(/\/\//g, "/");
-					grunt.file.copy(file, newFile);
+			var repoPaths = grunt.file.expand({
+				filter: "isFile",
+				dot : true
+			}, [path.join(plugDir, "**", "*")].concat(exclude));
 
+			var verbose = grunt.option("verbose");
+
+			repoPaths.forEach(function (file) {
+				newFile = file.replace(plugDir, path.join(process.cwd(), scope)).replace(/\/\//g, "/");
+				grunt.file.copy(file, newFile);
+
+				if (!verbose) {
 					grunt.log.write(".".grey);
 				}
 			});
@@ -154,24 +164,25 @@ module.exports = function (grunt) {
 			var pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 			var localDir = path.join(pluginDir, plug, localFiles);
 
+			exclude = buildExcludes(localDir);
+
 			if (fs.existsSync(localDir)) {
 				var localPaths = grunt.file.expand({
 					filter: "isFile",
 					dot : true
-				}, localDir + "/**/*");
+				}, [localDir + "/**/*"].concat(exclude));
 
-				localPaths.filter(function (file) {
-					return !grunt.file.isMatch(exclude, file) && fs.existsSync(file);
-				}).forEach(function (file) {
-					if (file.split(path.sep).indexOf(".git") === -1) {
-						newFile = file.replace(localDir + "/", "");
-						grunt.file.copy(file, newFile);
+				localPaths.forEach(function (file) {
+					newFile = file.replace(localDir + "/", "");
+					grunt.file.copy(file, newFile);
 
+					if (!verbose) {
 						grunt.log.write(".".grey);
 					}
 				});
 
 				var gitIgnore = path.join(localDir, ".gitignore");
+
 				if (fs.existsSync(gitIgnore)) {
 					var currGitIgnore = path.join(cwd, ".gitignore");
 
