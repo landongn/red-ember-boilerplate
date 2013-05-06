@@ -22,14 +22,7 @@ module.exports = function (grunt) {
 		});
 	};
 
-	grunt.registerTask("statix:build", "Build with statix", function () {
-		var done = this.async();
-
-		var statix = require("statix");
-		statix.build(statixPkg);
-	});
-
-	grunt.registerTask("statix:server", "Run the statix server", function (p) {
+	var server = function (p) {
 		var statix = require("statix");
 
 		var port = p || 8000;
@@ -40,19 +33,27 @@ module.exports = function (grunt) {
 			path.join(cwd, "robyn", "config", "statix")
 		].join(",");
 
-		grunt.task.run(["livereload-start"]);
 		statix.server(statixPkg, projectPaths, port);
 
 		process.on("exit", function () {
 			done(1);
 		});
+	};
+
+	grunt.registerTask("statix:build", "Build with statix", function () {
+		var done = this.async();
+
+		var statix = require("statix");
+		statix.build(statixPkg);
 	});
+
+	grunt.registerTask("statix:server", "Run the statix server", server);
 
 	// If RED Start is installed, it's considered the dominant plugin
 	// Otherwise, map `grunt server` to statix
 	var hasRedStart = !!(pkg.installedPlugins["red-start"]);
 
 	if (!hasRedStart) {
-		grunt.registerTask("server", ["statix:server"]);
+		grunt.registerTask("server", server);
 	}
 };
