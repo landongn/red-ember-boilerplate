@@ -2,18 +2,34 @@
 "use strict";
 
 module.exports = function (grunt, helper, cb) {
+	var path = require("path");
+
+	var runSync = function () {
+		helper.spawn({
+			cmd: "sh",
+			args: [path.join("scripts", "sync.sh")],
+			title: "Syncing database",
+			complete: function (code) {
+				if (code !== 0) {
+					return exit("Something went wrong attempting to run scripts/sync.sh");
+				}
+
+				exit();
+			}
+		});
+	};
 
 	var runSetup = function () {
 		helper.spawn({
 			cmd: "sh",
-			args: ["./scripts/setup.sh"],
+			args: [path.join("scripts", "setup.sh")],
 			title: "Creating a virtualenv. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("Something went wrong attempting to run scripts/setup.sh");
 				}
 
-				return exit();
+				runSync();
 			}
 		});
 	};
@@ -38,8 +54,8 @@ module.exports = function (grunt, helper, cb) {
 
 		var filesToCheck = [
 			"fabfile.py",
-			"project/manage.py",
-			"scripts/setup.sh"
+			path.join("project", "manage.py"),
+			path.join("scripts", "setup.sh")
 		];
 
 		var isInstalled = true;

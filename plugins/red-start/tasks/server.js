@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* jshint node:true */
 module.exports = function (grunt) {
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
@@ -15,13 +15,20 @@ module.exports = function (grunt) {
 
 		var activate = path.join("env", "bin", "activate");
 		var setup = path.join("scripts", "setup.sh");
+		var sync = path.join("scripts", "sync.sh");
 		var server = path.join("scripts", "run.sh");
 
 		var child;
 
 		var runProject = function () {
 			if (fs.existsSync(setup)) {
-				child = cp.spawn("sh", [server, cmd], {
+				var args = [server, cmd];
+
+				if (grunt.option("verbose")) {
+					grunt.log.writeln(args.join(" "));
+				}
+
+				child = cp.spawn("sh", args, {
 					stdio: "inherit"
 				});
 
@@ -31,6 +38,24 @@ module.exports = function (grunt) {
 			} else {
 				console.error("No run script found. Aborting.");
 				process.exit();
+			}
+		};
+
+		var syncProject = function () {
+			if (fs.existsSync(sync)) {
+				child = cp.spawn("sh", [sync], {
+					stdio: "inherit"
+				});
+
+				child.addListener("exit", function (code) {
+					if (code !== 0) {
+						process.exit();
+					} else {
+						runProject();
+					}
+				});
+			} else {
+				runProject();
 			}
 		};
 
@@ -44,7 +69,7 @@ module.exports = function (grunt) {
 					if (code !== 0) {
 						process.exit();
 					} else {
-						runProject();
+						syncProject();
 					}
 				});
 			} else {
