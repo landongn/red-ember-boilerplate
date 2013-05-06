@@ -14,26 +14,26 @@ module.exports = function (grunt) {
 		var root = opts.root || "";
 		var config = opts.config || {};
 
+		var rootWithTrailingSlash = root ? (root + "/") : "";
 		delete require.cache[updatePath + ".js"];
 
 		var i, j, current, newFile,
 			stats;
 
-		var excludeDirs = (pkg.config.excludedPaths || []).filter(function (path) {
-			return !opts.root || path.indexOf(root) !== -1;
+		var excludeDirs = (pkg.config.excludedPaths || []).map(function (path) {
+			return "!" + rootWithTrailingSlash + path;
 		});
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
-			return "!" + dir + "/**/*";
+			return dir + "/**/*";
 		})).concat([
-			"!**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg,pyc,pyo}",
-			"!**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
-			"!**/*.min.{js,css}"
+			"!" + rootWithTrailingSlash + "**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg,pyc,pyo}",
+			"!" + rootWithTrailingSlash + "**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
+			"!" + rootWithTrailingSlash + "**/*.min.{js,css}"
 		]);
 
-		var files = grunt.file.expand(config, [path.join(root, "**/*")].concat(excludeFiles));
-
-		console.log(files);
+		var paths = [path.join(root, "**/*")].concat(excludeFiles);
+		var files = grunt.file.expand(config, paths);
 
 		files.filter(function (file) {
 			return fs.statSync(file).isFile();
