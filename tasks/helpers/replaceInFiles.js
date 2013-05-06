@@ -26,9 +26,9 @@ module.exports = function (grunt) {
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
 			return "!" + dir + "/**/*";
 		})).concat([
-			"!" + root + "**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
-			"!" + root + "**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
-			"!" + root + "**/*.min.{js,css}"
+			"!**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg,pyc,pyo}",
+			"!**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
+			"!**/*.min.{js,css}"
 		]);
 
 		var files = grunt.file.expand(config, [path.join(root, "**/*")].concat(excludeFiles));
