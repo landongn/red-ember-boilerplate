@@ -15,7 +15,6 @@ module.exports = function (grunt) {
 
 	// Load grunt-contrib tasks
 	grunt.loadNpmTasks("grunt-contrib-watch");
-	grunt.loadNpmTasks("grunt-contrib-livereload");
 
 	// Robin tasks
 	// Load your custom tasks *after* these
