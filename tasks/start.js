@@ -67,6 +67,7 @@ module.exports = function (grunt) {
 			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
 			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
+			grunt.task.run(["build"]);
 			done();
 		};
 
