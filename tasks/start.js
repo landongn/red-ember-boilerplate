@@ -63,16 +63,17 @@ module.exports = function (grunt) {
 			pkg.initialized = true;
 			pkg.save();
 
-			grunt.task.run(["build"]);
-			grunt.util.spawn({
+			helper.spawn({
 				cmd: "grunt",
-				args: ["build"]
-			}, function () {
-				grunt.log.writeln();
-				grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
-				grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+				args: ["build"],
+				title: "Initial build",
+				complete: function () {
+					grunt.log.writeln();
+					grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+					grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
-				done();
+					done();
+				}
 			});
 		};
 
