@@ -16,8 +16,6 @@ module.exports = function (grunt) {
 
 		delete require.cache[updatePath + ".js"];
 
-		var files = grunt.file.expand(config, path.join(root, "**/*"));
-
 		var i, j, current, newFile,
 			stats;
 
@@ -26,15 +24,19 @@ module.exports = function (grunt) {
 		});
 
 		var excludeFiles = excludeDirs.concat(excludeDirs.map(function (dir) {
-			return dir + "/**/*";
+			return "!" + dir + "/**/*";
 		})).concat([
-			"**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
-			"**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
-			"**/*.min.{js,css}"
+			"!" + root + "**/*.{fla,gz,tar,tgz,zip,pyc,DS_Store,bpm,ico,psd,swf,gif,png,jpg}",
+			"!" + root + "**/*.{ttf,otf,eot,woff,jar,exe,pdf,bz2,swc,as,mp3}",
+			"!" + root + "**/*.min.{js,css}"
 		]);
 
+		var files = grunt.file.expand(config, [path.join(root, "**/*")].concat(excludeFiles));
+
+		console.log(files);
+
 		files.filter(function (file) {
-			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isFile();
+			return fs.statSync(file).isFile();
 		}).forEach(function (file) {
 			var contents = grunt.file.read(file);
 			contents = helper.replaceVars(contents.toString());
@@ -45,7 +47,7 @@ module.exports = function (grunt) {
 		});
 
 		files.filter(function (file) {
-			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isDirectory();
+			return fs.statSync(file).isDirectory();
 		}).forEach(function (file) {
 			if (fs.existsSync(file)) {
 				newFile = helper.replaceVars(file.toString());
