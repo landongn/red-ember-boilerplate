@@ -3,20 +3,20 @@ module.exports = function (grunt) {
 	"use strict";
 
 	var path = require("path"),
-		caboose = require(path.join(__dirname, "../plugin.json")),
-		output = "project/static",
+		caboose = require(path.join(__dirname, "..", "plugin.json")),
+		output = path.join("project", "static"),
 		source = caboose.config.scope;
 
 	// Config options
 	grunt.config.set("compass.dev", {
 		http_path: "/",
-		sass_dir: path.join(source, "scss/project"),
+		sass_dir: path.join(source, "scss", "project"),
 		css_dir: path.join(output, "css"),
 		images_dir: path.join(output, "img"),
 		fonts_dir: path.join(output, "fonts"),
 		javascripts_dir: path.join(output, "js"),
 		generated_images_dir: path.join(output, "img"),
-		additional_import_paths: [path.join(source, "scss/caboose")],
+		additional_import_paths: [path.join(source, "scss", "caboose")],
 		sprite_load_path: [path.join(source, "img")],
 		output_style: ":expanded",
 		line_comments: true,
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("watch.compass", {
-		files: path.join(source, "**/*.s{a,c}ss"),
+		files: path.join(source, "**", "*.s{a,c}ss"),
 		tasks: ["compass:dev"],
 		options: {
 			interrupt: true,

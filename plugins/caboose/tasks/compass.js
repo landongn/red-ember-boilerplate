@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
 		var config = {
 			// Build temp config path
-			path : path.join("/", "tmp", tmp),
+			path : path.join(path.sep, "tmp", tmp),
 
 			// Build config text, array => string conversion, etc
 			rb : (function () {

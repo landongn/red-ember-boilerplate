@@ -5,18 +5,18 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		rosy = require(path.join(__dirname, "../../rosy", "plugin.json")),
-		output = "project/static/js",
+		rosy = require(path.join(__dirname, "..", "..", "rosy", "plugin.json")),
+		output = path.join("project", "static", "js"),
 		source = rosy.config.scope;
 
 	// Project configuration.
 	grunt.config.set("modernizr", {
 
 		// [REQUIRED] Path to the build you're using for development.
-		"devFile" : path.join(source, "libs/modernizr.js"),
+		"devFile" : path.join(source, "libs", "modernizr.js"),
 
 		// [REQUIRED] Path to save out the built file.
-		"outputFile" : path.join(output, "libs/modernizr.min.js"),
+		"outputFile" : path.join(output, "libs", "modernizr.min.js"),
 
 		// Based on default settings on http://modernizr.com/download/
 		"extra" : {
@@ -52,8 +52,8 @@ module.exports = function (grunt) {
 		// When parseFiles = true, this task will crawl all *.js, *.css, *.scss files.
 		// You can override this by defining a "files" array below.
 		"files" : [
-			path.join(source, "**/*.js"),
-			path.join(source, "../{sass,scss}", "**/*.scss")
+			path.join(source, "**", "*.js"),
+			path.join(source, "..", "{sass,scss}", "**", "*.scss")
 		],
 
 		// When parseFiles = true, matchCommunityTests = true will attempt to
@@ -65,20 +65,20 @@ module.exports = function (grunt) {
 
 		// Files added here will be excluded when looking for Modernizr refs.
 		"excludeFiles" : [
-			"env/**/*",
-			"robyn/**/*",
-			".bundle/**/*",
-			"node_modules/**/*",
-			"project/static/**/*",
-			"collected-static/**/*",
-			".{git,sass-cache,robyn}/**/*"
+			path.join("env", "**", "*"),
+			path.join("robyn", "**", "*"),
+			path.join(".bundle", "**", "*"),
+			path.join("node_modules", "**", "*"),
+			path.join("project", "static", "**", "*"),
+			path.join("collected-static", "**", "*"),
+			path.join(".{git,sass-cache,robyn}", "**", "*")
 		]
 	});
 
 	grunt.config.set("watch.modernizr", {
 		files: [
-			path.join(source, "**/*[^.min].js"),
-			path.join(source, "../{sass,scss}", "**/*.s{a,c}ss")
+			path.join(source, "**", "*[^.min].js"),
+			path.join(source, "..", "{sass,scss}", "**", "*.s{a,c}ss")
 		],
 		tasks: ["modernizr"],
 		options: {
