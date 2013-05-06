@@ -63,11 +63,18 @@ module.exports = function (grunt) {
 			pkg.initialized = true;
 			pkg.save();
 
-			grunt.log.writeln();
-			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
-			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+			helper.spawn({
+				cmd: "grunt",
+				args: ["build"],
+				title: "Initial build",
+				complete: function () {
+					grunt.log.writeln();
+					grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+					grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
-			done();
+					done();
+				}
+			});
 		};
 
 		var shrinkWrap = function () {
