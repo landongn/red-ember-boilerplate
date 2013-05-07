@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* jshint node: true */
 module.exports = function (grunt) {
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {

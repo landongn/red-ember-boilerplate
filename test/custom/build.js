@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/* jshint node: true */
 /*global describe, before, it*/
 
 "use strict";
