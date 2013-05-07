@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 	var fs = require("fs"),
 		path = require("path"),
 		rosy = require(path.join(__dirname, "..", "plugin.json")),
-		output = "project/static/js",
+		output = path.join("project", "static", "js"),
 		source = rosy.config.scope;
 
 	// Project configuration.
