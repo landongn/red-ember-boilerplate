@@ -45,12 +45,17 @@ module.exports = function (grunt, helper, cb) {
 		}
 
 		var tmuxinatorFile = path.join(configPath, grunt.template.process("<%= meta.projectName %>") + ".yml");
-		var contents = grunt.file.read(tmuxinatorFile);
+		var userTmuxinatorFile = path.join(userTmuxinatorDir, path.basename(tmuxinatorFile));
 
+		if (fs.existsSync(userTmuxinatorFile)) {
+			return exit(userTmuxinatorFile + " already exists. Aborting.");
+		}
+
+		var contents = grunt.file.read(tmuxinatorFile);
 		contents = contents.replace("__" + "PROJECT_ROOT" + "__", cwd);
 
 		grunt.file.write(tmuxinatorFile, contents);
-		fs.symlinkSync(tmuxinatorFile, path.join(userTmuxinatorDir, path.basename(tmuxinatorFile)));
+		fs.symlinkSync(tmuxinatorFile, userTmuxinatorFile);
 
 		writeToGemfile();
 	};
