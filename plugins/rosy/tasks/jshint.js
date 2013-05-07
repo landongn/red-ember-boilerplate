@@ -4,11 +4,11 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		rosy = require(path.join(__dirname, "../plugin.json")),
+		rosy = require(path.join(__dirname, "..", "plugin.json")),
 		source = rosy.config.scope,
 		jshint = require("jshint").JSHINT;
 
-	var FILES = path.join(source, "**/*[^.min].js");
+	var FILES = path.join(source, "**", "*[^.min].js");
 
 	function pad(str, len, padChar) {
 

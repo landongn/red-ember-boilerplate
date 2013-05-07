@@ -10,7 +10,7 @@ module.exports = function (grunt, helper, cb) {
 		cwd = process.cwd();
 
 	var installExternalScripts = function () {
-		var installpath = path.join(cwd, source, "libs/_install");
+		var installpath = path.join(cwd, source, "libs", "_install");
 
 		if (!fs.existsSync(path.join(installpath, "installer.js"))) {
 			return exit();
