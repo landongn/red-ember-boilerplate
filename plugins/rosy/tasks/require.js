@@ -17,9 +17,7 @@ module.exports = function (grunt) {
 	var requirejs = require("requirejs");
 	var lineBreak = "----------------";
 
-	// TODO: extend this to send build log to grunt.log.ok / grunt.log.error
-	// by overriding the r.js logger (or submit issue to r.js to expand logging support)
-	requirejs.define("node/print", [], function () {
+	var overrideRequireJSLog = function () {
 		return function print(msg) {
 			if (grunt.option("quiet")) {
 				return;
@@ -31,7 +29,7 @@ module.exports = function (grunt) {
 				msg = msg.replace(absPath);
 				grunt.fail.warn(msg);
 			} else {
-				if (msg.indexOf(lineBreak) !== -1) {
+				if (grunt.option("verbose") && msg.indexOf(lineBreak) !== -1) {
 					msg = msg.split(lineBreak);
 					msg.shift();
 
@@ -44,14 +42,19 @@ module.exports = function (grunt) {
 					grunt.log.subhead(msg.trim().grey);
 				} else if (msg.indexOf("Uglifying file:") !== -1) {
 					grunt.log.writeln(msg.trim().green);
-				} else {
+				} else if (grunt.option("verbose")) {
 					grunt.log.writeln(msg.trim().grey);
 				}
 			}
 		};
-	});
+	};
 
 	grunt.registerMultiTask("requirejs", "Build a RequireJS project.", function () {
+
+		// TODO: extend this to send build log to grunt.log.ok / grunt.log.error
+		// by overriding the r.js logger (or submit issue to r.js to expand logging support)
+		requirejs.define("node/print", [], overrideRequireJSLog);
+
 		absPath = process.cwd();
 
 		var done = this.async();
