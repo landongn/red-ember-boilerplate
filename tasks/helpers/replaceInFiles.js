@@ -49,6 +49,7 @@ module.exports = function (grunt) {
 		files.filter(function (file) {
 			return fs.statSync(file).isDirectory();
 		}).forEach(function (file) {
+			console.log(file);
 			if (fs.existsSync(file)) {
 				newFile = helper.replaceVars(file.toString());
 

@@ -181,6 +181,18 @@ module.exports = function (grunt) {
 					}
 				});
 
+				var doReplacement = plugPkg.config.replaceVars;
+				var localPlugFiles = path.join(cwd, pkg.config.dirs.config, plug);
+
+				if (doReplacement && fs.existsSync(localPlugFiles)) {
+					helper.replaceInFiles(function () {}, {
+						root : localPlugFiles,
+						config : {
+							dot : true
+						}
+					});
+				}
+
 				var gitIgnore = path.join(localDir, ".gitignore");
 
 				if (fs.existsSync(gitIgnore)) {
