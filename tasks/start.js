@@ -77,7 +77,7 @@ module.exports = function (grunt) {
 			});
 		};
 
-		var addHooks = function () {
+		var addHooks = function (cb) {
 			var hookDir = pkg.config.dirs.hooks;
 
 			if (fs.existsSync(hookDir)) {
@@ -91,7 +91,10 @@ module.exports = function (grunt) {
 				});
 
 				grunt.log.writeln("    ".grey + "Added git hooks.".grey);
-				finalizeInstall();
+
+				if (cb) {
+					cb();
+				}
 			}
 		};
 
@@ -103,7 +106,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
 
-				addHooks();
+				addHooks(finalizeInstall);
 			});
 		};
 
@@ -279,12 +282,16 @@ module.exports = function (grunt) {
 			helper.checkForPlugins(gatherArgs);
 		};
 
+		var alreadyStarted = function () {
+			grunt.log.writeln();
+			grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
+
+			done();
+		};
+
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
-				grunt.log.writeln();
-				grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
-
-				done();
+				addHooks(alreadyStarted);
 			} else {
 				prompt = require("prompt");
 				prompt.start();
