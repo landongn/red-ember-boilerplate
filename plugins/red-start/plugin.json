@@ -15,7 +15,7 @@
 			"upgrade": "sudo pip install virtualenv --upgrade"
 		},
 		"red-start": {
-			"version": ">= 0.1.10",
+			"version": ">= 0.1.14",
 			"install": "sudo pip install red-start",
 			"upgrade": "sudo pip install red-start --upgrade"
 		}
