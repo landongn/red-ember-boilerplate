@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* jshint node: true */
 module.exports = function (grunt) {
 
 	var replaceInFiles = function (cb, opts) {

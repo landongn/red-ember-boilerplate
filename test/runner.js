@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* jshint node: true */
 
 // Start a pristine Robyn project
 // This test expects a Robyn nest called 'robyn-test'

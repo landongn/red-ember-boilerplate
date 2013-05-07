@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* jshint node: true */
 /* global describe, it */
 
 describe("Plugin Integrity", function () {
