@@ -77,6 +77,24 @@ module.exports = function (grunt) {
 			});
 		};
 
+		var addHooks = function () {
+			var hookDir = pkg.config.dirs.hooks;
+
+			if (fs.existsSync(hookDir)) {
+				var gitHookDir = path.join(cwd, ".git", "hooks");
+
+				var hooks = grunt.file.recurse(hookDir, function (abspath, root, sub, file) {
+					var hook = path.join(gitHookDir, file);
+
+					grunt.file.copy(abspath, hook);
+					fs.chmodSync(hook, "755");
+				});
+
+				grunt.log.writeln("    ".grey + "Added git hooks.".grey);
+				finalizeInstall();
+			}
+		};
+
 		var shrinkWrap = function () {
 			grunt.util.spawn({
 				cmd: "npm",
@@ -85,7 +103,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
 
-				finalizeInstall();
+				addHooks();
 			});
 		};
 

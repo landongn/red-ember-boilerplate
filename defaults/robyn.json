@@ -8,7 +8,7 @@
 		"url": "__PROJECT_REPOSITORY__"
 	},
 	"systemDependencies": {
-		"git": "*",
+		"git": ">=1.8.2",
 		"grunt": "<0.4.x"
 	},
 	"engines": {
@@ -19,6 +19,7 @@
 		"vars": {},
 		"dirs": {
 			"robyn": ".robyn",
+			"hooks": "robyn/hooks",
 			"tasks": "robyn/tasks",
 			"config": "robyn/config"
 		},

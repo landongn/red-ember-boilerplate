@@ -15,6 +15,9 @@
 		"grunt": "~0.4.x",
 		"grunt-contrib-watch": "https://github.com/doctyper/grunt-contrib-watch/tarball/feature/multi-watchers-fix"
 	},
+	"scripts": {
+		"build": "grunt build"
+	},
 	"license": "MIT",
 	"devDependencies": {},
 	"optionalDependencies": {},
