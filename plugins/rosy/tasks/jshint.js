@@ -35,8 +35,6 @@ module.exports = function (grunt) {
 		return str.slice(0, i + 1);
 	}
 
-	var timestamp = new Date().getTime();
-
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
@@ -71,10 +69,6 @@ module.exports = function (grunt) {
 			fa[fa.length - 1] = fa[fa.length - 1].white;
 			var filename = fa.join("/").grey;
 
-			if (mode === "soft" && new Date(stats.ctime).getTime() < timestamp) {
-				continue;
-			}
-
 			var contents = grunt.file.read(file);
 
 			if (!jshint(contents, jshintOptions)) {
@@ -97,13 +91,7 @@ module.exports = function (grunt) {
 			}
 		}
 
-		timestamp = new Date().getTime();
 		done(!hasErrors);
-	});
-
-	grunt.config.set("watch.jshint", {
-		files: FILES,
-		tasks: ["jshint:soft"]
 	});
 
 	grunt.config.set("build.jshint", "jshint:browser");
