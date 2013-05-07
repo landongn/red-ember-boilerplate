@@ -49,6 +49,7 @@ module.exports = function (grunt) {
 				cmd: "npm",
 				args: ["shrinkwrap", "--depth", "100000"]
 			}, function () {
+				grunt.log.writeln("[*] Please commit your update now. A build/push will revert you to the last committed version.".yellow);
 				pluginCheck();
 			});
 		};
