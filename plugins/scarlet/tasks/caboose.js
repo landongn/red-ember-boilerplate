@@ -27,5 +27,5 @@ module.exports = function (grunt) {
 		force_compile: true
 	});
 
-	grunt.config.set("build.compass_admin", ["copy:admin", "compass:admin"]);
+	grunt.config.set("build.compass_admin", ["compass:admin"]);
 };
