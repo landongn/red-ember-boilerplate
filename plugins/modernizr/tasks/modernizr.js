@@ -75,18 +75,6 @@ module.exports = function (grunt) {
 		]
 	});
 
-	grunt.config.set("watch.modernizr", {
-		files: [
-			path.join(source, "**", "*[^.min].js"),
-			path.join(source, "..", "{sass,scss}", "**", "*.s{a,c}ss")
-		],
-		tasks: ["modernizr"],
-		options: {
-			interrupt: true,
-			livereload: true
-		}
-	});
-
 	grunt.config.set("build.modernizr", "modernizr");
 
 	grunt.loadNpmTasks("grunt-modernizr");
