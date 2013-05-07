@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* jshint node:true */
 module.exports = function (grunt) {
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
@@ -19,6 +19,20 @@ module.exports = function (grunt) {
 		var server = path.join("scripts", "run.sh");
 
 		var child;
+
+		var checkLiveReload = function () {
+			var liveReloadUrl = "http://0.0.0.0:35729";
+			var child = cp.exec("curl -I " + liveReloadUrl, function (err, stdout, stderr) {
+				if (stderr.toString().indexOf("couldn't connect to host") !== -1) {
+					console.log();
+					grunt.log.subhead("Hey front-end developer!".yellow);
+					grunt.log.warn("You should run `grunt watch` to enable LiveReload functionality".yellow);
+					console.log();
+				}
+
+				runProject();
+			});
+		};
 
 		var runProject = function () {
 			if (fs.existsSync(setup)) {
@@ -51,11 +65,11 @@ module.exports = function (grunt) {
 					if (code !== 0) {
 						process.exit();
 					} else {
-						runProject();
+						checkLiveReload();
 					}
 				});
 			} else {
-				runProject();
+				checkLiveReload();
 			}
 		};
 
@@ -81,7 +95,7 @@ module.exports = function (grunt) {
 		if (!fs.existsSync(activate)) {
 			setupProject();
 		} else {
-			runProject();
+			checkLiveReload();
 		}
 	});
 

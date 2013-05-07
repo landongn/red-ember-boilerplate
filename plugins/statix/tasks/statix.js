@@ -22,21 +22,38 @@ module.exports = function (grunt) {
 		});
 	};
 
-	var server = function (p) {
-		var statix = require("statix");
+	var checkLiveReload = function (cb) {
+		var liveReloadUrl = "http://0.0.0.0:35729";
+		var child = cp.exec("curl -I " + liveReloadUrl, function (err, stdout, stderr) {
+			if (stderr.toString().indexOf("couldn't connect to host") !== -1) {
+				console.log();
+				grunt.log.subhead("Hey front-end developer!".yellow);
+				grunt.log.warn("You should run `grunt watch` to enable LiveReload functionality".yellow);
+				console.log();
+			}
 
-		var port = p || 8000;
+			cb();
+		});
+	};
+
+	var server = function (p) {
 		var done = this.async();
 
-		var projectPaths = [
-			path.join(cwd, "project", "templates"),
-			path.join(cwd, "robyn", "config", "statix")
-		].join(",");
+		checkLiveReload(function () {
+			var statix = require("statix");
 
-		statix.server(statixPkg, projectPaths, port);
+			var port = p || 8000;
 
-		process.on("exit", function () {
-			done(1);
+			var projectPaths = [
+				path.join(cwd, "project", "templates"),
+				path.join(cwd, "robyn", "config", "statix")
+			].join(",");
+
+			statix.server(statixPkg, projectPaths, port);
+
+			process.on("exit", function () {
+				done(1);
+			});
 		});
 	};
 
