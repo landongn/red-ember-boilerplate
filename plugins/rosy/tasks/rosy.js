@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		rosy = require(path.join(__dirname, "../plugin.json")),
+		rosy = require(path.join(__dirname, "..", "plugin.json")),
 		output = "project/static/js",
 		source = rosy.config.scope;
 
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("watch.requirejs", {
-		files: path.join(source, "**/*[^.min].js"),
+		files: path.join(source, "**", "*[^.min].js"),
 		tasks: ["requirejs:reload"],
 		options: {
 			interrupt: true,
