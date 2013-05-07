@@ -1,0 +1,20 @@
+{
+	"name": "tmux",
+	"description": "A bundled set of tools for use with tmuxinator.",
+	"version": "0.0.1",
+	"dependencies": {},
+	"systemDependencies": {
+		"tmux": {
+			"version": "*",
+			"install": "brew update && brew install tmux",
+			"upgrade": "brew update && brew upgrade tmux"
+		}
+	},
+	"scripts": {
+		"install" : "./config/init/tmux.js",
+		"update" : "./config/init/tmux.js"
+	},
+	"config": {
+		"replaceVars": true
+	}
+}
