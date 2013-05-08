@@ -20,7 +20,6 @@
 		"vars": {},
 		"dirs": {
 			"robyn": ".robyn",
-			"hooks": "robyn/hooks",
 			"tasks": "robyn/tasks",
 			"config": "robyn/config"
 		},

@@ -78,7 +78,7 @@ module.exports = function (grunt) {
 		};
 
 		var addHooks = function (cb) {
-			var hookDir = pkg.config.dirs.hooks;
+			var hookDir = path.join(pkg.config.dirs.config, "hooks");
 
 			if (fs.existsSync(hookDir)) {
 				var gitHookDir = path.join(cwd, ".git", "hooks");
