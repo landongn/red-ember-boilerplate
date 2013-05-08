@@ -11,7 +11,7 @@ module.exports = function (grunt, helper, cb) {
 	var installTmuxinator = function () {
 		helper.spawn({
 			cmd: "bundle",
-			args: ["update"],
+			args: ["install", "--path", ".bundle"],
 			title: "Installing tmuxinator",
 			complete: function (code) {
 				if (code !== 0) {
