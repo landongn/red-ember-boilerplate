@@ -82,7 +82,6 @@ module.exports = function (grunt) {
 				cmd: "npm",
 				args: ["shrinkwrap"]
 			}, function () {
-				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
 
 				finalizeInstall();
@@ -126,7 +125,6 @@ module.exports = function (grunt) {
 			plugArr = plugArr.sort();
 
 			helper.storeVars(name, title, function () {
-				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
 				(function install(count) {
@@ -248,7 +246,6 @@ module.exports = function (grunt) {
 			}
 
 			if (opts.length) {
-				grunt.log.writeln();
 				grunt.log.writeln("[*]".grey + " Checking param overrides.".grey);
 
 				helper.writeln(opts.join(", ").grey);
