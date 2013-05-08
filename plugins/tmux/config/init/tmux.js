@@ -31,7 +31,7 @@ module.exports = function (grunt, helper, cb) {
 		}
 
 		var tmuxinator = 'gem "tmuxinator", "0.5.0"';
-		grunt.file.write(grunt.file.read(gemfile) + "\n" + tmuxinator + "\n");
+		grunt.file.write(gemfile, grunt.file.read(gemfile) + "\n" + tmuxinator + "\n");
 
 		installTmuxinator();
 	};
