@@ -279,7 +279,7 @@ module.exports = function (grunt) {
 		};
 
 		var gatherPlugins = function () {
-			helper.checkForPlugins(gatherArgs);
+			helper.checkForPlugins(true, gatherArgs);
 		};
 
 		var alreadyStarted = function () {

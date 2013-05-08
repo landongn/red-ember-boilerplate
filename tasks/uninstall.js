@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 
 		var done = this.async();
 
-		helper.checkForPlugins(function (plugins) {
+		helper.checkForPlugins(false, function (plugins) {
 			var i, j, current;
 			var installed = [];
 			var plug;
