@@ -4,9 +4,7 @@
 module.exports = function (grunt, helper, cb) {
 	var fs = require("fs"),
 		path = require("path"),
-		cwd = process.cwd(),
-		pkg = require(path.join(cwd, "robyn.json")),
-		configPath = path.join(cwd, pkg.config.dirs.config, "tmux");
+		cwd = process.cwd();
 
 	var installTmuxinator = function () {
 		helper.spawn({
@@ -37,6 +35,8 @@ module.exports = function (grunt, helper, cb) {
 	};
 
 	var copyTmuxConfig = function () {
+		var pkg = require(path.join(cwd, "robyn.json"));
+		var configPath = path.join(cwd, pkg.config.dirs.config, "tmux");
 		var wrench = require("wrench");
 		var userTmuxinatorDir = path.join(process.env.HOME, ".tmuxinator");
 
@@ -44,7 +44,9 @@ module.exports = function (grunt, helper, cb) {
 			wrench.mkdirSyncRecursive(userTmuxinatorDir);
 		}
 
-		var tmuxinatorFile = path.join(configPath, grunt.template.process("<%= meta.projectName %>") + ".yml");
+		var localPkg = require(path.join(pkg.config.dirs.robyn, "tasks", "utils", "pkg"));
+
+		var tmuxinatorFile = path.join(configPath, localPkg.config.vars.PROJECT_NAME + ".yml");
 		var userTmuxinatorFile = path.join(userTmuxinatorDir, path.basename(tmuxinatorFile));
 
 		if (fs.existsSync(userTmuxinatorFile)) {

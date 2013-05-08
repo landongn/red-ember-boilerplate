@@ -3,7 +3,6 @@
 
 project_name: __PROJECT_NAME__
 project_root: __PROJECT_ROOT__
-pre: virtualenv env
 tabs:
   - editor:
       layout: main-vertical
