@@ -50,7 +50,9 @@ module.exports = function (grunt) {
 				plugins.push(plugin);
 			}
 
-			helper.writeln(("Found the following: " + plugins.map(function (plug) {
+			helper.writeln(("Found the following: " + plugins.filter(function (plug) {
+				return plug.config.promptOnStart !== false;
+			}).map(function (plug) {
 				return plug.name;
 			}).sort().join(", ")).grey);
 

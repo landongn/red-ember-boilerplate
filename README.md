@@ -254,6 +254,9 @@ The main entry point of your plugin. For example, RED Interactive's [`rosy`](htt
 ###### replaceVars
 A boolean. When `true`, Robyn will traverse through the plugin's files and replace instances of the placeholder values `__PROJECT_NAME__` and `__PROJECT_TITLE__`
 
+###### promptOnStart
+A boolean. True by default. When `true`, Robyn will prompt to install associated plugin when `grunt start` is invoked.
+
 ###### requiredPaths
 An array of required plugin paths. Robyn collects these paths and checks for their existence. If any path listed is not found, it is assumed the plugin is not installed, and Robyn attempts to run any action found in `scripts.install`. Example below:
 
