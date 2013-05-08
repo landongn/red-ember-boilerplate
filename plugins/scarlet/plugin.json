@@ -26,6 +26,7 @@
 	},
 	"config": {
 		"replaceVars": false,
+		"promptOnStart": false,
 		"requiredPaths": [
 			"scarlet"
 		],

@@ -27,6 +27,7 @@
 	"config": {
 		"scope": "project/source",
 		"replaceVars": false,
+		"promptOnStart": true,
 		"requiredPaths": [
 			".bundle",
 			"Gemfile",

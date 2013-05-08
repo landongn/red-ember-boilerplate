@@ -25,6 +25,7 @@
 	},
 	"config": {
 		"replaceVars": false,
+		"promptOnStart": true,
 		"requiredPaths": [
 			"env"
 		],

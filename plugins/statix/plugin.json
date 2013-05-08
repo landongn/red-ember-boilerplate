@@ -13,6 +13,7 @@
 		}
 	},
 	"config": {
-		"replaceVars": false
+		"replaceVars": false,
+		"promptOnStart": true
 	}
 }

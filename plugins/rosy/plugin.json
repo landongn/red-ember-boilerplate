@@ -31,6 +31,7 @@
 	},
 	"config": {
 		"scope": "project/source/js",
-		"replaceVars": true
+		"replaceVars": true,
+		"promptOnStart": true
 	}
 }
