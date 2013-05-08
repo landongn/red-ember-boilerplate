@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 		var colors = require("colors");
 		var done = this.async();
 
-		helper.checkForPlugins(function (plugins) {
+		helper.checkForPlugins(false, function (plugins) {
 			var i, j, current;
 			var available = [];
 			var installed = [];

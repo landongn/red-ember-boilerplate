@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	var checkForPlugins = function (cb) {
+	var checkForPlugins = function (isStart, cb) {
 		var helper = require("../helpers").init(grunt);
 
 		var fs = require("fs"),
@@ -51,9 +51,11 @@ module.exports = function (grunt) {
 			}
 
 			// Remove non-visible
-			plugins = plugins.filter(function (plug) {
-				return plug.config.promptOnStart !== false;
-			});
+			if (isStart) {
+				plugins = plugins.filter(function (plug) {
+					return plug.config.promptOnStart !== false;
+				});
+			}
 
 			helper.writeln(("Found the following: " + plugins.map(function (plug) {
 				return plug.name;
