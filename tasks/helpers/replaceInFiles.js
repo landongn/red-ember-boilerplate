@@ -37,19 +37,28 @@ module.exports = function (grunt) {
 
 		files.filter(function (file) {
 			return fs.statSync(file).isFile();
-		}).forEach(function (file) {
-			var contents = grunt.file.read(file);
-			contents = helper.replaceVars(contents.toString());
+		}).forEach(function (file, i) {
+			if (fs.existsSync(file)) {
+				var contents = grunt.file.read(file);
+				contents = helper.replaceVars(contents.toString());
 
-			if (contents) {
-				grunt.file.write(file, contents);
+				if (contents) {
+					grunt.file.write(file, contents);
+					newFile = helper.replaceVars(file.toString());
+
+					if (newFile && file !== newFile) {
+						grunt.file.copy(file, newFile);
+						grunt.file.delete(file);
+
+						files[i] = newFile;
+					}
+				}
 			}
 		});
 
 		files.filter(function (file) {
-			return fs.statSync(file).isDirectory();
+			return fs.existsSync(file) && fs.statSync(file).isDirectory();
 		}).forEach(function (file) {
-			console.log(file);
 			if (fs.existsSync(file)) {
 				newFile = helper.replaceVars(file.toString());
 
