@@ -9,7 +9,8 @@
 		"jshint": ">=0.9.x",
 		"requirejs": ">=2.0.x",
 		"colors": ">=0.6.x",
-		"wrench": ">=1.3.x"
+		"wrench": ">=1.3.x",
+		"grunt-modernizr": "~0.3.x"
 	},
 	"devDependencies": {
 		"mocha": "1.3.x",
