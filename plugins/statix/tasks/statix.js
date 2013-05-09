@@ -4,7 +4,6 @@ module.exports = function (grunt) {
 
 	var cwd = process.cwd();
 	var path = require("path");
-	var helper = require(path.join(cwd, "tasks", "helpers")).init(grunt);
 
 	var cp = require("child_process"),
 		pkg = require(path.join(cwd, "robyn.json")),
@@ -20,20 +19,6 @@ module.exports = function (grunt) {
 
 		child.addListener("exit", function (code) {
 			doneCB(!code);
-		});
-	};
-
-	var checkLiveReload = function (cb) {
-		var liveReloadUrl = "http://0.0.0.0:35729";
-		var child = cp.exec("curl -I " + liveReloadUrl, function (err, stdout, stderr) {
-			if (stderr.toString().indexOf("couldn't connect to host") !== -1) {
-				console.log();
-				grunt.log.subhead("Hey front-end developer!".yellow);
-				grunt.log.warn("You should run `grunt watch` to enable LiveReload functionality".yellow);
-				console.log();
-			}
-
-			cb();
 		});
 	};
 
@@ -109,7 +94,7 @@ module.exports = function (grunt) {
 		};
 
 		if (!nowatch) {
-			helper.startWatcher(runProject, done);
+			startWatcher(runProject, done);
 		} else {
 			runProject();
 		}
