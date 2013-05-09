@@ -126,9 +126,24 @@ module.exports = function (grunt) {
 			// In verbose mode, write args
 			grunt.verbose.subhead(["Running:", cmd].concat(args).join(" "));
 
+			var quiet = grunt.option("quiet");
+
 			// Run the command
 			var child = cp.spawn(cmd, args, {
-				stdio: grunt.option("quiet") ? "pipe" : "inherit"
+				stdio: "pipe"
+			});
+
+			child.stdout.on("data", function (data) {
+				if (!quiet) {
+					process.stdout.write(data);
+				}
+
+				var string = data.toString().trim();
+
+				if (string.indexOf("error") !== -1 || string.indexOf("warning") !== -1) {
+					var beep = (!grunt.option("no-color")) ? "\x07" : "";
+					console.log(beep);
+				}
 			});
 
 			// Clean up on exit
