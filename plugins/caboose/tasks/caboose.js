@@ -21,7 +21,15 @@ module.exports = function (grunt) {
 		output_style: ":expanded",
 		line_comments: true,
 		relative_assets: true,
+
+		// Runs compass via your project gem bundle
 		bundle_exec: true,
+
+		// Force compilation? If true, will regenerate everything, sprites included
+		force_compile: false,
+
+		// Clean cache before compile?
+		clean: false,
 
 		// Extra config options
 		extras: {
@@ -52,7 +60,15 @@ module.exports = function (grunt) {
 		output_style: ":compressed",
 		line_comments: false,
 		relative_assets: "<%= compass.dev.relative_assets %>",
-		bundle_exec: "<%= compass.dev.bundle_exec %>"
+
+		// Runs compass via your project gem bundle
+		bundle_exec: "<%= compass.dev.bundle_exec %>",
+
+		// Force compilation? If true, will regenerate everything, sprites included
+		force_compile: "<%= compass.dev.force_compile %>",
+
+		// Clean cache before compile?
+		clean: true,
 	});
 
 	grunt.registerTask("compass:bundle", function () {
