@@ -29,20 +29,33 @@ module.exports = function (grunt) {
 				msg = msg.replace(absPath);
 				grunt.fail.warn(msg);
 			} else {
-				if (grunt.option("verbose") && msg.indexOf(lineBreak) !== -1) {
+				if (msg.indexOf(lineBreak) !== -1) {
 					msg = msg.split(lineBreak);
 					msg.shift();
 
-					grunt.log.subhead("Built with the following modules:".grey);
+					grunt.log.subhead("Built with these modules:".grey);
 
-					msg = msg.join("");
+					var lines = msg[0].trim().split("\n");
+					lines.forEach(function (line) {
+						line = line.split("/");
+						var last = line.pop();
+
+						line = (line.join("/") + "/").grey + last.white;
+						grunt.log.writeln(line);
+					});
+
+					msg = "";
 				}
 
 				if (msg.indexOf("Tracing dependencies for:") !== -1) {
 					grunt.log.subhead(msg.trim().grey);
-				} else if (msg.indexOf("Uglifying file:") !== -1) {
+				} else if (msg.indexOf("Uglify2 file:") !== -1) {
+					grunt.log.writeln();
 					grunt.log.writeln(msg.trim().green);
-				} else if (grunt.option("verbose")) {
+				} else if (msg.indexOf("WARN") !== -1) {
+					msg = msg.trim().replace("uglifyjs2 WARN: ", "        Warn: ");
+					grunt.log.writeln(msg.yellow);
+				} else if (msg) {
 					grunt.log.writeln(msg.trim().grey);
 				}
 			}
