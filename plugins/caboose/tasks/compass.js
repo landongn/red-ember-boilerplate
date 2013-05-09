@@ -35,15 +35,18 @@ module.exports = function (grunt) {
 		// Custom params
 		var force = data.force_compile;
 		var bundle = data.bundle_exec;
+		var clean = data.clean;
+
 		var extras = data.extras;
 
 		var tmp = [process.pid, "compass", new Date().getTime()].join("-");
 		var cmd = bundle ? "bundle" : "compass";
-		var args = ["compile"];
+		var args = [clean ? "clean" : "compile"];
 
 		// Delete custom properties
-		delete data.bundle_exec;
 		delete data.force_compile;
+		delete data.bundle_exec;
+		delete data.clean;
 		delete data.extras;
 
 		var config = {
@@ -95,23 +98,47 @@ module.exports = function (grunt) {
 			args = ["exec", "compass"].concat(args);
 		}
 
-		// Add path to temp config file and path to sass directory
-		args = args.concat(["--config", config.path, "--sass-dir", data.sass_dir]);
+		var cleanFiles = function () {
+			// In verbose mode, write args
+			grunt.verbose.subhead(["Running:", cmd].concat(args).join(" "));
 
-		// If force is true, append parameter
-		if (force) {
-			args.push("--force");
+			// Run the command
+			var child = cp.spawn(cmd, args, {
+				stdio: grunt.option("quiet") ? "pipe" : "inherit"
+			});
+
+			// Clean up on exit
+			child.on("exit", function () {
+				args.splice(args.length - 1, 1, "compile");
+				afterClean();
+			});
+		};
+
+		var afterClean = function () {
+			// Add path to temp config file and path to sass directory
+			args = args.concat(["--config", config.path, "--sass-dir", data.sass_dir]);
+
+			// If force is true, append parameter
+			if (force) {
+				args.push("--force");
+			}
+
+			// In verbose mode, write args
+			grunt.verbose.subhead(["Running:", cmd].concat(args).join(" "));
+
+			// Run the command
+			var child = cp.spawn(cmd, args, {
+				stdio: grunt.option("quiet") ? "pipe" : "inherit"
+			});
+
+			// Clean up on exit
+			child.on("exit", done);
+		};
+
+		if (clean) {
+			cleanFiles(afterClean);
+		} else {
+			afterClean();
 		}
-
-		// In verbose mode, write args
-		grunt.verbose.subhead(["Running:", cmd].concat(args).join(" "));
-
-		// Run the command
-		var child = cp.spawn(cmd, args, {
-			stdio: grunt.option("quiet") ? "pipe" : "inherit"
-		});
-
-		// Clean up on exit
-		child.on("exit", done);
 	});
 };
