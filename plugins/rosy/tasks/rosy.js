@@ -18,7 +18,12 @@ module.exports = function (grunt) {
 			paths : {
 				"jquery": "empty:"
 			},
-			optimize : "uglify",
+			generateSourceMaps : true,
+			preserveLicenseComments : false,
+			optimize : "uglify2",
+			uglify2 : {
+				warnings : true
+			},
 			out : path.join(output, "site.min.js"),
 			name : grunt.template.process("<%= meta.projectName %>") + "/Site",
 			skipModuleInsertion : true
