@@ -77,16 +77,27 @@ module.exports = function (grunt) {
 		var runProject = function (watcher) {
 			if (fs.existsSync(setup)) {
 				var args = [server, cmd];
+				var verbose = grunt.option("verbose");
 
-				if (grunt.option("verbose")) {
+				if (verbose) {
 					grunt.log.writeln(args.join(" "));
 				}
 
 				grunt.log.ok("Starting the server...".bold.cyan);
 
 				var runner = cp.spawn("sh", args, {
-					stdio: "inherit"
+					stdio: [0, 1, verbose ? 2 : "pipe"]
 				});
+
+				if (!verbose) {
+					runner.stderr.on("data", function (data) {
+						var string = data.toString().trim();
+
+						if (string.indexOf(" 200 ") === -1 && string.indexOf(" 304 ") === -1) {
+							process.stdout.write(data);
+						}
+					});
+				}
 
 				runner.on("exit", function (code) {
 					if (watcher && typeof (watcher || {}).kill === "function") {
