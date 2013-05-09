@@ -2,39 +2,79 @@
 module.exports = function (grunt) {
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
+		var cwd = process.cwd();
+		var path = require("path");
+
 		var fs = require("fs");
 		var cp = require("child_process");
-		var path = require("path");
+		var colors = require("colors");
 
 		var args = grunt.util.toArray(arguments);
 		var done = this.async();
 
-		var port = (args[1] || args[0]);
-		var ip = (args[1] ? args[0] : null);
-		var cmd = (ip || "0.0.0.0") + ":" + (port || "8000");
+		var port = "8000",
+			ip = "0.0.0.0",
+			nowatch = false;
+
+		args.forEach(function (arg) {
+			if (/^[\d]+\.[\d]+\.[\d]+\.[\d]+$/.test(arg)) {
+				ip = arg;
+			}
+
+			if (/^[\d]+$/.test(arg)) {
+				port = arg;
+			}
+
+			if (/^nowatch$/.test(arg)) {
+				nowatch = arg;
+			}
+		});
+
+		var cmd = ip + ":" + port;
 
 		var activate = path.join("env", "bin", "activate");
 		var setup = path.join("scripts", "setup.sh");
 		var sync = path.join("scripts", "sync.sh");
 		var server = path.join("scripts", "run.sh");
 
-		var child;
+		var runOnce;
 
-		var checkLiveReload = function () {
-			var liveReloadUrl = "http://0.0.0.0:35729";
-			var child = cp.exec("curl -I " + liveReloadUrl, function (err, stdout, stderr) {
-				if (stderr.toString().indexOf("couldn't connect to host") !== -1) {
+		var startWatcher = function (cb, done) {
+			var cp = require("child_process");
+
+			var watcher = cp.spawn("grunt", ["watch"], {
+				stdio: "pipe"
+			});
+
+			watcher.stdout.on("data", function (data) {
+				var string = data.toString();
+				var buffer = new Array(3).join("\n");
+
+				if (string.indexOf('Running "watch" task') !== -1) {
 					console.log();
-					grunt.log.subhead("Hey front-end developer!".yellow);
-					grunt.log.warn("You should run `grunt watch` to enable LiveReload functionality".yellow);
-					console.log();
+					grunt.log.ok("Now watching for file changes...".bold.cyan);
 				}
 
-				runProject();
+				if (string.indexOf("OK") !== -1) {
+					process.stdout.write(buffer);
+				}
+
+				process.stdout.write(data);
+
+				if (string.indexOf("Waiting...") !== -1) {
+					console.log("\n");
+
+					if (!runOnce && cb) {
+						cb(watcher);
+						runOnce = true;
+					}
+				}
 			});
+
+			watcher.stdout.on("error", done);
 		};
 
-		var runProject = function () {
+		var runProject = function (watcher) {
 			if (fs.existsSync(setup)) {
 				var args = [server, cmd];
 
@@ -42,11 +82,17 @@ module.exports = function (grunt) {
 					grunt.log.writeln(args.join(" "));
 				}
 
-				child = cp.spawn("sh", args, {
+				grunt.log.ok("Starting the server...".bold.cyan);
+
+				var runner = cp.spawn("sh", args, {
 					stdio: "inherit"
 				});
 
-				child.addListener("exit", function (code) {
+				runner.on("exit", function (code) {
+					if (watcher && typeof (watcher || {}).kill === "function") {
+						watcher.kill();
+					}
+
 					done(!!code);
 				});
 			} else {
@@ -57,29 +103,33 @@ module.exports = function (grunt) {
 
 		var syncProject = function () {
 			if (fs.existsSync(sync)) {
-				child = cp.spawn("sh", [sync], {
+				var child = cp.spawn("sh", [sync], {
 					stdio: "inherit"
 				});
 
-				child.addListener("exit", function (code) {
+				child.on("exit", function (code) {
 					if (code !== 0) {
 						process.exit();
+					} else if (!nowatch) {
+						startWatcher(runProject, done);
 					} else {
-						checkLiveReload();
+						runProject();
 					}
 				});
+			} else if (!nowatch) {
+				startWatcher(runProject, done);
 			} else {
-				checkLiveReload();
+				runProject();
 			}
 		};
 
 		var setupProject = function () {
 			if (fs.existsSync(setup)) {
-				child = cp.spawn("sh", [setup], {
+				var child = cp.spawn("sh", [setup], {
 					stdio: "inherit"
 				});
 
-				child.addListener("exit", function (code) {
+				child.on("exit", function (code) {
 					if (code !== 0) {
 						process.exit();
 					} else {
@@ -94,8 +144,10 @@ module.exports = function (grunt) {
 
 		if (!fs.existsSync(activate)) {
 			setupProject();
+		} else if (!nowatch) {
+			startWatcher(runProject, done);
 		} else {
-			checkLiveReload();
+			runProject();
 		}
 	});
 
