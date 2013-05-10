@@ -13,9 +13,6 @@ module.exports = function (grunt) {
 	}, {
 		src: "project/source/img",
 		dest: "project/static/img"
-	}, {
-		src: "project/source/js/libs",
-		dest: "project/static/js/libs"
 	}]);
 
 	grunt.config.set("build.copy", ["copy"]);
