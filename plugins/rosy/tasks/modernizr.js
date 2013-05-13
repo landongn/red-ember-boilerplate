@@ -54,17 +54,7 @@ module.exports = function (grunt) {
 		"files" : [
 			path.join(source, "**", "*.js"),
 			path.join(source, "..", "{sass,scss}", "**", "*.scss")
-		],
-
-		// When parseFiles = true, matchCommunityTests = true will attempt to
-		// match user-contributed tests.
-		"matchCommunityTests" : false,
-
-		// Have custom Modernizr tests? Add paths to their location here.
-		"customTests" : [],
-
-		// Files added here will be excluded when looking for Modernizr refs.
-		"excludeFiles" : [
+		].concat([
 			path.join("env"),
 			path.join("robyn"),
 			path.join(".bundle"),
@@ -72,10 +62,17 @@ module.exports = function (grunt) {
 			path.join("project", "static"),
 			path.join("collected-static"),
 			path.join(".{git,sass-cache,robyn}"),
-			path.join("project", "source", "js", "libs", "modernizr")
+			path.join("project", "**", "js", "libs")
 		].map(function (src) {
-			return path.join(src, "**", "*");
-		})
+			return "!" + path.join(src, "**", "*");
+		})),
+
+		// When parseFiles = true, matchCommunityTests = true will attempt to
+		// match user-contributed tests.
+		"matchCommunityTests" : false,
+
+		// Have custom Modernizr tests? Add paths to their location here.
+		"customTests" : []
 	});
 
 	grunt.config.set("build.modernizr", "modernizr");
