@@ -8,14 +8,15 @@ module.exports = function (grunt) {
 		path = require("path"),
 		rosy = require(path.join(__dirname, "..", "plugin.json")),
 		output = path.join("project", "static", "js"),
-		source = rosy.config.scope;
+		source = rosy.config.scope,
+		rosyConfig = path.join("libs", "rosy", "config.js");
 
 	// Project configuration.
 	grunt.config.set("requirejs.desktop", {
 		options : {
-			mainConfigFile : path.join(source, "config.js"),
+			mainConfigFile : path.join(source, rosyConfig),
 			urlArgs : null,
-			include : ["config.js"],
+			include : [rosyConfig],
 			paths : {
 				"jquery": "empty:"
 			},
@@ -32,7 +33,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("watch.requirejs", {
-		files: path.join(source, "**", "*[^.min].js"),
+		files: path.join(source, "*[^libs]", "*[^.min].js"),
 		tasks: ["requirejs:reload"],
 		options: {
 			interrupt: true,

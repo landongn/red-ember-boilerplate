@@ -1,13 +1,11 @@
-/* jshint node: true */
-"use strict";
-
+/*jshint node: true */
 module.exports = function (grunt) {
+	"use strict";
 
 	var fs = require("fs"),
-		cwd = process.cwd(),
 		path = require("path"),
+		cwd = process.cwd(),
 		rosy = require(path.join(__dirname, "..", "plugin.json")),
-		output = path.join("project", "static", "js"),
 		source = rosy.config.scope;
 
 	var logPlugins = function (filtered) {

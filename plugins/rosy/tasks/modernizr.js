@@ -13,10 +13,10 @@ module.exports = function (grunt) {
 	grunt.config.set("modernizr", {
 
 		// [REQUIRED] Path to the build you're using for development.
-		"devFile" : path.join(source, "libs", "modernizr.js"),
+		"devFile" : path.join(source, "libs", "modernizr", "modernizr.js"),
 
 		// [REQUIRED] Path to save out the built file.
-		"outputFile" : path.join(output, "libs", "modernizr.min.js"),
+		"outputFile" : path.join(output, "libs", "modernizr", "modernizr.min.js"),
 
 		// Based on default settings on http://modernizr.com/download/
 		"extra" : {
@@ -65,14 +65,17 @@ module.exports = function (grunt) {
 
 		// Files added here will be excluded when looking for Modernizr refs.
 		"excludeFiles" : [
-			path.join("env", "**", "*"),
-			path.join("robyn", "**", "*"),
-			path.join(".bundle", "**", "*"),
-			path.join("node_modules", "**", "*"),
-			path.join("project", "static", "**", "*"),
-			path.join("collected-static", "**", "*"),
-			path.join(".{git,sass-cache,robyn}", "**", "*")
-		]
+			path.join("env"),
+			path.join("robyn"),
+			path.join(".bundle"),
+			path.join("node_modules"),
+			path.join("project", "static"),
+			path.join("collected-static"),
+			path.join(".{git,sass-cache,robyn}"),
+			path.join("project", "source", "js", "libs", "modernizr")
+		].map(function (src) {
+			return path.join(src, "**", "*");
+		})
 	});
 
 	grunt.config.set("build.modernizr", "modernizr");
