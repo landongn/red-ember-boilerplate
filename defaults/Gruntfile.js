@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 			files = grunt.file.expand(path.join(dir, "*"));
 
 		if (!files.length) {
-			var d = dir.replace(cwd + "/", "");
+			var d = dir.replace(cwd + path.sep, "");
 
 			var warn = [
 				"%s is not yet initialized".replace("%s", d),
