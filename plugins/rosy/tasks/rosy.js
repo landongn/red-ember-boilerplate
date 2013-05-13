@@ -39,5 +39,5 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.config.set("build.requirejs", ["requirejs", "requirejs:uglify"]);
+	grunt.config.set("build.requirejs", ["requirejs"]);
 };
