@@ -45,7 +45,7 @@ module.exports = function (grunt, helper, cb) {
 			}
 		}).on("end", function (data) {
 			if (!grunt.option("verbose")) {
-				process.stdout.write("OK".green);
+				process.stdout.write("OK".green + "\n");
 			}
 
 			process.chdir(cwd);
@@ -54,37 +54,29 @@ module.exports = function (grunt, helper, cb) {
 			var project = path.join(libs, "example");
 
 			// Get rid of all the cruft. Ugh.
-			var rosyConfig = path.join(libs, "rosy", "config.js");
+			var f = [
+				path.join(libs, "handlebars.js", "*[^dist]"),
+				path.join(libs, "jquery.transit", "*"),
+				path.join(libs, "jquery", "*"),
+				path.join(libs, "json3", "*[^lib]"),
+				path.join(libs, "modernizr", "*"),
+				path.join(libs, "requirejs", "*"),
+				path.join(libs, "**", "test{,s}"),
+				path.join("!", libs, "handlebars.js", "dist", "handlebars.js"),
+				path.join("!", libs, "jquery.transit", "jquery.transit.js"),
+				path.join("!", libs, "jquery", "jquery.js"),
+				path.join("!", libs, "json3", "lib", "json3.js"),
+				path.join("!", libs, "modernizr", "modernizr.js"),
+				path.join("!", libs, "requirejs", "require.js")
+			];
 
-			if (fs.existsSync(rosyConfig)) {
-				var config = grunt.file.read(rosyConfig);
-				config = config.replace("require.config(", "");
-				config = config.replace(");", "");
-				config = config.replace(/([a-zA-Z0-9]+)(\s)?\:/g, "\"$1\"$2:");
-
-				console.log(config);
-				config = JSON.parse(config);
-
-				var paths = config.paths;
-				var keep = [];
-
-				for (var key in paths) {
-					keep.push(paths[key]);
+			var cruft = grunt.file.expand({
+				dot: true
+			}, f).forEach(function (file) {
+				if (fs.existsSync(file)) {
+					grunt.file.delete(file);
 				}
-
-				keep = keep.map(function (src) {
-					return path.join("!", cwd, source, src + ".js");
-				});
-
-				keep.unshift(path.join(libs, "**", "*"));
-
-				console.log(keep);
-				var cruft = grunt.file.expand(keep, {
-					dot: true
-				});
-
-				console.log(cruft);
-			}
+			});
 
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
