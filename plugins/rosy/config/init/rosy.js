@@ -55,7 +55,7 @@ module.exports = function (grunt, helper, cb) {
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
 				var localPkg = require(path.join(robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
-				fs.unlinkSync(path.join(project, "component.json"));
+				fs.unlinkSync(path.join(project, "bower.json"));
 				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
 				wrench.rmdirSyncRecursive(project);
 			}
