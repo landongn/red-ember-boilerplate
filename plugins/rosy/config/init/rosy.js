@@ -50,7 +50,36 @@ module.exports = function (grunt, helper, cb) {
 
 			process.chdir(cwd);
 
-			var project = path.join(cwd, source, "libs", "example");
+			var libs = path.join(cwd, source, "libs");
+			var project = path.join(libs, "example");
+
+			// Get rid of all the cruft. Ugh.
+			var rosyConfig = path.join(libs, "rosy", "config.js");
+
+			if (fs.existsSync(rosyConfig)) {
+				var config = grunt.file.read(rosyConfig);
+				config = config.replace("require.config(", "");
+				config = config.replace("});", "");
+				config = JSON.parse(config);
+
+				var paths = config.paths;
+				var keep = [];
+
+				for (var key in paths) {
+					keep.push(paths[key]);
+				}
+
+				keep = keep.map(function (src) {
+					return path.join("!", cwd, source, src + ".js");
+				});
+
+				console.log(keep);
+				var cruft = grunt.file.expand(keep, {
+					dot: true
+				});
+
+				console.log(cruft);
+			}
 
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
