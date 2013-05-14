@@ -5,28 +5,8 @@ module.exports = function (grunt, helper, cb) {
 	var fs = require("fs"),
 		cwd = process.cwd(),
 		path = require("path"),
+		wrench = require("wrench"),
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json");
-
-	var copy = function (source, destination) {
-		var fs = require("fs"),
-			BUF_LENGTH = 64 * 1024,
-			_buff = new Buffer(BUF_LENGTH);
-
-		var bytesRead, fdr, fdw, pos;
-		fdr = fs.openSync(source, "r");
-		fdw = fs.openSync(destination, "w");
-		bytesRead = 1;
-		pos = 0;
-
-		while (bytesRead > 0) {
-			bytesRead = fs.readSync(fdr, _buff, 0, BUF_LENGTH, pos);
-			fs.writeSync(fdw, _buff, 0, bytesRead);
-			pos += bytesRead;
-		}
-
-		fs.closeSync(fdr);
-		return fs.closeSync(fdw);
-	};
 
 	var removeConfig = function () {
 		if (fs.existsSync(pkgPath)) {
@@ -63,8 +43,8 @@ module.exports = function (grunt, helper, cb) {
 		var gempath = path.join(__dirname, "..", "Gemfile");
 
 		if (fs.existsSync(gempath)) {
-			copy(gempath, path.join(cwd, "Gemfile"));
-			copy(gempath + ".lock", path.join(cwd, "Gemfile.lock"));
+			grunt.file.copy(gempath, path.join(cwd, "Gemfile"));
+			grunt.file.copy(gempath + ".lock", path.join(cwd, "Gemfile.lock"));
 		}
 
 		installGems();
@@ -84,18 +64,26 @@ module.exports = function (grunt, helper, cb) {
 		moveGemfileToRoot();
 	};
 
-	var moveHTCToImageDir = function () {
+	var moveAssetsToImageDir = function () {
 		if (fs.existsSync(pkgPath)) {
 			var pkg = require(pkgPath),
 				file = "boxsizing.htc",
+				imgpath = path.join(cwd, pkg.config.scope, "img"),
 				dirpath = path.join(cwd, pkg.config.scope, "images"),
 				htcpath = path.join(dirpath, file);
 
 			if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
-				copy(htcpath, path.join(cwd, pkg.config.scope, "img", file));
+				grunt.file.copy(htcpath, path.join(imgpath, file));
 
 				fs.unlinkSync(htcpath);
 				fs.rmdirSync(dirpath);
+			}
+
+			var caboosePath = path.join(cwd, pkg.config.scope, "scss", "caboose");
+			var cfPath = path.join(caboosePath, "rosy", "google-chrome-frame", "images", "global");
+
+			if (fs.existsSync(cfPath)) {
+				wrench.copyDirSyncRecursive(cfPath, path.join(imgpath, "global"));
 			}
 		}
 
@@ -110,6 +98,6 @@ module.exports = function (grunt, helper, cb) {
 		}
 	};
 
-	moveHTCToImageDir();
+	moveAssetsToImageDir();
 
 };
