@@ -59,7 +59,10 @@ module.exports = function (grunt, helper, cb) {
 			if (fs.existsSync(rosyConfig)) {
 				var config = grunt.file.read(rosyConfig);
 				config = config.replace("require.config(", "");
-				config = config.replace("});", "");
+				config = config.replace(");", "");
+				config = config.replace(/([a-zA-Z0-9]+)(\s)?\:/g, "\"$1\"$2:");
+
+				console.log(config);
 				config = JSON.parse(config);
 
 				var paths = config.paths;
@@ -72,6 +75,8 @@ module.exports = function (grunt, helper, cb) {
 				keep = keep.map(function (src) {
 					return path.join("!", cwd, source, src + ".js");
 				});
+
+				keep.unshift(path.join(libs, "**", "*"));
 
 				console.log(keep);
 				var cruft = grunt.file.expand(keep, {
