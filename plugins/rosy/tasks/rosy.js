@@ -21,9 +21,15 @@ module.exports = function (grunt) {
 
 		components = (components || "").split(",");
 
-		var url = "https://api.github.com/orgs/rosy-components/repos";
+		var options = {
+			"host": "api.github.com",
+			"path": "/orgs/rosy-components/repos",
+			"headers": {
+				"User-Agent": "Node.js"
+			}
+		};
 
-		https.get(url, function (res) {
+		https.get(options, function (res) {
 			var data = [];
 
 			res.on("data", function (chunk) {
@@ -62,10 +68,10 @@ module.exports = function (grunt) {
 					});
 
 					bower.commands.install(install).on("data", function (data) {
-						console.log("    " + data);
+						process.stdout.write("    " + data);
 					}).on("end", function (data) {
 						if (!grunt.option("verbose")) {
-							process.stdout.write("OK".green);
+							grunt.log.ok();
 						}
 
 						process.chdir(cwd);
