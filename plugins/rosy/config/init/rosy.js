@@ -34,7 +34,7 @@ module.exports = function (grunt, helper, cb) {
 			"https://github.com/rosy-components/example.git"
 		]).on("data", function (data) {
 			if (grunt.option("verbose")) {
-				console.log("    " + data);
+				process.stdout.write("    " + data);
 			} else {
 				if (!title) {
 					title = "Fetching external libraries";
