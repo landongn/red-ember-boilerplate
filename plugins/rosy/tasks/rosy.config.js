@@ -32,14 +32,4 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.config.set("watch.requirejs", {
-		files: path.join(source, "*[^libs]", "*[^.min].js"),
-		tasks: ["requirejs:reload"],
-		options: {
-			interrupt: true,
-			livereload: true
-		}
-	});
-
-	grunt.config.set("build.requirejs", ["requirejs"]);
 };
