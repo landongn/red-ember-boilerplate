@@ -55,9 +55,14 @@ module.exports = function (grunt) {
 					grunt.log.writeln("Install plugins with grunt install:rosy-plugin-name");
 				} else {
 					var bower = require("bower");
+					var _ = grunt.util._;
 
 					// Change directory to Rosy root
 					process.chdir(path.join(cwd, source));
+
+					// Read .bowerrc settings into bower.config
+					var rc = JSON.parse(fs.readFileSync(path.join(cwd, source, ".bowerrc")));
+					_.extend(bower.config, rc);
 
 					var title;
 
