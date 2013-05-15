@@ -80,6 +80,34 @@ module.exports = function (grunt) {
 						}
 
 						process.chdir(cwd);
+
+						var libs = path.join(cwd, source, "libs");
+
+						// Get rid of all the cruft. Ugh.
+						var f = [
+							path.join(libs, "handlebars.js", "*[^dist]"),
+							path.join(libs, "jquery.transit", "*"),
+							path.join(libs, "jquery", "*"),
+							path.join(libs, "json3", "*[^lib]"),
+							path.join(libs, "modernizr", "*"),
+							path.join(libs, "requirejs", "*"),
+							path.join(libs, "**", "test{,s}"),
+							path.join("!", libs, "handlebars.js", "dist", "handlebars.js"),
+							path.join("!", libs, "jquery.transit", "jquery.transit.js"),
+							path.join("!", libs, "jquery", "jquery.js"),
+							path.join("!", libs, "json3", "lib", "json3.js"),
+							path.join("!", libs, "modernizr", "modernizr.js"),
+							path.join("!", libs, "requirejs", "require.js")
+						];
+
+						var cruft = grunt.file.expand({
+							dot: true
+						}, f).forEach(function (file) {
+							if (fs.existsSync(file)) {
+								grunt.file.delete(file);
+							}
+						});
+
 						return done;
 					});
 				}
