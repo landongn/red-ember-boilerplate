@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 
 				var frontend = path.join("project", "settings", "frontend.py");
 
-				if (fs.existsSync(frontend)) {
+				if (!verbose && fs.existsSync(frontend)) {
 					args.push("--settings=settings.frontend");
 				}
 
