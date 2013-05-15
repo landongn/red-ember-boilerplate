@@ -141,8 +141,7 @@ module.exports = function (grunt) {
 				var string = data.toString().trim();
 
 				if (string.indexOf("error") !== -1 || string.indexOf("warning") !== -1) {
-					var beep = (!grunt.option("no-color")) ? "\x07" : "";
-					console.log(beep);
+					grunt.fail.fatal("Compass failed to build.");
 				}
 			});
 
