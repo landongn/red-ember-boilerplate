@@ -79,6 +79,12 @@ module.exports = function (grunt) {
 				var args = [server, cmd];
 				var verbose = grunt.option("verbose");
 
+				var frontend = path.join("project", "settings", "frontend.py");
+
+				if (fs.existsSync(frontend)) {
+					args.push("--settings=settings.frontend");
+				}
+
 				if (verbose) {
 					grunt.log.writeln(args.join(" "));
 				}
@@ -86,18 +92,8 @@ module.exports = function (grunt) {
 				grunt.log.ok("Starting the server...".bold.cyan);
 
 				var runner = cp.spawn("sh", args, {
-					stdio: [0, 1, verbose ? 2 : "pipe"]
+					stdio: "inherit"
 				});
-
-				if (!verbose) {
-					runner.stderr.on("data", function (data) {
-						var string = data.toString().trim();
-
-						if (string.indexOf(" 200 ") === -1 && string.indexOf(" 304 ") === -1) {
-							process.stdout.write(data);
-						}
-					});
-				}
 
 				runner.on("exit", function (code) {
 					if (watcher && typeof (watcher || {}).kill === "function") {
