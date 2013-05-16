@@ -196,6 +196,7 @@ module.exports = function (grunt) {
 
 			if (override) {
 				var assert = "y";
+				var isAll = (override === "all");
 
 				if (override === "bare") {
 					assert = "n";
@@ -204,8 +205,10 @@ module.exports = function (grunt) {
 				override = override.split(",");
 
 				for (i = 0, j = pluginOpts.length; i < j; i++) {
-					if (override.length > 1) {
-						assert = (override.indexOf(pluginOpts[i].name) !== -1) ? "y" : "n";
+					assert = "n";
+
+					if (isAll || override.indexOf(pluginOpts[i].name) !== -1) {
+						assert = "y";
 					}
 
 					overrideProps[pluginOpts[i].name] = assert;
