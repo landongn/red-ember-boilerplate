@@ -33,8 +33,10 @@ module.exports = function (grunt) {
 					err += data.toString();
 				});
 			} else {
-				child.stderr.on("data", function () {
-					grunt.log.write(".".grey);
+				child.stderr.on("data", function (data) {
+					if (data.toString().indexOf("GET") === -1) {
+						grunt.log.write(".".grey);
+					}
 				});
 			}
 		}
