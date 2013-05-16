@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 				tasks.unshift("start");
 			}
 
-			if (typeof this.data === typeof []) {
+			if (Array.isArray(this.data)) {
 				tasks = tasks.concat(this.data);
 			} else {
 				tasks.push(this.data);
