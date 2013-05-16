@@ -2,7 +2,21 @@
 "use strict";
 
 module.exports = function (grunt, helper, cb) {
+	var fs = require("fs");
 	var path = require("path");
+
+	var updateRunScript = function () {
+		var run = path.join("scripts", "run.sh");
+
+		if (fs.existsSync(run)) {
+			var contents = grunt.file.read(run);
+			contents = contents.replace("SERVER=$1", "SERVER=$@");
+
+			grunt.file.write(run, contents);
+		}
+
+		return exit();
+	};
 
 	var runSync = function () {
 		helper.spawn({
@@ -14,7 +28,7 @@ module.exports = function (grunt, helper, cb) {
 					return exit("Something went wrong attempting to run scripts/sync.sh");
 				}
 
-				exit();
+				updateRunScript();
 			}
 		});
 	};
@@ -23,7 +37,7 @@ module.exports = function (grunt, helper, cb) {
 		helper.spawn({
 			cmd: "sh",
 			args: [path.join("scripts", "setup.sh")],
-			title: "Creating a virtualenv. This may take a minute",
+			title: "Creating a Python virtualenv. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("Something went wrong attempting to run scripts/setup.sh");
