@@ -60,6 +60,14 @@ module.exports = function (grunt) {
 		}
 
 		var finalizeInstall = function () {
+			grunt.log.writeln();
+			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+
+			done();
+		};
+
+		var initialBuild = function (cb) {
 			pkg.initialized = true;
 			pkg.save();
 
@@ -67,20 +75,15 @@ module.exports = function (grunt) {
 				cmd: "grunt",
 				args: ["build"],
 				title: "Initial build",
-				complete: function () {
-					grunt.log.writeln();
-					grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
-					grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
-
-					done();
-				}
+				complete: cb
 			});
 		};
 
-		var addHooks = function (cb) {
+		var addHooks = function () {
 			var hookDir = path.join(pkg.config.dirs.config, "hooks");
 
 			if (fs.existsSync(hookDir)) {
+				grunt.log.writeln("    ".grey + "Adding git hooks.".grey);
 				var gitHookDir = path.join(cwd, ".git", "hooks");
 
 				var hooks = grunt.file.recurse(hookDir, function (abspath, root, sub, file) {
@@ -89,12 +92,6 @@ module.exports = function (grunt) {
 					grunt.file.copy(abspath, hook);
 					fs.chmodSync(hook, "755");
 				});
-
-				grunt.log.writeln("    ".grey + "Added git hooks.".grey);
-
-				if (cb) {
-					cb();
-				}
 			}
 		};
 
@@ -106,7 +103,8 @@ module.exports = function (grunt) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
 
-				addHooks(finalizeInstall);
+				addHooks();
+				initialBuild(finalizeInstall);
 			});
 		};
 
@@ -292,7 +290,8 @@ module.exports = function (grunt) {
 
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
-				addHooks(alreadyStarted);
+				addHooks();
+				initialBuild(alreadyStarted);
 			} else {
 				prompt = require("prompt");
 				prompt.start();
