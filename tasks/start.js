@@ -354,17 +354,11 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var installNpmModules = function () {
+		(function () {
 			grunt.log.writeln();
 			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
-			helper.installModules(["--production"], function () {
-				checkSystemDependencies(pkg.systemDependencies);
-			});
-		};
-
-		(function () {
-			installNpmModules();
+			checkSystemDependencies(pkg.systemDependencies);
 		}());
 
 	});
