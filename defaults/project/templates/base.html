@@ -41,7 +41,6 @@
 		<meta property="og:locale" content="en_us" />
 
 		{# All JavaScript at the bottom, except for Modernizr. #}
-		{# Modernizr enables HTML5 elements & feature detects; For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ #}
 		{% if settings.TEMPLATE_DEBUG %}
 		<script src="{{ STATIC_URL }}js/libs/modernizr/modernizr.js"></script>
 		{% else %}
@@ -74,7 +73,7 @@
 
 		<script>
 			require.config({
-				baseUrl : "{{STATIC_URL}}js",
+				baseUrl : "{{ STATIC_URL }}js",
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
 		</script>
@@ -88,7 +87,7 @@
 
 		<script>
 			require.config({
-				baseUrl : "{{STATIC_URL}}js",
+				baseUrl : "{{ STATIC_URL }}js",
 				paths : {
 					"__PROJECT_NAME__/Site" : "site.min"
 				}
@@ -102,7 +101,7 @@
 		</script>
 
 		{# Chrome Frame prompt for IE9 and below. #}
-		{# See: project/source/js/rosy/modules/google-chrome-frame for more info. #}
+		{# See: project/source/js/libs/rosy-google-chrome-frame for more info. #}
 		<!--[if lte IE 9]>
 		<script>
 			require(["libs/rosy-google-chrome-frame/ChromeFrame"]);
