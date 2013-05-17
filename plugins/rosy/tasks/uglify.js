@@ -3,7 +3,7 @@
 
 module.exports = function (grunt) {
 
-	grunt.registerTask("requirejs:uglify", function () {
+	grunt.registerTask("requirejs:uglify", "Minify your RequireJS file.", function () {
 		var done = this.async();
 		var uglify = require("uglify-js");
 		var colors = require("colors");

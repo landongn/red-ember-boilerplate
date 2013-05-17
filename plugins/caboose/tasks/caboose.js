@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		caboose = require(path.join(__dirname, "..", "plugin.json")),
 		source = caboose.config.scope;
 
-	grunt.registerTask("caboose:bundle", function () {
+	grunt.registerTask("caboose:bundle", "Ensure your gem bundle is up to date.", function () {
 		var done = this.async();
 		var cp = require("child_process");
 

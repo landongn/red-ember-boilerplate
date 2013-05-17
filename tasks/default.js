@@ -3,7 +3,7 @@ module.exports = function (grunt) {
 	"use strict";
 
 	// Default task.
-	grunt.registerTask("default", function () {
+	grunt.registerTask("default", "Your project's available tasks.", function () {
 		var helper = require("./helpers").init(grunt);
 
 		var done = this.async();
