@@ -83,10 +83,10 @@ module.exports = function (grunt, helper, cb) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
 				var localPkg = require(path.join(robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
 
-				var rosyConfig = path.join(libs, "rosy", "config.json");
+				var rosyConfig = path.join(libs, "rosy", "config.js");
 
 				if (fs.existsSync(rosyConfig)) {
-					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.json"));
+					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.js"));
 				}
 
 				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
