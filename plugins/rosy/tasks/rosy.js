@@ -116,4 +116,15 @@ module.exports = function (grunt) {
 		});
 	});
 
+	grunt.registerTask("rosy:reload", function () {});
+
+	grunt.config.set("watch.rosy", {
+		files: path.join(source, "*[^libs]", "*[^.min].js"),
+		tasks: ["rosy:reload"],
+		options: {
+			interrupt: true,
+			livereload: true
+		}
+	});
+
 };

@@ -82,20 +82,6 @@ module.exports = function (grunt) {
 		});
 	});
 
-	var path = require("path"),
-		cwd = process.cwd(),
-		rosy = require(path.join(__dirname, "..", "plugin.json")),
-		source = rosy.config.scope;
-
-	grunt.config.set("watch.requirejs", {
-		files: path.join(source, "*[^libs]", "*[^.min].js"),
-		tasks: ["requirejs:reload"],
-		options: {
-			interrupt: true,
-			livereload: true
-		}
-	});
-
 	grunt.config.set("build.requirejs", ["requirejs:uglify", "requirejs"]);
 
 };
