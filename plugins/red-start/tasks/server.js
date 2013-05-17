@@ -40,6 +40,13 @@ module.exports = function (grunt) {
 		var runOnce;
 
 		var startWatcher = function (cb, done) {
+			var watch = grunt.config.get("watch");
+
+			if (typeof watch === "undefined") {
+				grunt.log.ok("Nothing to watch...".bold.cyan);
+				return cb();
+			}
+
 			var cp = require("child_process");
 
 			var watcher = cp.spawn("grunt", ["watch"], {
