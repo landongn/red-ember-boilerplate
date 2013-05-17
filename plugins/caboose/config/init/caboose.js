@@ -28,7 +28,7 @@ module.exports = function (grunt, helper, cb) {
 		helper.spawn({
 			cmd: "bundle",
 			args: ["install", "--path", ".bundle"],
-			title: "Installing gem bundle. This may take a minute",
+			title: "Installing Ruby gem bundle. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("No executable named bundle found.");
