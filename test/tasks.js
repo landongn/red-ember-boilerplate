@@ -185,8 +185,7 @@ describe("Clone Check", function () {
 
 	it("Should run the default grunt task", function (done) {
 		grunt.spawn("", {
-			cwd: clone,
-			verbose: true
+			cwd: clone
 		})
 
 		.wait('Running "default" task')
@@ -223,8 +222,7 @@ describe("Default Tasks", function () {
 		it("grunt start", function (done) {
 			grunt.spawn("start")
 			.wait("[*] Starting the party")
-			.expect("Installing npm packages")
-			.wait("OK")
+			.expect("Initial build").wait("OK")
 			.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
 			.run(done);
 		});
@@ -304,7 +302,7 @@ describe("Default Tasks", function () {
 
 		it("grunt update", function (done) {
 			grunt.spawn("update", {
-				verbose: true
+				stripColors: true
 			})
 			.wait("Checking for newer version").wait("OK")
 			.expect("[?] An updated version of your boilerplate")
@@ -314,6 +312,7 @@ describe("Default Tasks", function () {
 			.expect("Fetching latest from origin remote").wait("OK")
 			.expect("Updating to version").wait("OK")
 			.expect("Installing npm packages").wait("OK")
+			.expect("[*] Please commit your update now. A build/push will revert you to the last committed version.")
 			.expect("Done, without errors.")
 			.run(function (err) {
 				var testPath = path.join(test, "robyn.json");
