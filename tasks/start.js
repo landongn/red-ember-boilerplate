@@ -1,10 +1,9 @@
-/*jshint node:true*/
+/* jshint node: true */
 module.exports = function (grunt) {
 	"use strict";
 
 	grunt.registerTask("start", "Get your party started", function (branch, override) {
-		// TODO: ditch this when grunt v0.4 is released
-		grunt.util = grunt.util || grunt.utils;
+		var helper = require("./helpers").init(grunt);
 
 		var fs = require("fs");
 		var cp = require("child_process");
@@ -64,11 +63,18 @@ module.exports = function (grunt) {
 			pkg.initialized = true;
 			pkg.save();
 
-			grunt.log.writeln();
-			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
-			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+			helper.spawn({
+				cmd: "grunt",
+				args: ["build"],
+				title: "Initial build",
+				complete: function () {
+					grunt.log.writeln();
+					grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+					grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
 
-			done();
+					done();
+				}
+			});
 		};
 
 		var shrinkWrap = function () {
@@ -109,7 +115,7 @@ module.exports = function (grunt) {
 			var i = 0;
 
 			for (key in props) {
-				var assert = grunt.helper("get_assertion", props[key]);
+				var assert = helper.getAssertion(props[key]);
 
 				if (assert) {
 					plugArr.push(key);
@@ -119,8 +125,7 @@ module.exports = function (grunt) {
 			// Sort by name
 			plugArr = plugArr.sort();
 
-			grunt.helper("store_vars", name, title, function () {
-				grunt.log.writeln();
+			helper.storeVars(name, title, function () {
 				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
 
 				(function install(count) {
@@ -129,7 +134,7 @@ module.exports = function (grunt) {
 						return;
 					}
 
-					grunt.helper("install_plugin", plugArr[count], null, function (stop) {
+					helper.installPlugin(plugArr[count], null, function (stop) {
 						if (stop === true) {
 							done(false);
 							return;
@@ -191,6 +196,7 @@ module.exports = function (grunt) {
 
 			if (override) {
 				var assert = "y";
+				var isAll = (override === "all");
 
 				if (override === "bare") {
 					assert = "n";
@@ -199,8 +205,10 @@ module.exports = function (grunt) {
 				override = override.split(",");
 
 				for (i = 0, j = pluginOpts.length; i < j; i++) {
-					if (override.length > 1) {
-						assert = (override.indexOf(pluginOpts[i].name) !== -1) ? "y" : "n";
+					assert = "n";
+
+					if (isAll || override.indexOf(pluginOpts[i].name) !== -1) {
+						assert = "y";
 					}
 
 					overrideProps[pluginOpts[i].name] = assert;
@@ -212,7 +220,9 @@ module.exports = function (grunt) {
 			options = options.concat(pluginOpts);
 
 			if (options.length) {
-				grunt.helper("prompt", {}, options, function (err, props) {
+				grunt.log.subhead("Please answer the following:");
+
+				prompt.get(options, function (err, props) {
 					handleSettings(err, props, overrideProps);
 				});
 			} else {
@@ -240,17 +250,16 @@ module.exports = function (grunt) {
 			}
 
 			if (opts.length) {
-				grunt.log.writeln();
 				grunt.log.writeln("[*]".grey + " Checking param overrides.".grey);
 
-				grunt.helper("writeln", opts.join(", ").grey);
+				helper.writeln(opts.join(", ").grey);
 			}
 
 			promptForSettings(plugins);
 		};
 
 		var gatherPlugins = function () {
-			grunt.helper("check_for_available_plugins", gatherArgs);
+			helper.checkForPlugins(true, gatherArgs);
 		};
 
 		var getThisPartyStarted = function () {
@@ -261,6 +270,8 @@ module.exports = function (grunt) {
 				done();
 			} else {
 				prompt = require("prompt");
+				prompt.start();
+
 				prompt.message = (prompt.message !== "prompt") ? prompt.message : "[?]".white;
 				prompt.delimiter = prompt.delimter || " ";
 
@@ -285,7 +296,7 @@ module.exports = function (grunt) {
 			if (fs.existsSync(file)) {
 				var initializer = require(file);
 
-				initializer(grunt, function (error) {
+				initializer(grunt, helper, function (error) {
 					if (error) {
 						grunt.fail.warn(error);
 					}
@@ -333,7 +344,7 @@ module.exports = function (grunt) {
 
 		var checkSystemDependencies = function (sysDeps) {
 			if (sysDeps) {
-				grunt.helper("check_dependencies", sysDeps, function (name) {
+				helper.checkDependencies(sysDeps, function (name) {
 					checkIfPartyStarted();
 				}, function (error) {
 					done(error);
@@ -343,17 +354,11 @@ module.exports = function (grunt) {
 			}
 		};
 
-		var installNpmModules = function () {
+		(function () {
 			grunt.log.writeln();
 			grunt.log.writeln("[*]".grey + (" Starting the party").magenta);
 
-			grunt.helper("install_modules", ["--production"], function () {
-				checkSystemDependencies(pkg.systemDependencies);
-			});
-		};
-
-		(function () {
-			installNpmModules();
+			checkSystemDependencies(pkg.systemDependencies);
 		}());
 
 	});
