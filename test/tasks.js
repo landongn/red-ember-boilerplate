@@ -166,6 +166,13 @@ describe("Clone Check", function () {
 		.run(done);
 	});
 
+	it("Should install npm packages", function (done) {
+		nexpect.spawn("npm", ["install"], {
+			stripColors: true
+		})
+		.run(done);
+	});
+
 	it("Should initialize the robyn submodule", function (done) {
 		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
 			cwd: clone,
@@ -178,14 +185,15 @@ describe("Clone Check", function () {
 
 	it("Should run the default grunt task", function (done) {
 		grunt.spawn("", {
-			cwd: clone
+			cwd: clone,
+			verbose: true
 		})
 
 		.wait('Running "default" task')
 		.expect('Running "start" task')
 
 		.expect('[*] Starting the party')
-		.expect('    Installing npm packages').wait('OK')
+		.expect('    Initial build').wait('OK')
 
 		.wait("[*] This party's already been started. You can install individual plugins with `grunt install`")
 
