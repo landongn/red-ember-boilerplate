@@ -75,7 +75,7 @@ module.exports = function (grunt) {
 			//http://lisperator.net/uglifyjs/codegen
 			//http://lisperator.net/uglifyjs/compress
 			uglify2 : {
-				warnings : true
+				warnings : false
 			},
 
 			//If skipModuleInsertion is false, then files that do not use define()
