@@ -1,7 +1,7 @@
 /*jslint node: true */
 "use strict";
 
-module.exports = function (grunt, cb) {
+module.exports = function (grunt, helper, cb) {
 	var config = require("../../plugin.json").config;
 	var cwd = process.cwd();
 	var path = require("path");
@@ -10,7 +10,7 @@ module.exports = function (grunt, cb) {
 	var scarletDir = "scarlet";
 
 	var runSetup = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "git",
 			args: ["submodule", "add", config.repo, scarletDir],
 			title: "Adding scarlet as a submodule",
@@ -19,7 +19,7 @@ module.exports = function (grunt, cb) {
 					return exit("Something went wrong while adding the submodule");
 				}
 
-				grunt.helper("spawn", {
+				helper.spawn({
 					cmd: "git",
 					args: ["submodule", "update", "--init", scarletDir],
 					title: "Update submodule",
@@ -33,7 +33,7 @@ module.exports = function (grunt, cb) {
 
 	var checkInstall = function () {
 		if (fs.existsSync(path.join(cwd, scarletDir))) {
-			grunt.helper("spawn", {
+			helper.spawn({
 				cmd: "git",
 				args: ["submodule", "update", "--init", scarletDir],
 				title: "Update submodule",
