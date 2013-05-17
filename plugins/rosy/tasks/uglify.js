@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		var path = require("path");
 
 		var libs = path.join(cwd, "project", "source", "js", "libs");
-		var requirePath = path.join("requirejs", "require.js");
+		var requirePath = path.join(libs, "requirejs", "require.js");
 
 		if (fs.existsSync(requirePath)) {
 			var result = uglify.minify(requirePath, {
