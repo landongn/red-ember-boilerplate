@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 		rosy = require(path.join(__dirname, "..", "plugin.json")),
 		output = path.join("project", "static", "js"),
 		source = rosy.config.scope,
-		rosyConfig = path.join("libs", "rosy", "config.js");
+		rosyConfig = path.join("config.js");
 
 	// Project configuration.
 	grunt.config.set("requirejs.desktop", {

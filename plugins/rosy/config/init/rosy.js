@@ -51,7 +51,6 @@ module.exports = function (grunt, helper, cb) {
 			process.chdir(cwd);
 
 			var libs = path.join(cwd, source, "libs");
-			var project = path.join(libs, "example");
 
 			// Get rid of all the cruft. Ugh.
 			var f = [
@@ -78,18 +77,16 @@ module.exports = function (grunt, helper, cb) {
 				}
 			});
 
+			var project = path.join(libs, "example");
+
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
 				var localPkg = require(path.join(robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
 
-				var bowerConfig = path.join(project, "bower.json");
+				var rosyConfig = path.join(libs, "rosy", "config.json");
 
-				if (!fs.existsSync(bowerConfig)) {
-					bowerConfig = path.join(project, "component.json");
-				}
-
-				if (fs.existsSync(bowerConfig)) {
-					fs.unlinkSync(bowerConfig);
+				if (fs.existsSync(rosyConfig)) {
+					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.json"));
 				}
 
 				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
