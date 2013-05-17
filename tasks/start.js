@@ -71,13 +71,22 @@ module.exports = function (grunt) {
 			pkg.initialized = true;
 			pkg.save();
 
-			console.log(grunt.config.get("build"));
+			var verbose = grunt.option("verbose");
+			var build = cp.spawn("grunt", ["build"], {
+				stdio: verbose ? "inherit" : "pipe"
+			});
 
-			helper.spawn({
-				cmd: "grunt",
-				args: ["build"],
-				title: "Initial build",
-				complete: cb
+			if (!verbose) {
+				helper.write("Initial build.".grey);
+
+				build.stdout.on("data", function () {
+					process.stdout.write(".".grey);
+				});
+			}
+
+			build.on("exit", function () {
+				grunt.log.ok();
+				cb();
 			});
 		};
 
