@@ -71,6 +71,8 @@ module.exports = function (grunt) {
 			pkg.initialized = true;
 			pkg.save();
 
+			console.log(grunt.config.get("build"));
+
 			helper.spawn({
 				cmd: "grunt",
 				args: ["build"],
