@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		caboose = require(path.join(__dirname, "..", "plugin.json")),
 		source = caboose.config.scope;
 
-	grunt.registerTask("compass:bundle", function () {
+	grunt.registerTask("caboose:bundle", function () {
 		var done = this.async();
 		var cp = require("child_process");
 
@@ -38,15 +38,15 @@ module.exports = function (grunt) {
 		});
 	});
 
-	grunt.config.set("watch.compass", {
+	grunt.config.set("watch.caboose", {
 		files: path.join(source, "**", "*.s{a,c}ss"),
-		tasks: ["compass:dev"],
+		tasks: ["caboose:dev"],
 		options: {
 			interrupt: true,
 			livereload: true
 		}
 	});
 
-	grunt.config.set("build.compass", ["compass:bundle", "compass:prod"]);
+	grunt.config.set("build.caboose", ["caboose:bundle", "caboose:prod"]);
 
 };
