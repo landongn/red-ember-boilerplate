@@ -52,7 +52,32 @@ robyn add rbp-bare git://github.com/ff0000/red-boilerplate.git --bare
 robyn init rbp-bare path/to/folder
 ```
 
-RBP Plugins
+Built-in Tasks
+==========
+Run any of the following via `grunt [task]`:
+
+### Build
+Builds your current project.
+
+### Tasks
+List out your project's available tasks.
+
+### Info
+Outputs project specific information, such as your current Robyn version, etc.
+
+### Install/Uninstall
+Find plugins to install/uninstall.
+
+### Start
+Initialize your project's boilerplate.
+
+### Sync
+Sync your Robyn version with any upstream changes.
+
+### Update
+Update your boilerplate to the latest RBP version.
+
+Plugins
 ==========
 
 ### [Caboose](https://github.com/ff0000/caboose)
