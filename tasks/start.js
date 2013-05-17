@@ -60,20 +60,33 @@ module.exports = function (grunt) {
 		}
 
 		var finalizeInstall = function () {
+			grunt.log.writeln();
+			grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
+			grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+
+			done();
+		};
+
+		var initialBuild = function (cb) {
 			pkg.initialized = true;
 			pkg.save();
 
-			helper.spawn({
-				cmd: "grunt",
-				args: ["build"],
-				title: "Initial build",
-				complete: function () {
-					grunt.log.writeln();
-					grunt.log.writeln("[*] ".grey + "You should edit your package.json and fill in your project details.".magenta);
-					grunt.log.writeln("[*] ".grey + "All done! Commit you changes and you're on your way.".magenta);
+			var verbose = grunt.option("verbose");
+			var build = cp.spawn("grunt", ["build"], {
+				stdio: verbose ? "inherit" : "pipe"
+			});
 
-					done();
-				}
+			if (!verbose) {
+				helper.write("Initial build.".grey);
+
+				build.stdout.on("data", function () {
+					process.stdout.write(".".grey);
+				});
+			}
+
+			build.on("exit", function () {
+				grunt.log.ok();
+				cb();
 			});
 		};
 
@@ -85,7 +98,7 @@ module.exports = function (grunt) {
 				grunt.log.writeln();
 				grunt.log.writeln("[*] ".grey + "Shrinkwrapped npm packages.".grey);
 
-				finalizeInstall();
+				initialBuild(finalizeInstall);
 			});
 		};
 
@@ -262,12 +275,16 @@ module.exports = function (grunt) {
 			helper.checkForPlugins(true, gatherArgs);
 		};
 
+		var alreadyStarted = function () {
+			grunt.log.writeln();
+			grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
+
+			done();
+		};
+
 		var getThisPartyStarted = function () {
 			if (pkg.initialized) {
-				grunt.log.writeln();
-				grunt.log.writeln("[*] ".grey + "This party's already been started. You can install individual plugins with `grunt install`".magenta);
-
-				done();
+				initialBuild(alreadyStarted);
 			} else {
 				prompt = require("prompt");
 				prompt.start();
