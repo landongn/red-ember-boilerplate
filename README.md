@@ -221,7 +221,7 @@ A folder for your plugin-specific Grunt tasks.
 
 ### plugin.json
 A plugin-specific definition of your plugin's internals.
-Most of these parameters follow [NPM package.json](http://package.json.jit.su) conventions:
+Most of these parameters follow [npm package.json](http://package.json.jit.su) conventions:
 
 - name
 - description
@@ -239,7 +239,7 @@ A hash containing key/pair mappings of system-wide dependencies and versions. Ex
 
 ```json
 "systemDependencies": {
-    "grunt": ">=0.3.0",
+    "grunt": "~0.4.x",
     "ruby": ">=1.8.x",
     "python": "*"
 }
@@ -253,6 +253,9 @@ The main entry point of your plugin. For example, RED Interactive's [`rosy`](htt
 
 ###### replaceVars
 A boolean. When `true`, Robyn will traverse through the plugin's files and replace instances of the placeholder values `__PROJECT_NAME__` and `__PROJECT_TITLE__`
+
+###### promptOnStart
+A boolean. True by default. When `true`, Robyn will prompt to install associated plugin when `grunt start` is invoked.
 
 ###### requiredPaths
 An array of required plugin paths. Robyn collects these paths and checks for their existence. If any path listed is not found, it is assumed the plugin is not installed, and Robyn attempts to run any action found in `scripts.install`. Example below:

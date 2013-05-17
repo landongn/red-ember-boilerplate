@@ -1,3 +1,6 @@
+/* jshint node: true */
+/* global describe, it */
+
 describe("Plugin Integrity", function () {
 	var fs = require("fs");
 	var path = require("path");

@@ -1,13 +1,15 @@
-/*jshint node:true*/
+/* jshint node: true */
 module.exports = function (grunt) {
 	"use strict";
 
 	// Default task.
 	grunt.registerTask("default", function () {
+		var helper = require("./helpers").init(grunt);
+
 		var done = this.async();
 		var tasks = ["info"];
 
-		grunt.helper("check_initialized", function (initialized) {
+		helper.checkInitialized(function (initialized) {
 			if (!initialized) {
 				tasks.unshift("start");
 			}

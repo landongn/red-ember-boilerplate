@@ -1,3 +1,5 @@
+/* jshint node: true */
+
 // Start a pristine Robyn project
 // This test expects a Robyn nest called 'robyn-test'
 // Add: `robyn add robyn-test git://github.com/ff0000/robyn.git`

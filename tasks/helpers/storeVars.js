@@ -1,21 +1,24 @@
-/*jshint node:true*/
+/* jshint node:true, sub:true */
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("store_vars", function (name, title, cb) {
+	var storeVars = function (name, title, cb) {
+		var helper = require("../helpers").init(grunt);
 		var pkg = require("../utils/pkg");
 
 		pkg.config.vars["PROJECT_NAME"] = name;
 		pkg.config.vars["PROJECT_TITLE"] = title;
 
 		// Replace variables
-		grunt.helper("replace_in_files", function () {
+		helper.replaceInFiles(function () {
 			pkg.save();
 
 			if (cb) {
 				cb();
 			}
 		});
-	});
+	};
+
+	return storeVars;
 
 };
