@@ -6,7 +6,11 @@ module.exports = function (grunt) {
 		var helper = require("./helpers").init(grunt);
 
 		var done = this.async();
-		this.requiresConfig("build");
+		var build = this.data;
+
+		if (typeof build === "undefined") {
+			return done();
+		}
 
 		helper.checkInitialized(function (initialized) {
 			var tasks = [];
