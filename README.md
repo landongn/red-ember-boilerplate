@@ -20,7 +20,7 @@ npm install robyn -g
 robyn add rbp git://github.com/ff0000/red-boilerplate.git
 ```
 
-How to use
+Bootstrapping RBP via Robyn
 ==========
 
 #### Creating a project
