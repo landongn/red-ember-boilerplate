@@ -89,6 +89,12 @@ module.exports = function (grunt, helper, cb) {
 					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.js"));
 				}
 
+				var bowerConfig = path.join(project, "bower.json");
+
+				if (fs.existsSync(bowerConfig)) {
+					fs.unlinkSync(bowerConfig);
+				}
+
 				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
 				wrench.rmdirSyncRecursive(project);
 			}
