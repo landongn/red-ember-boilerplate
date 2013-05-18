@@ -12,9 +12,6 @@
 		{# Prefetch your CDN URL: http://j.mp/bplatednsfetch #}
 		<link rel="dns-prefetch" href="{{ STATIC_URL }}" />
 
-		{# Set STATIC_URL parameter #}
-		<link rel="static-url" href="{{ STATIC_URL }}" />
-
 		<title>{% block title %}__PROJECT_TITLE__{% endblock title %}</title>
 
 		<meta name="description" content="" />
@@ -96,7 +93,9 @@
 		{% endif %}
 		<script>
 			require(["__PROJECT_NAME__/Site"], function (Site) {
-				Site.initialize();
+				Site.initialize({
+					"STATIC_URL": "{{ STATIC_URL }}"
+				});
 			});
 		</script>
 
