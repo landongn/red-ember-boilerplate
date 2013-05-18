@@ -119,7 +119,10 @@ module.exports = function (grunt) {
 	grunt.registerTask("rosy:reload", function () {});
 
 	grunt.config.set("watch.rosy", {
-		files: path.join(source, "*[^libs]", "*[^.min].js"),
+		files: [
+			path.join(source, "*.js"),
+			path.join(source, grunt.template.process("<%= meta.projectName %>"), "**", "*.js")
+		],
 		tasks: ["rosy:reload"],
 		options: {
 			interrupt: true,
