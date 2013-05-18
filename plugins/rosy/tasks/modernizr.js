@@ -54,18 +54,7 @@ module.exports = function (grunt) {
 		"files" : [
 			path.join(source, "**", "*.js"),
 			path.join(source, "..", "{sass,scss}", "**", "*.scss")
-		].concat([
-			path.join("env"),
-			path.join("robyn"),
-			path.join(".bundle"),
-			path.join("node_modules"),
-			path.join("project", "static"),
-			path.join("collected-static"),
-			path.join(".{git,sass-cache,robyn}"),
-			path.join("project", "**", "js", "libs")
-		].map(function (src) {
-			return "!" + path.join(src, "**", "*");
-		})),
+		],
 
 		// When parseFiles = true, matchCommunityTests = true will attempt to
 		// match user-contributed tests.
