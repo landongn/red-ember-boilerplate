@@ -7,13 +7,13 @@ var grunt = require("../lib/grunt");
 
 describe("Caboose Tasks", function () {
 
-	describe("Compass", function () {
-		var asyncFileDetect = /overwrite project\/static\/css\/(style|ie)\.css/;
+	describe("Caboose", function () {
+		var asyncFileDetect = /(?:unchanged project\/source.*)|(?:overwrite project\/static.*)/;
 
-		it("grunt compass:bundle", function (done) {
-			grunt.spawn("compass:bundle")
+		it("grunt caboose:bundle", function (done) {
+			grunt.spawn("caboose:bundle")
 
-			.expect('Running "compass:bundle" task')
+			.expect('Running "caboose:bundle" task')
 			.expect("The Gemfile's dependencies are satisfied")
 
 			.expect('Done, without errors.')
@@ -21,10 +21,10 @@ describe("Caboose Tasks", function () {
 			.run(done);
 		});
 
-		it("grunt compass:dev", function (done) {
-			grunt.spawn("compass:dev")
+		it("grunt caboose:dev", function (done) {
+			grunt.spawn("caboose:dev")
 
-			.expect('Running "compass:dev" (compass) task')
+			.expect('Running "caboose:dev" (caboose) task')
 			.expect(asyncFileDetect)
 			.expect(asyncFileDetect)
 
@@ -33,11 +33,11 @@ describe("Caboose Tasks", function () {
 			.run(done);
 		});
 
-		it("grunt compass:prod", function (done) {
-			grunt.spawn("compass:prod")
+		it("grunt caboose:prod", function (done) {
+			grunt.spawn("caboose:prod")
 
-			.expect('Running "compass:prod" (compass) task')
-			.expect(asyncFileDetect)
+			.expect('Running "caboose:prod" (caboose) task')
+			.wait(asyncFileDetect)
 			.expect(asyncFileDetect)
 
 			.expect('Done, without errors.')

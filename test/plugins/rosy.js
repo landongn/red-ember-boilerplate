@@ -50,7 +50,7 @@ describe("Rosy Tasks", function () {
 			.expect('>> Generating a custom Modernizr build')
 			.expect('>> Uglifying')
 
-			.expect('>> Wrote file to project/static/js/libs/modernizr.min.js')
+			.expect('>> Wrote file to project/static/js/libs/modernizr/modernizr.min.js')
 
 			.expect('Done, without errors.')
 

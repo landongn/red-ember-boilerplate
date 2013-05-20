@@ -13,22 +13,19 @@
 			setup : "bdd",
 			reporter : process.env.TRAVIS ? "tap" : "spec",
 			slow : 20000,
-			timeout : 180000
+			timeout : 240000
 		});
 
 		mocha.addFile("test/tasks.js");
 
 		// Custom Functionality
 		mocha.addFile("test/custom/build.js");
-		mocha.addFile("test/custom/bump.js");
-		mocha.addFile("test/custom/push.js");
 		mocha.addFile("test/custom/tasks.js");
 
 		mocha.addFile("test/plugins.js");
 
 		// Plugins
 		mocha.addFile("test/plugins/caboose.js");
-		mocha.addFile("test/plugins/modernizr.js");
 		mocha.addFile("test/plugins/red-start.js");
 		mocha.addFile("test/plugins/rosy.js");
 		mocha.addFile("test/plugins/statix.js");
