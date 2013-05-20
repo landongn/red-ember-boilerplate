@@ -130,7 +130,7 @@ module.exports = function (grunt) {
 
 			// Run the command
 			var child = cp.spawn(cmd, args, {
-				stdio: "pipe"
+				stdio: [0, "pipe", 2]
 			});
 
 			child.stdout.on("data", function (data) {
