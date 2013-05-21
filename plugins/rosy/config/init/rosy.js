@@ -55,7 +55,7 @@ module.exports = function (grunt, helper, cb) {
 
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
-				var localPkg = require(path.join(robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
+				var localPkg = require(path.join(cwd, robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
 
 				var rosyConfig = path.join(libs, "rosy", "config.js");
 
