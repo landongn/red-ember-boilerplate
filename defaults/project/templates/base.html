@@ -39,7 +39,7 @@
 
 		{# All JavaScript at the bottom, except for Modernizr. #}
 		{% if settings.TEMPLATE_DEBUG %}
-		<script src="{{ STATIC_URL }}js/libs/modernizr/modernizr.js"></script>
+		<script src="{{ STATIC_URL }}js/libs/modernizr/index.js"></script>
 		{% else %}
 		<script src="{{ STATIC_URL }}js/libs/modernizr/modernizr.min.js"></script>
 		{% endif %}
@@ -65,7 +65,7 @@
 		</div>
 
 		{% if settings.TEMPLATE_DEBUG %}
-		<script src="{{ STATIC_URL }}js/libs/requirejs/require.js"></script>
+		<script src="{{ STATIC_URL }}js/libs/requirejs/index.js"></script>
 		<script src="{{ STATIC_URL }}js/config.js"></script>
 
 		<script>
