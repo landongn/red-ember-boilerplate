@@ -92,7 +92,7 @@ module.exports = {
 				.run(function (err) {
 					if (err) {
 						console.error(err);
-						process.exit();
+						process.exit(1);
 					}
 
 					callback();
@@ -116,7 +116,7 @@ module.exports = {
 				.run(function (err) {
 					if (err) {
 						console.error(err);
-						process.exit();
+						process.exit(1);
 					} else {
 						afterBefore();
 					}
