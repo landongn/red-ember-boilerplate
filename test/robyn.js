@@ -27,8 +27,7 @@ module.exports = {
 					"init", "rbp-test", test,
 					"--branch", branch.trim(),
 					"--name", "robynTest",
-					"--title", "Robyn Test",
-					"--verbose"
+					"--title", "Robyn Test"
 				], {
 					stripColors: true,
 					verbose: true
