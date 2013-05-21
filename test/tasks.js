@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/* jshint node: true */
 /*global describe, before, it, after*/
 
 "use strict";
@@ -42,10 +42,19 @@ describe("Setup Check", function () {
 			".gitmodules",
 			".robyn",
 			"README.md",
-			"grunt.js",
+			"Gruntfile.js",
 			"node_modules",
+			"node_modules/bower",
 			"node_modules/colors",
+			"node_modules/grunt",
+			"node_modules/grunt-contrib-watch",
+			"node_modules/grunt-modernizr",
+			"node_modules/jshint",
 			"node_modules/prompt",
+			"node_modules/requirejs",
+			"node_modules/semver",
+			"node_modules/statix",
+			"node_modules/uglify-js",
 			"node_modules/wrench",
 			"package.json",
 			"robyn",
@@ -164,6 +173,14 @@ describe("Clone Check", function () {
 		.run(done);
 	});
 
+	it("Should install npm packages", function (done) {
+		nexpect.spawn("npm", ["install"], {
+			cwd: clone,
+			stripColors: true
+		})
+		.run(done);
+	});
+
 	it("Should initialize the robyn submodule", function (done) {
 		nexpect.spawn("git", ["submodule", "update", "--init", ".robyn"], {
 			cwd: clone,
@@ -183,12 +200,15 @@ describe("Clone Check", function () {
 		.expect('Running "start" task')
 
 		.expect('[*] Starting the party')
-		.expect('Installing npm packages').wait('OK')
 
-		.expect('Installing bundle. This may take a minute').wait('OK')
+		.expect('Installing Ruby gem bundle. This may take a minute').wait('OK')
 		.expect('Looks like RED Start was already run on this project. Skipping ahead...')
-		.expect('Creating a virtualenv. This may take a minute').wait('OK')
+		.expect('Creating a Python virtualenv. This may take a minute').wait('OK')
+		.expect('Syncing database').wait('OK')
+		.expect('Fetching external libraries').wait('OK')
 
+		.expect('Adding git hooks.')
+		.expect('Initial build').wait('OK')
 		.wait("[*] This party's already been started. You can install individual plugins with `grunt install`")
 
 		.expect('Running "tasks" task')
@@ -208,8 +228,8 @@ describe("Default Tasks", function () {
 		it("grunt start", function (done) {
 			grunt.spawn("start")
 			.wait("[*] Starting the party")
-			.expect("Installing npm packages")
-			.wait("OK")
+			.expect("Adding git hooks.")
+			.expect("Initial build").wait("OK")
 			.expect("[*] This party's already been started. You can install individual plugins with `grunt install`")
 			.run(done);
 		});
@@ -266,13 +286,13 @@ describe("Default Tasks", function () {
 	});
 
 	describe("update", function () {
-		var currentBranch;
+		var currentSHA;
 
 		before(function (done) {
 			var testPath = path.join(test, "robyn.json");
 
 			if (fs.existsSync(testPath)) {
-				nexpect.spawn("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+				nexpect.spawn("git", ["rev-parse", "HEAD"], {
 					cwd: path.join(test, ".robyn"),
 					stripColors: true
 				})
@@ -281,14 +301,16 @@ describe("Default Tasks", function () {
 					testPkg.version = "0.1.0";
 					fs.writeFileSync(testPath, JSON.stringify(testPkg, null, "\t") + "\n");
 
-					currentBranch = result[0];
+					currentSHA = result[0];
 					done(err);
 				});
 			}
 		});
 
 		it("grunt update", function (done) {
-			grunt.spawn("update")
+			grunt.spawn("update", {
+				stripColors: true
+			})
 			.wait("Checking for newer version").wait("OK")
 			.expect("[?] An updated version of your boilerplate")
 			.expect("    Your current version:")
@@ -297,6 +319,7 @@ describe("Default Tasks", function () {
 			.expect("Fetching latest from origin remote").wait("OK")
 			.expect("Updating to version").wait("OK")
 			.expect("Installing npm packages").wait("OK")
+			.expect("[*] Please commit your update now. A build/push will revert you to the last committed version.")
 			.expect("Done, without errors.")
 			.run(function (err) {
 				var testPath = path.join(test, "robyn.json");
@@ -322,7 +345,7 @@ describe("Default Tasks", function () {
 		});
 
 		after(function (done) {
-			nexpect.spawn("git", ["checkout", currentBranch], {
+			nexpect.spawn("git", ["checkout", currentSHA], {
 				cwd: path.join(test, ".robyn"),
 				stripColors: true
 			})

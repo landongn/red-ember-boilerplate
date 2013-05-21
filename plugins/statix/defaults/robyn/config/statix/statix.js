@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* jshint node: true */
 
 var fs = require("fs");
 var wrench = require("wrench");
@@ -82,6 +82,27 @@ module.exports = {
 
 	ready : function (callback) {
 		callback();
+	},
+
+	/*
+		For swig users, configure its settings here.
+	*/
+
+	swigSettings : {
+		cache: false
+	},
+
+	/*
+		If you need custom express configuration options, return a function that will be passed into app.configure()
+	*/
+
+	expressConfig : function (express, app) {
+		var config = function () {
+			app.use("/static", express.static(path.join(this.source_dir, globals.STATIC_URL)));
+			app.use("/static", express.static(path.join(this.source_dir, globals.SOURCE_URL)));
+		}.bind(this);
+
+		return config;
 	},
 
 	/*

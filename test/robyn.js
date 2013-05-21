@@ -40,14 +40,13 @@ module.exports = {
 				.expect("[*] Project shell complete.")
 
 				// RED Boilerplate
-				.expect("Install npm modules").wait("OK")
+				.expect("Installing npm packages").wait("OK")
 				.expect('Running "start" task')
 
 				.expect("[*] Starting the party")
-				.expect("    Installing npm packages").wait("OK")
 
 				.expect("[*] Checking for available plugins.")
-				.expect("    Found the following: caboose, modernizr, red-start, rosy, scarlet, statix")
+				.expect("    Found the following: caboose, red-start, rosy, statix")
 
 				.expect("[*] Checking param overrides.")
 				.expect("    project name: robynTest, project title: Robyn Test")
@@ -55,17 +54,11 @@ module.exports = {
 				.expect("Please answer the following:")
 				.expect("[?] Would you like to add caboose")
 				.sendline("")
-				.expect("[?] Would you like to add modernizr")
-				.sendline("")
 				.expect("[?] Would you like to add red-start")
 				.sendline("")
 				.expect("[?] Would you like to add rosy")
 				.sendline("")
-				.expect("[?] Would you like to add scarlet")
-				.sendline("")
 				.expect("[?] Would you like to add statix")
-				.sendline("")
-				.expect("[?] Do you need to make any changes to the above before continuing? (y/N)")
 				.sendline("")
 
 				.expect("[*] Stored and updated your project variables.")
@@ -73,33 +66,26 @@ module.exports = {
 				.expect("[+] Installing caboose via https://github.com/ff0000/caboose.git")
 				.expect("    Cloning repository").wait("OK")
 				.expect("    Copying files into project").wait("OK")
-				.expect("    Installing bundle. This may take a minute").wait("OK")
-
-				.expect("[+] Installing modernizr via .robyn/plugins/modernizr")
-				.expect("    Installing npm packages").wait("OK")
-				.expect("    Copying files into project").wait("OK")
+				.expect("    Installing Ruby gem bundle. This may take a minute").wait("OK")
 
 				.expect("[+] Installing red-start via .robyn/plugins/red-start")
 				.expect("    Copying files into project").wait("OK")
 				.expect("    Creating a new red-start project").wait("OK")
-				.expect("    Creating a virtualenv. This may take a minute").wait("OK")
+				.expect("    Creating a Python virtualenv. This may take a minute").wait("OK")
+				.expect("    Syncing database").wait("OK")
 
-				.expect("[+] Installing rosy via https://github.com/ff0000/rosy.git")
+				.expect("[+] Installing rosy via .robyn/plugins/rosy")
 				.expect("    Installing npm packages").wait("OK")
-				.expect("    Cloning repository").wait("OK")
 				.expect("    Copying files into project").wait("OK")
-				.expect("    Installing external libraries").wait("OK")
-
-				.expect("[+] Installing scarlet via .robyn/plugins/scarlet")
-				.expect("    Copying files into project").wait("OK")
-				.expect("    Adding scarlet as a submodule").wait("OK")
-				.expect("    Update submodule").wait("OK")
+				.expect("    Fetching external libraries").wait("OK")
 
 				.expect("[+] Installing statix via .robyn/plugins/statix")
 				.expect("    Installing npm packages").wait("OK")
 				.expect("    Copying files into project").wait("OK")
 
 				.expect("[*] Shrinkwrapped npm packages.")
+				.expect("    Adding git hooks.")
+				.expect("    Initial build").wait("OK")
 
 				.expect("[*] You should edit your package.json and fill in your project details.")
 				.expect("[*] All done! Commit you changes and you're on your way.")

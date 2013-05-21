@@ -1,25 +1,55 @@
 /*jslint node: true */
 "use strict";
 
-module.exports = function (grunt, cb) {
+module.exports = function (grunt, helper, cb) {
+	var fs = require("fs");
+	var path = require("path");
+
+	var updateRunScript = function () {
+		var run = path.join("scripts", "run.sh");
+
+		if (fs.existsSync(run)) {
+			var contents = grunt.file.read(run);
+			contents = contents.replace("SERVER=$1", "SERVER=$@");
+
+			grunt.file.write(run, contents);
+		}
+
+		return exit();
+	};
+
+	var runSync = function () {
+		helper.spawn({
+			cmd: "sh",
+			args: [path.join("scripts", "sync.sh")],
+			title: "Syncing database",
+			complete: function (code) {
+				if (code !== 0) {
+					return exit("Something went wrong attempting to run scripts/sync.sh");
+				}
+
+				updateRunScript();
+			}
+		});
+	};
 
 	var runSetup = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "sh",
-			args: ["./scripts/setup.sh"],
-			title: "Creating a virtualenv. This may take a minute",
+			args: [path.join("scripts", "setup.sh")],
+			title: "Creating a Python virtualenv. This may take a minute",
 			complete: function (code) {
 				if (code !== 0) {
 					return exit("Something went wrong attempting to run scripts/setup.sh");
 				}
 
-				return exit();
+				runSync();
 			}
 		});
 	};
 
 	var runRedStart = function () {
-		grunt.helper("spawn", {
+		helper.spawn({
 			cmd: "red-start",
 			args: ["--no-prompt", "--no-git"],
 			title: "Creating a new red-start project",
@@ -38,8 +68,8 @@ module.exports = function (grunt, cb) {
 
 		var filesToCheck = [
 			"fabfile.py",
-			"project/manage.py",
-			"scripts/setup.sh"
+			path.join("project", "manage.py"),
+			path.join("scripts", "setup.sh")
 		];
 
 		var isInstalled = true;
@@ -54,7 +84,7 @@ module.exports = function (grunt, cb) {
 		if (!isInstalled) {
 			runRedStart();
 		} else {
-			grunt.helper("writeln", "Looks like RED Start was already run on this project. Skipping ahead...".grey);
+			helper.writeln("Looks like RED Start was already run on this project. Skipping ahead...".grey);
 			runSetup();
 		}
 	};

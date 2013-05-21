@@ -8,11 +8,15 @@
 		"url": "__PROJECT_REPOSITORY__"
 	},
 	"dependencies": {
-		"prompt": "0.1.x",
-		"wrench": "1.3.x",
-		"colors": "0.6.x",
+		"prompt": "~0.1.x",
+		"wrench": "~1.5.x",
+		"colors": "~0.6.x",
 		"semver": "~1.1.x",
-		"grunt": "~0.3.x"
+		"grunt": "~0.4.x",
+		"grunt-contrib-watch": "https://github.com/doctyper/grunt-contrib-watch/tarball/feature/multi-watchers-fix"
+	},
+	"scripts": {
+		"build": "grunt build"
 	},
 	"license": "MIT",
 	"devDependencies": {},

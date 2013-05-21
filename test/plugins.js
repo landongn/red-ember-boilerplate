@@ -1,3 +1,6 @@
+/* jshint node: true */
+/* global describe, it */
+
 describe("Plugin Integrity", function () {
 	var fs = require("fs");
 	var path = require("path");
@@ -101,7 +104,7 @@ describe("Plugin Integrity", function () {
 					var doTest = function (key) {
 						it(key, function (done) {
 							expect(pkgDeps[key]).to.be.ok();
-							expect(plugDeps[key]).to.eql(pkgDeps[key]);
+							expect(plugDeps[key]).to.be.ok();
 
 							var child = cp.spawn(key, ["--version"], {
 								stdio: "pipe"

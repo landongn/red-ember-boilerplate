@@ -1,4 +1,5 @@
-module.exports = function(grunt) {
+/* jshint node: true */
+module.exports = function (grunt) {
 
 	grunt.registerTask("tasks", "List all tasks", function () {
 
@@ -11,19 +12,16 @@ module.exports = function(grunt) {
 
 		// Build 2-column array for table view.
 		var col1len = 0;
-		var opts = Object.keys(grunt.cli.optlist).map(function(long) {
+		var opts = Object.keys(grunt.cli.optlist).map(function (long) {
 			var o = grunt.cli.optlist[long];
 			var col1 = '--' + (o.negate ? 'no-' : '') + long + (o.short ? ', -' + o.short : '');
 			col1len = Math.max(col1len, col1.length);
 			return [col1, o.info];
 		});
 
-		var taskNames = Object.keys(grunt.task._tasks).filter(function (task) {
-			var ignoreTasks = pkg.config.ignoreTasks || [];
-			return ignoreTasks.indexOf(task) == -1;
-		}).sort();
+		var taskNames = Object.keys(grunt.task._tasks).sort();
 
-		var tasks = taskNames.map(function(name) {
+		var tasks = taskNames.map(function (name) {
 			var arr = [];
 			col1len = Math.max(col1len, name.length);
 			var info = grunt.task._tasks[name].info;
@@ -48,7 +46,7 @@ module.exports = function(grunt) {
 		var widths = [1, col1len, 2, 76 - col1len];
 
 		grunt.log.writeln();
-		tasks.forEach(function(a) {
+		tasks.forEach(function (a) {
 			var b = a[0].split(":"),
 				c = a[1],
 				opts = a[2];

@@ -4,11 +4,11 @@ module.exports = function (grunt) {
 
 	var fs = require("fs"),
 		path = require("path"),
-		rosy = require(path.join(__dirname, "../plugin.json")),
+		rosy = require(path.join(__dirname, "..", "plugin.json")),
 		source = rosy.config.scope,
 		jshint = require("jshint").JSHINT;
 
-	var FILES = path.join(source, "**/*[^.min].js");
+	var FILES = path.join(source, "**", "*[^.min].js");
 
 	function pad(str, len, padChar) {
 
@@ -35,8 +35,6 @@ module.exports = function (grunt) {
 		return str.slice(0, i + 1);
 	}
 
-	var timestamp = new Date().getTime();
-
 	grunt.registerTask("jshint", "JSHint your JavaScript.", function (mode) {
 
 		var done = this.async();
@@ -51,7 +49,9 @@ module.exports = function (grunt) {
 		var hasErrors = false;
 
 		var exclude = grunt.file.read(path.join(source, ".jshintignore")).trim().split("\n");
-		var files = grunt.file.expandFiles(FILES).filter(function (file) {
+		var files = grunt.file.expand({
+			filter: "isFile"
+		}, FILES).filter(function (file) {
 			return exclude.every(function (x) {
 				x = x.replace(/\./g, "\\.");
 				x = x.replace(/^\*/g, ".*");
@@ -68,10 +68,6 @@ module.exports = function (grunt) {
 			var fa = file.split("/");
 			fa[fa.length - 1] = fa[fa.length - 1].white;
 			var filename = fa.join("/").grey;
-
-			if (mode === "soft" && new Date(stats.ctime).getTime() < timestamp) {
-				continue;
-			}
 
 			var contents = grunt.file.read(file);
 
@@ -95,13 +91,7 @@ module.exports = function (grunt) {
 			}
 		}
 
-		timestamp = new Date().getTime();
 		done(!hasErrors);
-	});
-
-	grunt.config.set("watch.jshint", {
-		files: FILES,
-		tasks: ["jshint:soft"]
 	});
 
 	grunt.config.set("build.jshint", "jshint:browser");

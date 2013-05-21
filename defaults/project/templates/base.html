@@ -12,9 +12,6 @@
 		{# Prefetch your CDN URL: http://j.mp/bplatednsfetch #}
 		<link rel="dns-prefetch" href="{{ STATIC_URL }}" />
 
-		{# Set STATIC_URL parameter #}
-		<link rel="static-url" href="{{ STATIC_URL }}" />
-
 		<title>{% block title %}__PROJECT_TITLE__{% endblock title %}</title>
 
 		<meta name="description" content="" />
@@ -22,8 +19,6 @@
 
 		{# Mobile viewport optimized: j.mp/bplateviewport #}
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-		{# Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons #}
 
 		{# CSS: implied media="all" #}
 		<link rel="stylesheet" id="caboose" href="{{ STATIC_URL }}css/style.css" />
@@ -43,8 +38,11 @@
 		<meta property="og:locale" content="en_us" />
 
 		{# All JavaScript at the bottom, except for Modernizr. #}
-		{# Modernizr enables HTML5 elements & feature detects; For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ #}
-		<script src="{{ STATIC_URL }}js/libs/modernizr.min.js"></script>
+		{% if settings.TEMPLATE_DEBUG %}
+		<script src="{{ STATIC_URL }}js/libs/modernizr/modernizr.js"></script>
+		{% else %}
+		<script src="{{ STATIC_URL }}js/libs/modernizr/modernizr.min.js"></script>
+		{% endif %}
 	</head>
 	<body class="{% block page_class %}page{% endblock page_class %}">
 		<div id="container">
@@ -66,19 +64,27 @@
 			</footer>
 		</div>
 
-		<script src="{{STATIC_URL}}js/libs/require.js"></script>
 		{% if settings.TEMPLATE_DEBUG %}
-		<script src="{{STATIC_URL}}js/config.js"></script>
+		<script src="{{ STATIC_URL }}js/libs/requirejs/require.js"></script>
+		<script src="{{ STATIC_URL }}js/config.js"></script>
+
 		<script>
 			require.config({
-				baseUrl : "{{STATIC_URL}}js",
+				baseUrl : "{{ STATIC_URL }}js",
 				urlArgs : "cacheBust=" + (new Date()).getTime()
 			});
 		</script>
+
+		{# LiveReload #}
+		<script>
+			require(["//" + (location.host || "localhost").split(":")[0] + ":35729/livereload.js"]);
+		</script>
 		{% else %}
+		<script src="{{ STATIC_URL }}js/libs/requirejs/require.min.js"></script>
+
 		<script>
 			require.config({
-				baseUrl : "{{STATIC_URL}}js",
+				baseUrl : "{{ STATIC_URL }}js",
 				paths : {
 					"__PROJECT_NAME__/Site" : "site.min"
 				}
@@ -87,15 +93,17 @@
 		{% endif %}
 		<script>
 			require(["__PROJECT_NAME__/Site"], function (Site) {
-				Site.initialize();
+				Site.initialize({
+					"STATIC_URL": "{{ STATIC_URL }}"
+				});
 			});
 		</script>
 
 		{# Chrome Frame prompt for IE9 and below. #}
-		{# See: project/source/js/rosy/modules/google-chrome-frame for more info. #}
+		{# See: project/source/js/libs/rosy-google-chrome-frame for more info. #}
 		<!--[if lte IE 9]>
 		<script>
-			require(["ChromeFrame"]);
+			require(["libs/rosy-google-chrome-frame/ChromeFrame"]);
 		</script>
 		<![endif]-->
 	</body>

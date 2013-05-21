@@ -1,3 +1,5 @@
+/* jshint node: true */
+
 module.exports = (function () {
 	var nexpect = require("nexpect");
 

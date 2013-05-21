@@ -1,4 +1,4 @@
-/*jshint node:true*/
+/* jshint node: true */
 module.exports = function (grunt) {
 	"use strict";
 
@@ -14,14 +14,9 @@ module.exports = function (grunt) {
 	for (key in plugins) {
 		pluginDir = path.join(cwd, pkg.config.dirs.robyn, pristinePkg.config.dirs.plugins);
 		plugDir = path.join(pluginDir, key, "tasks");
-		helperDir = path.join(plugDir, "helpers");
 
 		if (fs.existsSync(plugDir)) {
 			grunt.loadTasks(plugDir);
-
-			if (fs.existsSync(helperDir)) {
-				grunt.loadTasks(helperDir);
-			}
 		}
 	}
 
