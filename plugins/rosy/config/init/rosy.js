@@ -92,9 +92,15 @@ module.exports = function (grunt, helper, cb) {
 		}
 
 		var newcontent = fs.readFileSync(ignorefile).toString().trim();
-		newcontent += "\n" + "test" + "\n";
+		var hasTest = newcontent.split("\n").filter(function (line) {
+			return line.trim() === "test";
+		});
 
-		fs.writeFileSync(ignorefile, newcontent);
+		if (!hasTest) {
+			newcontent += "\n" + "test" + "\n";
+			fs.writeFileSync(ignorefile, newcontent);
+		}
+
 		return exit();
 	};
 
