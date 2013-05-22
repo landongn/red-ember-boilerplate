@@ -58,9 +58,10 @@ module.exports = function (grunt, helper, cb) {
 				var localPkg = require(path.join(cwd, robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
 
 				var rosyConfig = path.join(libs, "rosy", "config.js");
+				var existingConfig = path.join(cwd, source, "config.js");
 
-				if (fs.existsSync(rosyConfig)) {
-					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.js"));
+				if (fs.existsSync(rosyConfig) && !fs.existsSync(existingConfig)) {
+					grunt.file.copy(rosyConfig, existingConfig);
 				}
 
 				var bowerConfig = path.join(project, "bower.json");
@@ -69,7 +70,12 @@ module.exports = function (grunt, helper, cb) {
 					fs.unlinkSync(bowerConfig);
 				}
 
-				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
+				var projectPath = path.join(cwd, source, localPkg.config.vars.PROJECT_NAME);
+
+				if (!fs.existsSync(projectPath)) {
+					wrench.copyDirSyncRecursive(project, projectPath);
+				}
+
 				wrench.rmdirSyncRecursive(project);
 			}
 
