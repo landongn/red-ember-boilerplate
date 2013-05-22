@@ -86,6 +86,6 @@ module.exports = function (grunt) {
 		}.bind(this));
 	});
 
-	grunt.config.set("build.requirejs", ["requirejs:uglify", "requirejs"]);
+	grunt.config.set("build.requirejs", ["requirejs:uglify", "requirejs", "requirejs:srcmapfix"]);
 
 };
