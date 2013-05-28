@@ -1,7 +1,7 @@
 /* jshint node: true */
-"use strict";
 
 module.exports = function (grunt) {
+	"use strict";
 
 	var fs = require("fs"),
 		path = require("path"),

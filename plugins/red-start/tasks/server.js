@@ -1,5 +1,6 @@
 /* jshint node: true */
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
 		var cwd = process.cwd();

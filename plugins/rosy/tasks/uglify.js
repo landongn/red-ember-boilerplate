@@ -1,7 +1,7 @@
 /* jshint node: true */
-"use strict";
 
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("requirejs:uglify", "Minify your RequireJS file.", function () {
 		var done = this.async();

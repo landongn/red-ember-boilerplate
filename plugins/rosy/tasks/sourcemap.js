@@ -1,7 +1,7 @@
 /* jshint node: true */
-"use strict";
 
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("requirejs:srcmapfix", "Fix source map paths.", function () {
 		var done = this.async();

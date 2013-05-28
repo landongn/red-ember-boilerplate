@@ -1,7 +1,8 @@
 /*jslint node: true */
-"use strict";
 
 module.exports = function (grunt, helper, cb) {
+	"use strict";
+
 	var fs = require("fs"),
 		path = require("path"),
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json"),
