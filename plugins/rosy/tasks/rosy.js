@@ -52,7 +52,7 @@ module.exports = function (grunt) {
 					logPlugins(repos);
 
 					grunt.log.writeln();
-					grunt.log.writeln("Install plugins with grunt install:rosy-plugin-name");
+					grunt.log.writeln("Install plugins with grunt rosy:plugin-name");
 				} else {
 					var bower = require("bower");
 					var _ = grunt.util._;
