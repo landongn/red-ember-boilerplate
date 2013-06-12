@@ -136,8 +136,8 @@ module.exports = {
 	postBuild : function (done) {
 
 		function moveFiles(from, to) {
-			from = (from[0] === "/") ? from : process.cwd() + "/" + from;
-			to = (to[0] === "/") ? to : process.cwd() + "/" + to;
+			from = (from[0] === "/") ? from : cwd + "/" + from;
+			to = (to[0] === "/") ? to : cwd + "/" + to;
 
 			var fromStats = fs.statSync(from);
 			var fromName = from.substr(from.lastIndexOf("/"));
