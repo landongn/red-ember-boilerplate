@@ -44,7 +44,8 @@ module.exports = {
 	exclude_patterns : [
 		/^(.*)(base\.html{1})$/,
 		/^(.*)(\/templates{1})(.*)$/,
-		/^(.*)(\/source{1})(.*)$/
+		/^(.*)(\/source\/js{1})(.*)$/,
+		/^(.*)(\/source\/scss{1})(.*)$/
 	],
 
 	/*
