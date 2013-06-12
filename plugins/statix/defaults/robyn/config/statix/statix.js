@@ -136,11 +136,11 @@ module.exports = {
 	postBuild : function (done) {
 
 		function moveFiles(from, to) {
-			from = (from[0] === "/") ? from : cwd + "/" + from;
-			to = (to[0] === "/") ? to : cwd + "/" + to;
+			from = (from[0] === path.sep) ? from : path.join(cwd, from);
+			to = (to[0] === path.sep) ? to : path.join(cwd, to);
 
 			var fromStats = fs.statSync(from);
-			var fromName = from.substr(from.lastIndexOf("/"));
+			var fromName = from.substr(from.lastIndexOf(path.sep));
 
 			if (fromStats.isDirectory()) {
 
@@ -150,7 +150,7 @@ module.exports = {
 
 				var files = fs.readdirSync(from);
 				for (var i = 0; i < files.length; i ++) {
-					moveFiles(from + "/" + files[i], to + "/" + files[i]);
+					moveFiles(path.join(from, files[i]), path.join(to, files[i]));
 				}
 
 				wrench.rmdirSyncRecursive(from);
