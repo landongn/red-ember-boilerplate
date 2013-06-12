@@ -98,6 +98,10 @@ module.exports = {
 	*/
 
 	expressConfig : function (express, app) {
+		express.static.mime.define({
+			"application/font-woff": ["woff"]
+		});
+
 		var config = function () {
 			app.use("/static", express.static(path.join(this.source_dir, globals.STATIC_URL)));
 			app.use("/static", express.static(path.join(this.source_dir, globals.SOURCE_URL)));
