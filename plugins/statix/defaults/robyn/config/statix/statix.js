@@ -167,11 +167,14 @@ module.exports = {
 
 		moveFiles.bind(this);
 
-		var output = path.join(__dirname, this.output_dir);
-		var local_dir = path.join(output, "static", "local");
+		var output = path.join(cwd, this.output_dir, "static");
+		var source = path.join(cwd, this.output_dir, "source");
+		var local = path.join(output, "local");
 
-		if (fs.existsSync(local_dir)) {
-			moveFiles(local_dir, output);
+		moveFiles(source, output);
+
+		if (fs.existsSync(local)) {
+			moveFiles(local, output);
 		}
 
 		done();
