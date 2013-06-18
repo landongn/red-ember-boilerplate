@@ -95,7 +95,8 @@ module.exports = function (grunt) {
 		],
 		options: {
 			interrupt: true,
-			livereload: true
+			livereload: true,
+			debounceDelay: 250
 		}
 	});
 
