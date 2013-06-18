@@ -30,7 +30,7 @@ module.exports = function (grunt, helper, cb) {
 
 		// Install libs
 		bower.commands.install([
-			"https://github.com/ff0000/rosy.git#1.0.0-bower",
+			"https://github.com/ff0000/rosy.git#~3.x",
 			"https://github.com/rosy-components/rosy-google-chrome-frame.git",
 			"https://github.com/rosy-components/example.git"
 		]).on("data", function (data) {
