@@ -7,7 +7,7 @@
 		"url": "https://github.com/ff0000/caboose.git"
 	},
 	"dependencies": {
-		"wrench": "~1.5.x"
+		"wrench": "~1.5.1"
 	},
 	"systemDependencies": {
 		"ruby": {
