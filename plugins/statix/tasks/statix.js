@@ -42,29 +42,32 @@ module.exports = function (grunt) {
 		var runOnce;
 
 		var startWatcher = function (cb, done) {
+			var watch = grunt.config.get("watch");
+
+			if (typeof watch === "undefined") {
+				grunt.log.ok("Nothing to watch...".bold.cyan);
+				return cb();
+			}
+
+			var cp = require("child_process");
+
 			var watcher = cp.spawn("grunt", ["watch"], {
 				stdio: "pipe"
 			});
 
 			watcher.stdout.on("data", function (data) {
 				var string = data.toString();
-				var buffer = new Array(3).join("\n");
 
 				if (string.indexOf('Running "watch" task') !== -1) {
 					console.log();
 					grunt.log.ok("Now watching for file changes...".bold.cyan);
 				}
 
-				if (string.indexOf("OK") !== -1) {
-					process.stdout.write(buffer);
-				}
-
 				process.stdout.write(data);
 
 				if (string.indexOf("Waiting...") !== -1) {
-					console.log("\n");
-
 					if (!runOnce && cb) {
+						console.log("\n");
 						cb(watcher);
 						runOnce = true;
 					}

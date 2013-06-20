@@ -1,7 +1,7 @@
 /* jshint node: true */
-"use strict";
 
 module.exports = function (grunt) {
+	"use strict";
 
 	var fs = require("fs"),
 		path = require("path"),
@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 	grunt.config.set("modernizr", {
 
 		// [REQUIRED] Path to the build you're using for development.
-		"devFile" : path.join(source, "libs", "modernizr", "modernizr.js"),
+		"devFile" : path.join(source, "libs", "modernizr", "index.js"),
 
 		// [REQUIRED] Path to save out the built file.
 		"outputFile" : path.join(output, "libs", "modernizr", "modernizr.min.js"),

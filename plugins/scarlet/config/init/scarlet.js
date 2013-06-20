@@ -1,7 +1,8 @@
 /*jslint node: true */
-"use strict";
 
 module.exports = function (grunt, helper, cb) {
+	"use strict";
+
 	var config = require("../../plugin.json").config;
 	var cwd = process.cwd();
 	var path = require("path");

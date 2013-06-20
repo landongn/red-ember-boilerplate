@@ -1,7 +1,8 @@
 /*jslint node: true */
-"use strict";
 
 module.exports = function (grunt, helper, cb) {
+	"use strict";
+
 	var fs = require("fs"),
 		cwd = process.cwd(),
 		path = require("path"),
@@ -41,10 +42,14 @@ module.exports = function (grunt, helper, cb) {
 
 	var moveGemfileToRoot = function () {
 		var gempath = path.join(__dirname, "..", "Gemfile");
+		var existingpath = path.join(cwd, "Gemfile");
 
-		if (fs.existsSync(gempath)) {
-			grunt.file.copy(gempath, path.join(cwd, "Gemfile"));
-			grunt.file.copy(gempath + ".lock", path.join(cwd, "Gemfile.lock"));
+		if (fs.existsSync(gempath) && !fs.existsSync(existingpath)) {
+			grunt.file.copy(gempath, existingpath);
+		}
+
+		if (fs.existsSync(gempath + ".lock") && !fs.existsSync(existingpath + ".lock")) {
+			grunt.file.copy(gempath + ".lock", existingpath + ".lock");
 		}
 
 		installGems();

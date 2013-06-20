@@ -38,8 +38,6 @@ module.exports = function (grunt) {
 		});
 	});
 
-	grunt.registerTask("caboose:reload", function () {});
-
 	grunt.config.set("watch.caboose", {
 		files: path.join(source, "**", "*.s{a,c}ss"),
 		tasks: ["caboose:dev"],
@@ -53,9 +51,10 @@ module.exports = function (grunt) {
 			path.join(source, "..", "static", "css", "**", "*.css"),
 			path.join(source, "img", "**", "*.{png,jpg,jpeg,gif,webm,svg}")
 		],
-		tasks: ["caboose:reload"],
 		options: {
-			livereload: true
+			interrupt: true,
+			livereload: true,
+			debounceDelay: 250
 		}
 	});
 

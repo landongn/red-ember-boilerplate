@@ -68,6 +68,21 @@ module.exports = function (grunt) {
 
 		// Clean cache before compile?
 		clean: true,
+
+		// Extra config options
+		extras: {
+
+			// Gems?
+			// require: ["susy", "stitch"],
+
+			// Additional import paths?
+			// add_import_path: "",
+
+			// Bust the cache?
+			// asset_cache_buster: ":none"
+
+		}
+
 	});
 
 };

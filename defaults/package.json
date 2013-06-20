@@ -9,11 +9,11 @@
 	},
 	"dependencies": {
 		"prompt": "~0.1.x",
-		"wrench": "~1.5.x",
-		"colors": "~0.6.x",
-		"semver": "~1.1.x",
-		"grunt": "~0.4.x",
-		"grunt-contrib-watch": "https://github.com/doctyper/grunt-contrib-watch/tarball/feature/multi-watchers-fix"
+		"wrench": "~1.5.1",
+		"colors": "~0.6.0-1",
+		"semver": "~1.1.4",
+		"grunt": "~0.4.1",
+		"grunt-contrib-watch": "~0.4.4"
 	},
 	"scripts": {
 		"build": "grunt build"

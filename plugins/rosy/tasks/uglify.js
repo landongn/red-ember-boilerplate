@@ -1,7 +1,7 @@
 /* jshint node: true */
-"use strict";
 
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("requirejs:uglify", "Minify your RequireJS file.", function () {
 		var done = this.async();
@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		var path = require("path");
 
 		var libs = path.join(cwd, "project", "source", "js", "libs");
-		var requirePath = path.join(libs, "requirejs", "require.js");
+		var requirePath = path.join(libs, "requirejs", "index.js");
 
 		if (fs.existsSync(requirePath)) {
 			var result = uglify.minify(requirePath, {
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 			});
 
 			var staticPath = requirePath.replace("source", "static");
-			staticPath = staticPath.replace(".js", ".min.js");
+			staticPath = staticPath.replace("index.js", "require.min.js");
 
 			grunt.log.writeln();
 			grunt.log.writeln(("Minified RequireJS to " + staticPath.replace(path.join(cwd, path.sep), "")).grey);

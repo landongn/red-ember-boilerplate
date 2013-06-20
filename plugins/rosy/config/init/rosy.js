@@ -1,7 +1,8 @@
 /*jslint node: true */
-"use strict";
 
 module.exports = function (grunt, helper, cb) {
+	"use strict";
+
 	var fs = require("fs"),
 		path = require("path"),
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json"),
@@ -29,7 +30,7 @@ module.exports = function (grunt, helper, cb) {
 
 		// Install libs
 		bower.commands.install([
-			"https://github.com/ff0000/rosy.git#1.0.0-bower",
+			"https://github.com/ff0000/rosy.git#~3.x",
 			"https://github.com/rosy-components/rosy-google-chrome-frame.git",
 			"https://github.com/rosy-components/example.git"
 		]).on("data", function (data) {
@@ -51,42 +52,17 @@ module.exports = function (grunt, helper, cb) {
 			process.chdir(cwd);
 
 			var libs = path.join(cwd, source, "libs");
-
-			// Get rid of all the cruft. Ugh.
-			var f = [
-				path.join(libs, "handlebars.js", "*[^dist]"),
-				path.join(libs, "jquery.transit", "*"),
-				path.join(libs, "jquery", "*"),
-				path.join(libs, "json3", "*[^lib]"),
-				path.join(libs, "modernizr", "*"),
-				path.join(libs, "requirejs", "*"),
-				path.join(libs, "**", "test{,s}"),
-				path.join("!", libs, "handlebars.js", "dist", "handlebars.js"),
-				path.join("!", libs, "jquery.transit", "jquery.transit.js"),
-				path.join("!", libs, "jquery", "jquery.js"),
-				path.join("!", libs, "json3", "lib", "json3.js"),
-				path.join("!", libs, "modernizr", "modernizr.js"),
-				path.join("!", libs, "requirejs", "require.js")
-			];
-
-			var cruft = grunt.file.expand({
-				dot: true
-			}, f).forEach(function (file) {
-				if (fs.existsSync(file)) {
-					grunt.file.delete(file);
-				}
-			});
-
 			var project = path.join(libs, "example");
 
 			if (fs.existsSync(project)) {
 				var robynPkg = require(path.join(cwd, "robyn.json"));
-				var localPkg = require(path.join(robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
+				var localPkg = require(path.join(cwd, robynPkg.config.dirs.robyn, "tasks", "utils", "pkg"));
 
 				var rosyConfig = path.join(libs, "rosy", "config.js");
+				var existingConfig = path.join(cwd, source, "config.js");
 
-				if (fs.existsSync(rosyConfig)) {
-					grunt.file.copy(rosyConfig, path.join(cwd, source, "config.js"));
+				if (fs.existsSync(rosyConfig) && !fs.existsSync(existingConfig)) {
+					grunt.file.copy(rosyConfig, existingConfig);
 				}
 
 				var bowerConfig = path.join(project, "bower.json");
@@ -95,7 +71,12 @@ module.exports = function (grunt, helper, cb) {
 					fs.unlinkSync(bowerConfig);
 				}
 
-				wrench.copyDirSyncRecursive(project, path.join(cwd, source, localPkg.config.vars.PROJECT_NAME));
+				var projectPath = path.join(cwd, source, localPkg.config.vars.PROJECT_NAME);
+
+				if (!fs.existsSync(projectPath)) {
+					wrench.copyDirSyncRecursive(project, projectPath);
+				}
+
 				wrench.rmdirSyncRecursive(project);
 			}
 
@@ -112,9 +93,15 @@ module.exports = function (grunt, helper, cb) {
 		}
 
 		var newcontent = fs.readFileSync(ignorefile).toString().trim();
-		newcontent += "\n" + "test" + "\n";
+		var hasTest = newcontent.split("\n").filter(function (line) {
+			return line.trim() === "test";
+		});
 
-		fs.writeFileSync(ignorefile, newcontent);
+		if (!hasTest) {
+			newcontent += "\n" + "test" + "\n";
+			fs.writeFileSync(ignorefile, newcontent);
+		}
+
 		return exit();
 	};
 

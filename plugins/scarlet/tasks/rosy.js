@@ -1,5 +1,7 @@
 /* jshint node: true */
 module.exports = function (grunt) {
+	"use strict";
+
 	var path = require("path");
 	var paths = require("./utils/paths");
 

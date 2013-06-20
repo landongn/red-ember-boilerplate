@@ -1,5 +1,6 @@
 /* jshint node: true */
 module.exports = function (grunt) {
+	"use strict";
 
 	grunt.registerTask("server", "An alias for Python's runserver", function () {
 		var cwd = process.cwd();
@@ -55,23 +56,17 @@ module.exports = function (grunt) {
 
 			watcher.stdout.on("data", function (data) {
 				var string = data.toString();
-				var buffer = new Array(3).join("\n");
 
 				if (string.indexOf('Running "watch" task') !== -1) {
 					console.log();
 					grunt.log.ok("Now watching for file changes...".bold.cyan);
 				}
 
-				if (string.indexOf("OK") !== -1) {
-					process.stdout.write(buffer);
-				}
-
 				process.stdout.write(data);
 
 				if (string.indexOf("Waiting...") !== -1) {
-					console.log("\n");
-
 					if (!runOnce && cb) {
+						console.log("\n");
 						cb(watcher);
 						runOnce = true;
 					}

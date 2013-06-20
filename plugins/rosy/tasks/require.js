@@ -78,10 +78,14 @@ module.exports = function (grunt) {
 		grunt.verbose.writeflags(options, "Options");
 
 		requirejs.optimize(options, function (response) {
-			done();
-		});
+			if (this.data.options && this.data.options.complete) {
+				this.data.options.complete(response, done);
+			} else {
+				done();
+			}
+		}.bind(this));
 	});
 
-	grunt.config.set("build.requirejs", ["requirejs:uglify", "requirejs"]);
+	grunt.config.set("build.requirejs", ["requirejs:uglify", "requirejs", "requirejs:srcmapfix"]);
 
 };

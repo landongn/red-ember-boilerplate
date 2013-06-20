@@ -44,7 +44,8 @@ module.exports = {
 	exclude_patterns : [
 		/^(.*)(base\.html{1})$/,
 		/^(.*)(\/templates{1})(.*)$/,
-		/^(.*)(\/source{1})(.*)$/
+		/^(.*)(\/source\/js{1})(.*)$/,
+		/^(.*)(\/source\/scss{1})(.*)$/
 	],
 
 	/*
@@ -97,6 +98,10 @@ module.exports = {
 	*/
 
 	expressConfig : function (express, app) {
+		express.static.mime.define({
+			"application/font-woff": ["woff"]
+		});
+
 		var config = function () {
 			app.use("/static", express.static(path.join(this.source_dir, globals.STATIC_URL)));
 			app.use("/static", express.static(path.join(this.source_dir, globals.SOURCE_URL)));
@@ -124,10 +129,6 @@ module.exports = {
 		});
 	},
 
-	swigSettings : {
-		cache: false
-	},
-
 	/*
 		Just like `preBuild()` but this method gets called after Statix has generated the static site. You can use this to
 		cleanup some files, git commit/push, or whatever you feel like. Just be sure to invoke the `done()` function afterwards.
@@ -135,11 +136,11 @@ module.exports = {
 	postBuild : function (done) {
 
 		function moveFiles(from, to) {
-			from = (from[0] === "/") ? from : process.cwd() + "/" + from;
-			to = (to[0] === "/") ? to : process.cwd() + "/" + to;
+			from = (from[0] === path.sep) ? from : path.join(cwd, from);
+			to = (to[0] === path.sep) ? to : path.join(cwd, to);
 
 			var fromStats = fs.statSync(from);
-			var fromName = from.substr(from.lastIndexOf("/"));
+			var fromName = from.substr(from.lastIndexOf(path.sep));
 
 			if (fromStats.isDirectory()) {
 
@@ -149,7 +150,7 @@ module.exports = {
 
 				var files = fs.readdirSync(from);
 				for (var i = 0; i < files.length; i ++) {
-					moveFiles(from + "/" + files[i], to + "/" + files[i]);
+					moveFiles(path.join(from, files[i]), path.join(to, files[i]));
 				}
 
 				wrench.rmdirSyncRecursive(from);
@@ -166,11 +167,14 @@ module.exports = {
 
 		moveFiles.bind(this);
 
-		var output = path.join(__dirname, this.output_dir);
-		var local_dir = path.join(output, "static", "local");
+		var output = path.join(cwd, this.output_dir, "static");
+		var source = path.join(cwd, this.output_dir, "source");
+		var local = path.join(output, "local");
 
-		if (fs.existsSync(local_dir)) {
-			moveFiles(local_dir, output);
+		moveFiles(source, output);
+
+		if (fs.existsSync(local)) {
+			moveFiles(local, output);
 		}
 
 		done();
