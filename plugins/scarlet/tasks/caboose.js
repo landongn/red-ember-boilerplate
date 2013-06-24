@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 	}
 
 	// Config options
-	grunt.config.set("compass.admin", {
+	grunt.config.set("caboose.admin", {
 		http_path: "/",
 		sass_dir: path.join(paths.sourcePathRel, "compass", "scss", "admin"),
 		css_dir: path.join(paths.staticPathRel, "css"),
@@ -27,5 +27,5 @@ module.exports = function (grunt) {
 		force_compile: true
 	});
 
-	grunt.config.set("build.compass_admin", ["compass:admin"]);
+	grunt.config.set("build.caboose_admin", ["caboose:admin"]);
 };
