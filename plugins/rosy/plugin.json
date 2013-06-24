@@ -2,7 +2,7 @@
 	"name": "rosy",
 	"description": "An inheritable / extendable JavaScript framework.",
 	"dependencies": {
-		"jshint": "~2.1.3",
+		"jshint": "2.1.3",
 		"requirejs": "~2.1.6",
 		"colors": "~0.6.0-1",
 		"wrench": "~1.5.1",
