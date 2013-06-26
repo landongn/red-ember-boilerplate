@@ -103,5 +103,5 @@ module.exports = function (grunt) {
 
 	});
 
-	grunt.config.set("build.jshint", "jshint:browser");
+	grunt.config.set("build.jshint", ["jshint:browser"]);
 };

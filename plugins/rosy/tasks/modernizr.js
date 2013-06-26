@@ -64,7 +64,7 @@ module.exports = function (grunt) {
 		"customTests" : []
 	});
 
-	grunt.config.set("build.modernizr", "modernizr");
+	grunt.config.set("build.modernizr", ["modernizr"]);
 
 	grunt.loadNpmTasks("grunt-modernizr");
 
