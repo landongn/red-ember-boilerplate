@@ -9,8 +9,7 @@ describe("Statix Tasks", function () {
 
 	it("grunt statix:build", function (done) {
 		grunt.spawn("statix:build")
-		.wait('Done, without errors.')
-		.expect('Statix build complete!')
+		.wait('Statix build complete!')
 
 		.run(done);
 	});
