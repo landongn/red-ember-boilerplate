@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 			include : ["config.js"],
 			paths : {
 				"jquery": "empty:",
-				"rosy": path.join(paths.baseJSSource, "rosy")
+				"rosy": path.join(paths.baseJSSource, "libs", "rosy", "src")
 			},
 			optimize : "uglify",
 			out : path.join(paths.staticPath, "js", "admin.min.js"),
