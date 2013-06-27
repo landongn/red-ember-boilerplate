@@ -61,38 +61,47 @@ module.exports = function (grunt) {
 			});
 		});
 
+		var length = files.length;
+		var x = 0;
+
+		var handleContents = function (filename) {
+			return function (stderr, contents) {
+				if (!jshint(contents, jshintOptions)) {
+					hasErrors = true;
+
+					grunt.log.writeln();
+					grunt.log.writeln("Err ".red + filename);
+
+					for (var j = 0; j < jshint.errors.length; j ++) {
+						var err = jshint.errors[j],
+							line = ["line", pad(err.line, 1, " "), ": char", pad(err.character, 1, " "), pad("", 1)].join(" ").grey.bold,
+							reason = err.reason.yellow;
+
+						grunt.log.writeln(pad("", 4) + line + reason);
+						grunt.log.writeln(pad("", 22) + trim(err.evidence).white);
+						grunt.log.writeln();
+					}
+				} else if (!grunt.option("quiet")) {
+					grunt.log.writeln("Ok  ".green + filename);
+				}
+
+				if (length === ++x) {
+					return done(!hasErrors);
+				}
+			};
+		};
+
 		for (var i = 0; i < files.length; i ++) {
 			var file = files[i];
-			var stats = fs.statSync(file);
 
-			var fa = file.split("/");
+			var fa = file.split(path.sep);
 			fa[fa.length - 1] = fa[fa.length - 1].white;
-			var filename = fa.join("/").grey;
+			var filename = fa.join(path.sep).grey;
 
-			var contents = grunt.file.read(file);
-
-			if (!jshint(contents, jshintOptions)) {
-				hasErrors = true;
-
-				grunt.log.writeln();
-				grunt.log.writeln("Err ".red + filename);
-
-				for (var j = 0; j < jshint.errors.length; j ++) {
-					var err = jshint.errors[j],
-						line = ["line", pad(err.line, 1, " "), ": char", pad(err.character, 1, " "), pad("", 1)].join(" ").grey.bold,
-						reason = err.reason.yellow;
-
-					grunt.log.writeln(pad("", 4) + line + reason);
-					grunt.log.writeln(pad("", 22) + trim(err.evidence).white);
-					grunt.log.writeln();
-				}
-			} else if (!grunt.option("quiet")) {
-				grunt.log.writeln("Ok  ".green + filename);
-			}
+			fs.readFile(file, "utf8", handleContents(filename));
 		}
 
-		done(!hasErrors);
 	});
 
-	grunt.config.set("build.jshint", "jshint:browser");
+	grunt.config.set("build.jshint", ["jshint:browser"]);
 };

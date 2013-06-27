@@ -58,6 +58,9 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.config.set("build.caboose", ["caboose:bundle", "caboose:prod"]);
+	grunt.config.set("build.caboose", {
+		"pre": ["caboose:bundle"],
+		"build": ["caboose:prod"]
+	});
 
 };
