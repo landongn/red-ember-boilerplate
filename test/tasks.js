@@ -312,6 +312,7 @@ describe("Default Tasks", function () {
 			.expect("Fetching latest from origin remote").wait("OK")
 			.expect("Updating to version").wait("OK")
 			.expect("Installing npm packages").wait("OK")
+			.expect("Shrinkwrapping npm packages").wait("OK")
 			.expect("[*] Please commit your update now. A build/push will revert you to the last committed version.")
 			.expect("Done, without errors.")
 			.run(function (err) {
