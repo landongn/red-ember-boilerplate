@@ -86,7 +86,7 @@ module.exports = function (grunt) {
 		}.bind(this));
 	});
 
-	grunt.config.set("build.modernizr", {
+	grunt.config.set("build.requirejs", {
 		"build": ["requirejs:uglify", "requirejs"],
 		"post": ["requirejs:srcmapfix"]
 	});
