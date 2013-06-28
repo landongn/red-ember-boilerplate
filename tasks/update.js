@@ -80,9 +80,16 @@ module.exports = function (grunt) {
 
 			fs.writeFileSync(localPath, JSON.stringify(localPkg, null, "\t") + "\n");
 
+			var install = Object.keys(localPkg.dependencies).map(function (key) {
+				return key + "@" + '"' + localPkg.dependencies[key] + '"';
+			});
+
+			// Tell npm to save new install paths.
+			install.push("--save");
+
 			helper.spawn({
 				cmd: "npm",
-				args: ["install", "--production", "--save"],
+				args: ["install"].concat(install),
 				title: "Installing npm packages",
 				complete: function (code) {
 					if (code !== 0) {
