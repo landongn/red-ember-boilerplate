@@ -82,7 +82,7 @@ module.exports = function (grunt) {
 
 			helper.spawn({
 				cmd: "npm",
-				args: ["install", "--production"],
+				args: ["install", "--production", "--save"],
 				title: "Installing npm packages",
 				complete: function (code) {
 					if (code !== 0) {
