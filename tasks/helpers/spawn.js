@@ -28,7 +28,7 @@ module.exports = function (grunt) {
 				out += data.toString();
 			});
 
-			if (opts.cmd !== "npm") {
+			if (opts.cmd !== "npm" || opts.args[0] === "shrinkwrap") {
 				child.stderr.on("data", function (data) {
 					err += data.toString();
 				});

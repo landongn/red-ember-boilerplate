@@ -44,13 +44,14 @@ module.exports = function (grunt) {
 		};
 
 		var shrinkWrap = function () {
-			grunt.util.spawn({
-				cwd: cwd,
+			helper.spawn({
 				cmd: "npm",
-				args: ["shrinkwrap", "--depth", "100000"]
-			}, function () {
-				grunt.log.writeln("[*] Please commit your update now. A build/push will revert you to the last committed version.".yellow);
-				pluginCheck();
+				args: ["shrinkwrap", "--depth", "100000"],
+				title: "Shrinkwrapping npm packages",
+				complete: function (code) {
+					grunt.log.writeln("[*] Please commit your update now. A build/push will revert you to the last committed version.".yellow);
+					pluginCheck();
+				}
 			});
 		};
 
@@ -68,28 +69,25 @@ module.exports = function (grunt) {
 			var pristinePkg = require(pristinePath);
 
 			var deps = pristinePkg.dependencies;
-			var key, local;
+			var key, local, updates = [];
 
 			for (key in deps) {
 				local = localPkg.dependencies[key];
 
 				if (!local || semver.gt(deps[key], local)) {
 					localPkg.dependencies[key] = deps[key];
+					updates.push(key + "@" + deps[key]);
 				}
 			}
 
 			fs.writeFileSync(localPath, JSON.stringify(localPkg, null, "\t") + "\n");
 
-			var install = Object.keys(localPkg.dependencies).map(function (key) {
-				return key + "@" + '"' + localPkg.dependencies[key] + '"';
-			});
-
 			// Tell npm to save new install paths.
-			install.push("--save");
+			updates.push("--save");
 
 			helper.spawn({
 				cmd: "npm",
-				args: ["install"].concat(install),
+				args: ["install"].concat(updates),
 				title: "Installing npm packages",
 				complete: function (code) {
 					if (code !== 0) {
