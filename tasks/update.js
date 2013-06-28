@@ -58,7 +58,7 @@ module.exports = function (grunt) {
 			var semver = require("semver");
 
 			var localPath = path.join(cwd, "package.json");
-			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "package.json");
+			var pristinePath = path.join(cwd, pkg.config.dirs.robyn, "defaults", "package.json");
 
 			if (!fs.existsSync(localPath) || !fs.existsSync(pristinePath)) {
 				return pluginCheck();
