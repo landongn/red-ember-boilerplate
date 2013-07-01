@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerTask("build", "Build your project.", function () {
+	grunt.registerTask("build", "Build your project.", function (namespace) {
 		var helper = require("./helpers").init(grunt);
 
 		var done = this.async();
@@ -10,6 +10,13 @@ module.exports = function (grunt) {
 		grunt.loadNpmTasks("grunt-concurrent");
 
 		var builds = grunt.config("build");
+
+		if (namespace) {
+			var newBuilds = {};
+			newBuilds[namespace] = builds[namespace];
+
+			builds = newBuilds;
+		}
 
 		grunt.config.set("concurrent", {
 			"pre": grunt.config.get("concurrent.pre") || [],
