@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 				message: "Project namespace?",
 				validator: /^([a-z]+)(\w+)$/,
 				warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
-				"default": projectName || "sampleProjectName"
+				"default": projectName || "sample"
 			});
 		}
 
@@ -140,6 +140,11 @@ module.exports = function (grunt) {
 
 			helper.storeVars(name, title, function () {
 				grunt.log.writeln("[*] ".grey + "Stored and updated your project variables.".grey);
+
+				// As of npm 1.3.2, it will complain about uppercase characters in pkg.name
+				// This hack lowercases the project name, but only in package.json
+				pkg.name = (pkg.name || "").toLowerCase();
+				pkg.save();
 
 				(function install(count) {
 					if (!plugArr[count]) {
