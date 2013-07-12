@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 				message: "Project namespace?",
 				validator: /^([a-z]+)(\w+)$/,
 				warning: "Invalid namespace. Valid characters are [a-Z]. Must start with a lowercase",
-				"default": projectName || "sampleProjectName"
+				"default": projectName || "sample"
 			});
 		}
 
