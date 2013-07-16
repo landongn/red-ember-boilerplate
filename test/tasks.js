@@ -198,7 +198,7 @@ describe("Clone Check", function () {
 
 		.expect('Running "info" task')
 
-		.expect('[*] Project name: robynTest')
+		.expect('[*] Project name: robyntest')
 		.expect('    Project version: 0.1.0')
 		.expect('    Project author: RED Interactive <geeks@ff0000.com>')
 		.expect('    Project repository: _PROJECT_REPOSITORY_')
