@@ -311,7 +311,7 @@ module.exports = function (grunt) {
 				}
 			}
 
-			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
+			pluginDeps.push("--save");
 
 			if (callUpdate) {
 				helper.installModules(pluginDeps, function () {
