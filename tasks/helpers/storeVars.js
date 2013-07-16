@@ -11,7 +11,14 @@ module.exports = function (grunt) {
 
 		// Replace variables
 		helper.replaceInFiles(function () {
-			pkg.save();
+			// As of npm 1.3.2, it will complain about uppercase characters in pkg.name
+			// This hack lowercases the project name, but only in package.json
+			var path = require("path");
+			var pristinePath = path.join(process.cwd(), "package.json");
+			var pristinePkg = grunt.file.readJSON(pristinePath);
+
+			pristinePkg.name = pristinePkg.name.toLowerCase();
+			grunt.file.write(pristinePath, JSON.stringify(pristinePkg, null, 2));
 
 			if (cb) {
 				cb();
