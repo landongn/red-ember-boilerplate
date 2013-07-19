@@ -63,9 +63,8 @@ module.exports = function (grunt) {
 				newFile = helper.replaceVars(file.toString());
 
 				if (newFile && file !== newFile) {
-					var wrench = require("wrench");
-					wrench.copyDirSyncRecursive(file, newFile);
-					wrench.rmdirSyncRecursive(file, true);
+					grunt.file.copy(file, newFile);
+					grunt.file.delete(file, true);
 				}
 			}
 		});

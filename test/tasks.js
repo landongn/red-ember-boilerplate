@@ -55,7 +55,6 @@ describe("Setup Check", function () {
 			"node_modules/semver",
 			"node_modules/statix",
 			"node_modules/uglify-js",
-			"node_modules/wrench",
 			"package.json",
 			"robyn",
 			"robyn/config",
