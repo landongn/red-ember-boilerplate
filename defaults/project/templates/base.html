@@ -77,7 +77,15 @@
 
 		{# LiveReload #}
 		<script>
-			require(["//" + (location.host || "localhost").split(":")[0] + ":35729/livereload.js"]);
+			(function (doc) {
+				try {
+					var script = doc.createElement("script"),
+						first = doc.scripts[0];
+
+					script.src = "//" + (location.host || "localhost").split(":")[0] + ":35729/livereload.js";
+					first.parentNode.insertBefore(script, first);
+				} catch (e) {}
+			}(document));
 		</script>
 		{% else %}
 		<script src="{{ STATIC_URL }}js/libs/requirejs/require.min.js"></script>

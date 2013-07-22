@@ -8,8 +8,7 @@ module.exports = function (grunt, helper, cb) {
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json"),
 		pkg = require(pkgPath),
 		source = pkg.config.scope,
-		cwd = process.cwd(),
-		wrench = require("wrench");
+		cwd = process.cwd();
 
 	var installExternalScripts = function () {
 		var bower = require("bower");
@@ -17,7 +16,7 @@ module.exports = function (grunt, helper, cb) {
 
 		// Change directory to Rosy root
 		if (!fs.existsSync(path.join(cwd, source))) {
-			wrench.mkdirSyncRecursive(path.join(cwd, source));
+			grunt.file.mkdir(path.join(cwd, source));
 		}
 
 		process.chdir(path.join(cwd, source));
@@ -74,10 +73,16 @@ module.exports = function (grunt, helper, cb) {
 				var projectPath = path.join(cwd, source, localPkg.config.vars.PROJECT_NAME);
 
 				if (!fs.existsSync(projectPath)) {
-					wrench.copyDirSyncRecursive(project, projectPath);
+					grunt.file.recurse(project, function (abspath, rootdir, subdir, filename) {
+						if (subdir) {
+							filename = path.join(subdir, filename);
+						}
+
+						grunt.file.copy(abspath, path.join(projectPath, filename));
+					});
 				}
 
-				wrench.rmdirSyncRecursive(project);
+				grunt.file.delete(project);
 			}
 
 			return ignoreTests();

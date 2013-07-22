@@ -49,6 +49,10 @@ module.exports = function (grunt) {
 		delete data.clean;
 		delete data.extras;
 
+		// Delete path fix
+		var temp_css_dir = extras.temp_css_dir;
+		delete extras.temp_css_dir;
+
 		var config = {
 			// Build temp config path
 			path : path.join(path.sep, "tmp", tmp),
@@ -116,7 +120,19 @@ module.exports = function (grunt) {
 
 		var afterClean = function () {
 			// Add path to temp config file and path to sass directory
-			args = args.concat(["--config", config.path, "--sass-dir", data.sass_dir]);
+			args = args.concat([
+				"--config", config.path,
+				"--sass-dir", data.sass_dir
+			]);
+
+			if (typeof temp_css_dir !== "undefined") {
+				if (fs.existsSync(temp_css_dir)) {
+					grunt.file.delete(temp_css_dir);
+				}
+
+				args.push("--css-dir");
+				args.push(temp_css_dir);
+			}
 
 			// If force is true, append parameter
 			if (force) {
@@ -146,7 +162,24 @@ module.exports = function (grunt) {
 			});
 
 			// Clean up on exit
-			child.on("exit", done);
+			child.on("exit", function (code) {
+				if (fs.existsSync(temp_css_dir)) {
+					grunt.file.recurse(temp_css_dir, function (abspath, rootdir, subdir, filename) {
+						if (subdir) {
+							filename = path.join(subdir, filename);
+						}
+
+						filename = path.join(data.css_dir, filename);
+						grunt.log.writeln(("     copy ").green + filename);
+						grunt.file.copy(abspath, filename);
+					});
+
+					// Remove temp directory
+					grunt.file.delete(temp_css_dir);
+				}
+
+				done();
+			});
 		};
 
 		if (clean) {

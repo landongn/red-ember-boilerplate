@@ -24,7 +24,6 @@ module.exports = function (grunt) {
 			branch = bits[1];
 		}
 
-		var wrench = require("wrench");
 		var bpName = pkg.name;
 
 		var storePkgScripts = function (plug, plugPkg) {
@@ -73,7 +72,7 @@ module.exports = function (grunt) {
 			pkg.save();
 
 			if (fs.existsSync(plugPath)) {
-				wrench.rmdirSyncRecursive(plugPath);
+				grunt.file.delete(plugPath);
 			}
 
 			if (cb) {
@@ -268,7 +267,7 @@ module.exports = function (grunt) {
 				var plugPath = path.join(cwd, pkg.config.dirs.robyn, plug);
 
 				if (fs.existsSync(plugPath)) {
-					wrench.rmdirSyncRecursive(plugPath);
+					grunt.file.delete(plugPath);
 				}
 
 				grunt.file.mkdir(plugPath);

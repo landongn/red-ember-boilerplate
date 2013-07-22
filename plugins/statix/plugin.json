@@ -3,7 +3,8 @@
 	"description": "Statix is a static website generator.",
 	"version": "0.0.5",
 	"dependencies": {
-		"statix": "~2.0.4"
+		"statix": "~2.0.4",
+		"wrench": "~1.5.1"
 	},
 	"systemDependencies": {
 		"node": {

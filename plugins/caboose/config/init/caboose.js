@@ -6,7 +6,6 @@ module.exports = function (grunt, helper, cb) {
 	var fs = require("fs"),
 		cwd = process.cwd(),
 		path = require("path"),
-		wrench = require("wrench"),
 		pkgPath = path.join(__dirname, "..", "..", "plugin.json");
 
 	var removeConfig = function () {
@@ -58,11 +57,10 @@ module.exports = function (grunt, helper, cb) {
 	var removeCabooseTests = function () {
 		if (fs.existsSync(pkgPath)) {
 			var pkg = require(pkgPath),
-				wrench = require("wrench"),
 				testpath = path.join(cwd, pkg.config.scope, "test");
 
 			if (fs.existsSync(testpath)) {
-				wrench.rmdirSyncRecursive(testpath);
+				grunt.file.delete(testpath);
 			}
 		}
 
@@ -80,15 +78,21 @@ module.exports = function (grunt, helper, cb) {
 			if (fs.existsSync(dirpath) && fs.existsSync(htcpath)) {
 				grunt.file.copy(htcpath, path.join(imgpath, file));
 
-				fs.unlinkSync(htcpath);
-				fs.rmdirSync(dirpath);
+				grunt.file.delete(htcpath);
+				grunt.file.delete(dirpath);
 			}
 
 			var caboosePath = path.join(cwd, pkg.config.scope, "scss", "caboose");
 			var cfPath = path.join(caboosePath, "rosy", "google-chrome-frame", "images", "global");
 
 			if (fs.existsSync(cfPath)) {
-				wrench.copyDirSyncRecursive(cfPath, path.join(imgpath, "global"));
+				grunt.file.recurse(cfPath, function (abspath, rootdir, subdir, filename) {
+					if (subdir) {
+						filename = path.join(subdir, filename);
+					}
+
+					grunt.file.copy(abspath, path.join(imgpath, "global", filename));
+				});
 			}
 		}
 
