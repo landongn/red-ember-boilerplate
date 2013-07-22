@@ -33,6 +33,10 @@ module.exports = function (grunt) {
 		// Extra config options
 		extras: {
 
+			// Red Boilerplate hack
+			// Compile into temp_css_dir, copy into css_dir
+			temp_css_dir: path.join(source, "css")
+
 			// Gems?
 			// require: ["susy", "stitch"],
 
@@ -71,6 +75,10 @@ module.exports = function (grunt) {
 
 		// Extra config options
 		extras: {
+
+			// Red Boilerplate hack
+			// Compile into temp_css_dir, copy into css_dir
+			temp_css_dir: "<%= caboose.dev.extras.temp_css_dir %>"
 
 			// Gems?
 			// require: ["susy", "stitch"],
