@@ -25,10 +25,7 @@ describe("Caboose Tasks", function () {
 			grunt.spawn("caboose:dev")
 
 			.expect('Running "caboose:dev" (caboose) task')
-			.expect(asyncFileDetect)
-			.expect(asyncFileDetect)
-
-			.expect('Done, without errors.')
+			.wait('Done, without errors.')
 
 			.run(done);
 		});
@@ -37,10 +34,7 @@ describe("Caboose Tasks", function () {
 			grunt.spawn("caboose:prod")
 
 			.expect('Running "caboose:prod" (caboose) task')
-			.wait(asyncFileDetect)
-			.expect(asyncFileDetect)
-
-			.expect('Done, without errors.')
+			.wait('Done, without errors.')
 
 			.run(done);
 		});
