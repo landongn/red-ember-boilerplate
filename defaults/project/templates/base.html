@@ -23,17 +23,12 @@
 		{# CSS: implied media="all" #}
 		<link rel="stylesheet" id="caboose" href="{{ STATIC_URL }}css/style.css" />
 
-		{# change the property_id - this is a default testing analytics account #}
-		<meta property="ga:property_id" content="UA-26918715-3"/>
-		<meta property="ga:domain" content="none"/>
-
 		{# change the facebook_app_id - this is a for testing localhost:8000 only #}
-		<meta property="fb:app_id" content="{{ FACEBOOK_APP_ID|default:'256785791077665'}}" />
 		<meta property="og:title" content="{% block og_title %}{% endblock og_title %}" />
-		<meta property="og:image" content="{% block og_image %}{{ ROOT_URL }}/static/img/fb-share.png{% endblock %}" />
+		<meta property="og:image" content="{% block og_image %}{% endblock %}" />
 		<meta property="og:site_name" content="{% block og_site_name %}{% endblock %}" />
 		<meta property="og:description" content="{% block og_description %}{% endblock %}" />
-		<meta property="og:url" content="{% block og_url %}{{ ROOT_URL|add:request.get_full_path }}{% endblock og_url %}" />
+		<meta property="og:url" content="{% block og_url %}{% endblock og_url %}" />
 		<meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
 		<meta property="og:locale" content="en_us" />
 
