@@ -2,7 +2,11 @@ from __init__ import *
 
 import sys
 import os.path
+import mimetypes
 from socket import gethostname
+
+# Add support for WOFF files
+mimetypes.add_type('application/font-woff', '.woff', True)
 
 # Suppress white noise
 LOGGING['loggers']['']['level'] = 'WARNING'

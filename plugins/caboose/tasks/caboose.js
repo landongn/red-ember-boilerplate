@@ -59,7 +59,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.config.set("build.caboose", {
-		"pre": ["caboose:bundle"],
+		"pre": ["caboose:bundle", "webfont"],
 		"build": ["caboose:prod"]
 	});
 
