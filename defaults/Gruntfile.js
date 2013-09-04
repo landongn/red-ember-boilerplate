@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     var path = require("path"),
         cwd = process.cwd(),
         projectConfig = {
-            app: '.tmp',
+            app: 'project',
             dist: 'dist'
         };
     // Project configuration.
@@ -228,7 +228,7 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,txt}',
                         '.htaccess',
-                        'images/{,*/}*.{webp,gif}',
+                        'img/{,*/}*.{webp,gif}',
                         'css/fonts/*'
                     ]
                 }]
