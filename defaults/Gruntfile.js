@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
-    require('matchdep').filter('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('*').forEach(grunt.loadNpmTasks);
 
     var LIVERELOAD_PORT = 35729;
     var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
@@ -282,8 +282,41 @@ module.exports = function (grunt) {
         }
     });
 
-    // Load grunt-contrib tasks
-    grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.registerTask('server', function (target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+        }
+
+        grunt.task.run([
+            'clean:server',
+            'concurrent:server',
+            'neuter:app',
+            'connect:livereload',
+            'open',
+            'watch'
+        ]);
+    });
+
+    grunt.registerTask('test', [
+        'clean:server',
+        'concurrent:test',
+        'connect:test',
+        'neuter:app',
+        'mocha'
+    ]);
+
+    grunt.registerTask('build', [
+        'clean:dist',
+        'useminPrepare',
+        'concurrent:dist',
+        'neuter:app',
+        'concat',
+        'cssmin',
+        'uglify',
+        'copy',
+        'rev',
+        'usemin'
+    ]);
 
     // Robin tasks
     // Load your custom tasks *after* these
