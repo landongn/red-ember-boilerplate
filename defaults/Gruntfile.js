@@ -13,7 +13,7 @@ module.exports = function (grunt) {
     };
 
     var path = require("path"),
-        cwd = process.cwd();
+        cwd = process.cwd(),
         projectConfig = {
             app: '.tmp',
             dist: 'dist'
