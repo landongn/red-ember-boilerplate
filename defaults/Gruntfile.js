@@ -4,7 +4,8 @@ module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
-    require('load-grunt-tasks')(grunt);
+    var matchdep = require('matchdep');
+    matchdep.filter("grunt-contrib*");
 
     var LIVERELOAD_PORT = 35729;
     var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
